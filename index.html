@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>My Website</title>
+
+</head>
+
+<body>
+
+    <h1 id="welcome">
+        Welcome!
+    </h1>
+
+    <p id="userInfo"></p>
+
+    <a href="cryptpayprofile.html">
+        My Profile
+    </a>
+
+    <br><br>
+
+    <button id="logoutButton">
+        Logout
+    </button>
+
+
+    <script>
+
+        async function loadUser() {
+
+            const response = await fetch("/me");
+
+            const result = await response.json();
+
+
+            if (!result.loggedIn) {
+
+                // User isn't logged in
+                window.location.href = "login.html";
+
+                return;
+
+            }
+
+
+            const user = result.user;
+
+
+            document.getElementById("welcome")
+                .textContent =
+                `Welcome, ${user.name}!`;
+
+
+            document.getElementById("userInfo")
+                .textContent =
+                `Username: ${user.username}`;
+
+        }
+
+
+        document.getElementById("logoutButton")
+            .addEventListener("click", async function() {
+
+                await fetch("/logout", {
+                    method: "POST"
+                });
+
+                window.location.href = "login.html";
+
+            });
+
+
+        loadUser();
+
+    </script>
+
+</body>
+
+</html>

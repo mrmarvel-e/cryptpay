@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Withdraw Funds - CryptPay</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        body {
+
+            background-color: black;
+
+            color: gold;
+
+            font-family: Arial, sans-serif;
+
+            min-height: 100vh;
+
+        }
+
+
+        .container {
+
+            width: 90%;
+
+            max-width: 450px;
+
+            margin: 40px auto;
+
+            padding: 30px 20px;
+
+            background-color: #080808;
+
+            border: 2px solid gold;
+
+            border-radius: 25px;
+
+        }
+
+
+        h1 {
+
+            text-align: center;
+
+            margin-bottom: 30px;
+
+        }
+
+
+        label {
+
+            display: block;
+
+            margin-top: 18px;
+
+            margin-bottom: 7px;
+
+            font-weight: bold;
+
+        }
+
+
+        input,
+        select {
+
+            width: 100%;
+
+            padding: 14px;
+
+            background-color: gold;
+
+            color: black;
+
+            border: 2px solid gold;
+
+            border-radius: 10px;
+
+            font-size: 16px;
+
+            outline: none;
+
+        }
+
+
+        input:focus,
+        select:focus {
+
+            background-color: #fff1a8;
+
+        }
+
+
+        .withdraw-button {
+
+            width: 100%;
+
+            padding: 15px;
+
+            margin-top: 30px;
+
+            background-color: gold;
+
+            color: black;
+
+            border: 2px solid gold;
+
+            border-radius: 15px;
+
+            font-size: 20px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+        }
+
+
+        .withdraw-button:hover {
+
+            background-color: black;
+
+            color: gold;
+
+        }
+
+
+        .withdraw-button:disabled {
+
+            opacity: 0.5;
+
+            cursor: not-allowed;
+
+        }
+
+
+        #notification {
+
+            display: none;
+
+            margin-top: 20px;
+
+            padding: 15px;
+
+            border-radius: 12px;
+
+            text-align: center;
+
+            font-weight: bold;
+
+        }
+
+
+        .success {
+
+            background-color: gold;
+
+            color: black;
+
+        }
+
+
+        .error {
+
+            background-color: #300000;
+
+            color: #ff7777;
+
+            border: 1px solid #ff7777;
+
+        }
+
+
+        .back-button {
+
+            display: block;
+
+            width: fit-content;
+
+            margin: 25px auto 0;
+
+            padding: 12px 22px;
+
+            color: gold;
+
+            border: 2px solid gold;
+
+            border-radius: 12px;
+
+            text-decoration: none;
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .container {
+
+                margin: 25px auto;
+
+                padding: 25px 15px;
+
+            }
+
+            h1 {
+
+                font-size: 27px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <h1>
+        Withdraw Funds
+    </h1>
+
+
+    <form id="withdrawForm">
+
+
+        <!-- ACCOUNT NUMBER -->
+
+        <label for="accountNumber">
+            Account Number
+        </label>
+
+        <input
+            type="text"
+            id="accountNumber"
+            inputmode="numeric"
+            maxlength="10"
+            placeholder="Enter 10-digit account number"
+            required
+        >
+
+
+        <!-- BANK -->
+
+        <label for="bank">
+            Bank
+        </label>
+
+        <select id="bank" required>
+
+            <option value="">
+                Select Bank
+            </option>
+
+            <option value="Access Bank">
+                Access Bank
+            </option>
+
+            <option value="GTBank">
+                GTBank
+            </option>
+
+            <option value="First Bank">
+                First Bank
+            </option>
+
+            <option value="UBA">
+                UBA
+            </option>
+
+            <option value="Zenith Bank">
+                Zenith Bank
+            </option>
+
+            <option value="Opay">
+                Opay
+            </option>
+
+            <option value="PalmPay">
+                PalmPay
+            </option>
+
+            <option value="Kuda">
+                Kuda
+            </option>
+
+        </select>
+
+
+        <!-- AMOUNT -->
+
+        <label for="amount">
+            Amount
+        </label>
+
+        <input
+            type="number"
+            id="amount"
+            min="1"
+            step="1"
+            placeholder="Enter amount"
+            required
+        >
+
+
+        <!-- CP CODE -->
+
+        <label for="cpCode">
+            CP-Code
+        </label>
+
+        <input
+            type="text"
+            id="cpCode"
+            placeholder="Enter CP-Code"
+            required
+        >
+
+
+        <!-- WITHDRAW -->
+
+        <button
+            type="submit"
+            class="withdraw-button"
+            id="withdrawButton"
+        >
+
+            WITHDRAW
+
+        </button>
+
+
+    </form>
+
+
+    <!-- NOTIFICATION -->
+
+    <div id="notification"></div>
+
+
+    <!-- BACK -->
+
+    <a
+        href="cryptpay.html"
+        class="back-button"
+    >
+
+        ← Back to CryptPay
+
+    </a>
+
+
+</div>
+
+
+
+<script>
+
+
+// ==============================
+// CHECK LOGIN
+// ==============================
+
+async function checkLogin() {
+
+    try {
+
+        const response =
+            await fetch("/me");
+
+        const result =
+            await response.json();
+
+
+        if (!result.loggedIn) {
+
+            window.location.href =
+                "login.html";
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
+
+checkLogin();
+
+
+
+// ==============================
+// WITHDRAW
+// ==============================
+
+document
+    .getElementById("withdrawForm")
+    .addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            const button =
+                document.getElementById(
+                    "withdrawButton"
+                );
+
+
+            const notification =
+                document.getElementById(
+                    "notification"
+                );
+
+
+            const accountNumber =
+                document.getElementById(
+                    "accountNumber"
+                ).value.trim();
+
+
+            const bank =
+                document.getElementById(
+                    "bank"
+                ).value;
+
+
+            const amount =
+                document.getElementById(
+                    "amount"
+                ).value;
+
+
+            const cpCode =
+                document.getElementById(
+                    "cpCode"
+                ).value.trim();
+
+
+            // Disable button
+            button.disabled = true;
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/withdraw",
+                        {
+
+                            method: "POST",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json"
+
+                            },
+
+                            body: JSON.stringify({
+
+                                accountNumber:
+                                    accountNumber,
+
+                                bank:
+                                    bank,
+
+                                amount:
+                                    amount,
+
+                                cpCode:
+                                    cpCode
+
+                            })
+
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                notification.textContent =
+                    result.message;
+
+
+                notification.style.display =
+                    "block";
+
+
+                if (result.success) {
+
+                    notification.className =
+                        "success";
+
+
+                    // Clear form
+                    document
+                        .getElementById(
+                            "withdrawForm"
+                        )
+                        .reset();
+
+                }
+
+                else {
+
+                    notification.className =
+                        "error";
+
+                    button.disabled = false;
+
+                }
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+
+                notification.textContent =
+                    "Something went wrong. Please try again.";
+
+
+                notification.className =
+                    "error";
+
+
+                notification.style.display =
+                    "block";
+
+
+                button.disabled = false;
+
+            }
+
+        }
+    );
+
+
+</script>
+
+
+</body>
+
+</html>

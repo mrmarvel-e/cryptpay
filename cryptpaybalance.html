@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>CryptPay Balance</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+
+            background-color: black;
+            color: gold;
+
+            font-family: Arial, sans-serif;
+
+            text-align: center;
+
+            margin: 0;
+
+            min-height: 100vh;
+
+        }
+
+
+        /* MAIN BOX */
+
+        .balance-box {
+
+            width: 90%;
+            max-width: 400px;
+
+            margin: 80px auto;
+
+            padding: 35px 20px;
+
+            border: 2px solid gold;
+
+            border-radius: 25px;
+
+            background-color: #080808;
+
+        }
+
+
+        h1 {
+
+            margin-bottom: 30px;
+
+            font-size: 30px;
+
+        }
+
+
+        /* BALANCE */
+
+        #balance {
+
+            font-size: 40px;
+
+            font-weight: bold;
+
+            margin: 30px 0;
+
+            word-break: break-word;
+
+        }
+
+
+        /* BACK BUTTON */
+
+        .back-button {
+
+            display: inline-block;
+
+            padding: 12px 25px;
+
+            color: gold;
+
+            border: 2px solid gold;
+
+            border-radius: 12px;
+
+            text-decoration: none;
+
+            font-size: 16px;
+
+        }
+
+
+        .back-button:hover {
+
+            background-color: #222;
+
+        }
+
+
+        /* PHONE */
+
+        @media (max-width: 500px) {
+
+            .balance-box {
+
+                margin: 50px auto;
+
+                padding: 30px 15px;
+
+            }
+
+
+            h1 {
+
+                font-size: 26px;
+
+            }
+
+
+            #balance {
+
+                font-size: 32px;
+
+            }
+
+
+            .back-button {
+
+                font-size: 14px;
+
+                padding: 10px 20px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <div class="balance-box">
+
+        <h1>
+            My Balance
+        </h1>
+
+
+        <div id="balance">
+
+            Loading...
+
+        </div>
+
+
+        <a
+            class="back-button"
+            href="cryptpay.html"
+        >
+
+            ← Back to CryptPay
+
+        </a>
+
+    </div>
+
+
+
+    <script>
+
+
+        // =========================
+        // LOAD USER BALANCE
+        // =========================
+
+        async function loadBalance() {
+
+            try {
+
+                const response =
+                    await fetch("/me");
+
+
+                const result =
+                    await response.json();
+
+
+                // User isn't logged in
+
+                if (!result.loggedIn) {
+
+                    window.location.href =
+                        "login.html";
+
+                    return;
+
+                }
+
+
+                // Get user information
+
+                const user =
+                    result.user;
+
+
+                // Display balance
+
+                document.getElementById(
+                    "balance"
+                ).textContent =
+
+                    "₦" +
+                    Number(
+                        user.balance || 0
+                    ).toLocaleString();
+
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+
+                document.getElementById(
+                    "balance"
+                ).textContent =
+
+                    "Unable to load balance";
+
+            }
+
+        }
+
+
+        // Run when page loads
+
+        loadBalance();
+
+
+    </script>
+
+
+</body>
+
+</html>

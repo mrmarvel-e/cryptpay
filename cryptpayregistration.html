@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Register@cryptpay.com</title>
+</head>
+<body>
+	<button onclick="createform()">Create Form
+	</button>
+
+	<div id="formcontainer"></div>
+
+	<script>
+		function createForm() {
+			const container = 
+			document.getElementById("formcontainer");
+			// clear previous form (optional)
+			container.innerHTML = "";
+
+			// create form
+			const form = 
+			document.createElement("form");
+
+			// Name label
+			const nameLabel =
+			document.createElement("label");
+			nameLabel.textContent = "Name: ";
+
+			// Name input
+			const nameInput =
+			document.createElement("input");
+			nameInput.type = "text";
+			nameInput.name = "name";
+			nameInput.required = true;
+
+			// Line break
+			const br1 =
+			document.createElement("br");
+
+			// Email label
+			const emailLabel =
+			document.createElement("label");
+			emailLabel.textContent = "Email: ";
+
+			// Email input
+			const emailInput =
+			document.createElement("input");
+			emailInput.type = "email";
+			emailInput.name = "email";
+			emailInput.required = true;
+
+			const br2 =
+			document.createElement("br");
+
+			// Submit button
+			const SubmitButton =
+			document.createElement("button");
+			SubmitButton.type = "submit";
+			SubmitButton.textContent = "Submit";
+
+			// Handle submission
+			form.addEventListener("submit,
+				function(event) {
+					event.preventDefault();
+
+					alert(
+						Name: ${nameInput.value})
+				}")
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Share CryptPay</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: black;
+            color: gold;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 30px 20px;
+
+            border: 2px solid gold;
+            border-radius: 25px;
+
+            background-color: #080808;
+        }
+
+        .share-image {
+            width: 100px;
+            height: 100px;
+
+            border-radius: 50%;
+            object-fit: cover;
+
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 18px;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        .link-box {
+            width: 100%;
+
+            padding: 15px;
+
+            border: 2px solid gold;
+            border-radius: 12px;
+
+            background-color: black;
+            color: white;
+
+            word-break: break-all;
+
+            margin-bottom: 15px;
+        }
+
+        button {
+            width: 100%;
+
+            padding: 15px;
+            margin-top: 10px;
+
+            border-radius: 15px;
+
+            font-size: 18px;
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .share-button {
+            background-color: gold;
+            color: black;
+            border: 2px solid gold;
+        }
+
+        .copy-button {
+            background-color: transparent;
+            color: gold;
+            border: 2px solid gold;
+        }
+
+        .back-button {
+            display: inline-block;
+
+            margin-top: 20px;
+            padding: 12px 25px;
+
+            color: gold;
+
+            border: 2px solid gold;
+            border-radius: 12px;
+
+            text-decoration: none;
+        }
+
+        #message {
+            margin-top: 20px;
+            font-weight: bold;
+            line-height: 1.5;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <img
+        class="share-image"
+        src="cryptpayshare2.png"
+        alt="Share"
+    >
+
+
+    <h1>
+        Share CryptPay
+    </h1>
+
+
+    <p>
+        Share the CryptPay website with
+        your friends.
+    </p>
+
+
+    <div
+        class="link-box"
+        id="websiteLink"
+    ></div>
+
+
+    <button
+        class="share-button"
+        id="shareButton"
+        onclick="shareWebsite()"
+    >
+        SHARE WEBSITE
+    </button>
+
+
+    <button
+        class="copy-button"
+        onclick="copyWebsite()"
+    >
+        COPY LINK
+    </button>
+
+
+    <div id="message"></div>
+
+
+    <a
+        class="back-button"
+        href="cryptpaygoals.html"
+    >
+        ← Back to Goals
+    </a>
+
+
+</div>
+
+
+
+<script>
+
+
+const websiteLink =
+    window.location.origin;
+
+
+document.getElementById(
+    "websiteLink"
+).textContent =
+    websiteLink;
+
+
+
+// ==============================
+// CHECK LOGIN
+// ==============================
+
+async function checkLogin() {
+
+    try {
+
+        const response =
+            await fetch("/me");
+
+
+        const result =
+            await response.json();
+
+
+        if (!result.loggedIn) {
+
+            window.location.href =
+                "login.html";
+
+            return false;
+
+        }
+
+
+        return true;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Login check error:",
+            error
+        );
+
+        return false;
+
+    }
+
+}
+
+
+
+// ==============================
+// SHARE
+// ==============================
+
+async function shareWebsite() {
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+    const button =
+        document.getElementById(
+            "shareButton"
+        );
+
+
+    try {
+
+        // Web Share API is required.
+        // Copying the link does NOT count
+        // as completing the Share goal.
+
+        if (!navigator.share) {
+
+            message.textContent =
+                "Your browser does not support website sharing. Please use a supported mobile browser.";
+
+            return;
+
+        }
+
+
+        button.disabled = true;
+
+
+        /*
+            Open the device's native
+            share menu.
+        */
+
+        await navigator.share({
+
+            title:
+                "CryptPay",
+
+            text:
+                "Check out CryptPay!",
+
+            url:
+                websiteLink
+
+        });
+
+
+        /*
+            navigator.share() resolving means
+            the native share operation was
+            completed from the browser's side.
+
+            Now tell the server.
+        */
+
+        const response =
+            await fetch(
+                "/complete-share",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    }
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (!response.ok ||
+            !result.success) {
+
+            message.textContent =
+                result.message ||
+                "Share could not be recorded.";
+
+            button.disabled = false;
+
+            return;
+
+        }
+
+
+        message.textContent =
+            "Share completed! Return to Goals to claim your reward.";
+
+    }
+
+
+    catch (error) {
+
+        /*
+            This normally happens when the
+            user closes/cancels the share menu.
+        */
+
+        console.log(
+            "Share cancelled:",
+            error
+        );
+
+
+        button.disabled = false;
+
+
+        message.textContent =
+            "Share cancelled.";
+
+    }
+
+}
+
+
+
+// ==============================
+// COPY LINK
+// ==============================
+
+async function copyWebsite() {
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+
+    try {
+
+        await navigator.clipboard.writeText(
+            websiteLink
+        );
+
+
+        message.textContent =
+            "Website link copied!";
+
+
+    }
+
+    catch (error) {
+
+        message.textContent =
+            "Unable to copy the link.";
+
+        console.error(error);
+
+    }
+
+}
+
+
+
+// ==============================
+// PAGE LOAD
+// ==============================
+
+checkLogin();
+
+
+</script>
+
+
+</body>
+
+</html>

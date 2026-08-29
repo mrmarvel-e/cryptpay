@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>CryptPay Profile</title>
+
+    <style>
+
+        body {
+            background-color: black;
+            color: gold;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .profile-container {
+            width: 90%;
+            max-width: 500px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #080808;
+            border: 2px solid gold;
+            border-radius: 25px;
+            box-sizing: border-box;
+        }
+
+        .profile-title {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 30px;
+        }
+
+        .profile-icon {
+            display: block;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px auto;
+            border-radius: 50%;
+            border: 2px solid gold;
+            padding: 5px;
+        }
+
+        .profile-info {
+            margin-top: 20px;
+        }
+
+        .info-box {
+            background-color: #111111;
+            border: 1px solid #806b00;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .info-label {
+            color: #aaa;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: gold;
+            font-size: 18px;
+            word-wrap: break-word;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        #editButton,
+        #saveButton,
+        #cancelButton,
+        #logoutButton {
+            width: 100%;
+            padding: 13px;
+            margin-top: 10px;
+            border-radius: 12px;
+            font-size: 16px;
+        }
+
+        #editButton,
+        #saveButton {
+            background-color: gold;
+            color: black;
+            border: 1px solid gold;
+        }
+
+        #editButton:hover,
+        #saveButton:hover {
+            background-color: #d4af37;
+        }
+
+        #cancelButton {
+            background-color: transparent;
+            color: gold;
+            border: 1px solid gold;
+        }
+
+        #cancelButton:hover {
+            background-color: #1a1a1a;
+        }
+
+        /* ==========================
+           LOGOUT BUTTON
+        ========================== */
+
+        #logoutButton {
+            background-color: transparent;
+            color: red;
+            border: 1px solid red;
+        }
+
+        #logoutButton:hover {
+            background-color: rgba(255, 0, 0, 0.08);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            background-color: #111111;
+            color: gold;
+            border: 1px solid #806b00;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: gold;
+        }
+
+        .back-home {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            color: gold;
+            text-decoration: none;
+        }
+
+        .back-home:hover {
+            text-decoration: underline;
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 15px;
+            color: lightgreen;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <div class="profile-container">
+
+
+        <h1 class="profile-title">
+            My Profile
+        </h1>
+
+
+        <!-- Profile picture/icon -->
+
+        <img
+            class="profile-icon"
+            src="cryptpayprofile.png"
+        >
+
+
+        <!-- ===================== -->
+        <!-- PROFILE VIEW -->
+        <!-- ===================== -->
+
+        <div id="profileView">
+
+
+            <div class="profile-info">
+
+
+                <div class="info-box">
+
+                    <div class="info-label">
+                        Name
+                    </div>
+
+                    <div
+                        class="info-value"
+                        id="displayName">
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <div class="info-label">
+                        Email
+                    </div>
+
+                    <div
+                        class="info-value"
+                        id="displayEmail">
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <div class="info-label">
+                        Username
+                    </div>
+
+                    <div
+                        class="info-value"
+                        id="displayUsername">
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <button id="editButton">
+                Edit Profile
+            </button>
+
+
+            <!-- LOGOUT BUTTON -->
+
+            <button
+                style="border-color: gold; color: gold"
+                id="logoutButton"
+                type="button"
+            >
+                Logout
+            </button>
+
+
+        </div>
+
+
+        <!-- ===================== -->
+        <!-- EDIT PROFILE -->
+        <!-- ===================== -->
+
+        <form
+            id="profileForm"
+            style="display: none;"
+        >
+
+
+            <label>
+                Name
+            </label>
+
+            <input
+                type="text"
+                id="name"
+                required
+            >
+
+
+            <label>
+                Email
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                required
+            >
+
+
+            <label>
+                Username
+            </label>
+
+            <input
+                type="text"
+                id="username"
+                required
+            >
+
+
+            <button
+                type="submit"
+                id="saveButton"
+            >
+                Save Changes
+            </button>
+
+
+            <button
+                type="button"
+                id="cancelButton"
+            >
+                Cancel
+            </button>
+
+
+        </form>
+
+
+        <p id="message"></p>
+
+
+        <a
+            class="back-home"
+            href="cryptpay.html"
+        >
+            ← Back to CryptPay
+        </a>
+
+
+    </div>
+
+
+    <script>
+
+
+        let currentUser;
+
+
+        // ==========================
+        // LOAD PROFILE
+        // ==========================
+
+        async function loadProfile() {
+
+
+            const response =
+                await fetch("/me");
+
+
+            const result =
+                await response.json();
+
+
+            if (!result.loggedIn) {
+
+
+                window.location.href =
+                    "login.html";
+
+
+                return;
+
+            }
+
+
+            currentUser =
+                result.user;
+
+
+            // Display information
+
+            document.getElementById(
+                "displayName"
+            ).textContent =
+                currentUser.name;
+
+
+            document.getElementById(
+                "displayEmail"
+            ).textContent =
+                currentUser.email;
+
+
+            document.getElementById(
+                "displayUsername"
+            ).textContent =
+                currentUser.username;
+
+
+            // Fill edit fields
+
+            document.getElementById(
+                "name"
+            ).value =
+                currentUser.name;
+
+
+            document.getElementById(
+                "email"
+            ).value =
+                currentUser.email;
+
+
+            document.getElementById(
+                "username"
+            ).value =
+                currentUser.username;
+
+        }
+
+
+        // ==========================
+        // EDIT PROFILE
+        // ==========================
+
+        document.getElementById(
+            "editButton"
+        ).addEventListener(
+            "click",
+            function() {
+
+
+                document.getElementById(
+                    "profileView"
+                ).style.display =
+                    "none";
+
+
+                document.getElementById(
+                    "profileForm"
+                ).style.display =
+                    "block";
+
+
+                document.getElementById(
+                    "message"
+                ).textContent = "";
+
+            }
+        );
+
+
+        // ==========================
+        // CANCEL
+        // ==========================
+
+        document.getElementById(
+            "cancelButton"
+        ).addEventListener(
+            "click",
+            function() {
+
+
+                document.getElementById(
+                    "profileForm"
+                ).style.display =
+                    "none";
+
+
+                document.getElementById(
+                    "profileView"
+                ).style.display =
+                    "block";
+
+
+                // Restore original values
+
+                document.getElementById(
+                    "name"
+                ).value =
+                    currentUser.name;
+
+
+                document.getElementById(
+                    "email"
+                ).value =
+                    currentUser.email;
+
+
+                document.getElementById(
+                    "username"
+                ).value =
+                    currentUser.username;
+
+
+                document.getElementById(
+                    "message"
+                ).textContent = "";
+
+            }
+        );
+
+
+        // ==========================
+        // SAVE CHANGES
+        // ==========================
+
+        document.getElementById(
+            "profileForm"
+        ).addEventListener(
+            "submit",
+            async function(event) {
+
+
+                event.preventDefault();
+
+
+                const name =
+                    document.getElementById(
+                        "name"
+                    ).value;
+
+
+                const email =
+                    document.getElementById(
+                        "email"
+                    ).value;
+
+
+                const username =
+                    document.getElementById(
+                        "username"
+                    ).value;
+
+
+                const response =
+                    await fetch(
+                        "/profile",
+                        {
+
+                            method: "PUT",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                name,
+                                email,
+                                username
+                            })
+
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                const message =
+                    document.getElementById(
+                        "message"
+                    );
+
+
+                if (result.success) {
+
+
+                    // Update displayed information
+
+                    document.getElementById(
+                        "displayName"
+                    ).textContent =
+                        name;
+
+
+                    document.getElementById(
+                        "displayEmail"
+                    ).textContent =
+                        email;
+
+
+                    document.getElementById(
+                        "displayUsername"
+                    ).textContent =
+                        username;
+
+
+                    // Update current user
+
+                    currentUser.name =
+                        name;
+
+                    currentUser.email =
+                        email;
+
+                    currentUser.username =
+                        username;
+
+
+                    // Return to profile view
+
+                    document.getElementById(
+                        "profileForm"
+                    ).style.display =
+                        "none";
+
+
+                    document.getElementById(
+                        "profileView"
+                    ).style.display =
+                        "block";
+
+
+                    message.style.color =
+                        "lightgreen";
+
+
+                    message.textContent =
+                        "Profile updated successfully!";
+
+
+                } else {
+
+
+                    message.style.color =
+                        "red";
+
+
+                    message.textContent =
+                        result.message;
+
+                }
+
+            }
+        );
+
+
+        // ==========================
+        // LOGOUT
+        // ==========================
+
+        document.getElementById(
+            "logoutButton"
+        ).addEventListener(
+            "click",
+            async function() {
+
+                const message =
+                    document.getElementById(
+                        "message"
+                    );
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            "/logout",
+                            {
+                                method: "POST"
+                            }
+                        );
+
+
+                    const result =
+                        await response.json();
+
+
+                    if (result.success) {
+
+                        window.location.href =
+                            "login.html";
+
+                    }
+
+                    else {
+
+                        message.style.color =
+                            "red";
+
+                        message.textContent =
+                            result.message ||
+                            "Unable to log out.";
+
+                    }
+
+                }
+
+                catch (error) {
+
+                    console.error(error);
+
+
+                    message.style.color =
+                        "red";
+
+                    message.textContent =
+                        "Unable to log out. Please try again.";
+
+                }
+
+            }
+        );
+
+
+        // ==========================
+        // LOAD PROFILE WHEN PAGE OPENS
+        // ==========================
+
+        loadProfile();
+
+
+    </script>
+
+
+</body>
+
+</html>
+

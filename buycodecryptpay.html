@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Buy CP Code</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: black;
+            color: gold;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Removes link underlines */
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        a:visited,
+        a:hover,
+        a:active {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Main page */
+        .container {
+            width: 100%;
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        /* Back button */
+        .back-button {
+            width: 55px;
+            height: 55px;
+            background-color: transparent;
+            color: gold;
+            border: 2px solid gold;
+            border-radius: 50%;
+            padding: 2px;
+            cursor: pointer;
+        }
+
+        .back-button img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* CP Code information */
+        .code-info {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .code-info img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .code-info h4 {
+            font-size: 21px;
+            line-height: 1.5;
+            margin-top: 20px;
+            font-weight: normal;
+        }
+
+        /* Purchase heading */
+        .purchase-title {
+            width: 100%;
+            min-height: 60px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background-color: gold;
+            color: black;
+
+            border-radius: 20px;
+
+            margin-top: 25px;
+            padding: 10px 15px;
+        }
+
+        .purchase-title b {
+            font-size: 20px;
+            text-align: center;
+        }
+
+        /* Proceed button */
+        .proceed-button {
+            display: block;
+
+            width: 160px;
+            height: 45px;
+
+            margin: 20px auto;
+
+            background-color: transparent;
+            color: gold;
+
+            border: 2px solid gold;
+            border-radius: 10px;
+
+            font-size: 18px;
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .proceed-button:hover {
+            background-color: gold;
+            color: black;
+        }
+
+        /* Phone */
+        @media (max-width: 500px) {
+
+            .container {
+                padding: 15px;
+            }
+
+            .code-info img {
+                width: 160px;
+                height: 160px;
+            }
+
+            .code-info h4 {
+                font-size: 18px;
+            }
+
+            .purchase-title b {
+                font-size: 17px;
+            }
+
+        }
+
+        /* Very small phones */
+        @media (max-width: 350px) {
+
+            .code-info img {
+                width: 140px;
+                height: 140px;
+            }
+
+            .code-info h4 {
+                font-size: 16px;
+            }
+
+            .purchase-title {
+                min-height: 65px;
+            }
+
+            .purchase-title b {
+                font-size: 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <!-- BACK BUTTON -->
+    <a href="cryptpay.html">
+
+        <button class="back-button">
+
+            <img src="cryptpaybackkey.png"
+                 alt="Back">
+
+        </button>
+
+    </a>
+
+
+    <!-- INFORMATION -->
+    <div class="code-info">
+
+        <img src="CPcodepurchase.png"
+             alt="CP Code">
+
+        <h4>
+            Select "Proceed" to purchase your 8-digit CP code.
+            Code is valid for only 24 hours.
+        </h4>
+
+    </div>
+
+
+    <!-- PURCHASE METHOD -->
+    <div class="purchase-title">
+
+        <b>
+            Purchase CP code @ NGN10,000 via bank transfer
+        </b>
+
+    </div>
+
+
+    <!-- PROCEED -->
+    <a href="buycppayment.html">
+
+        <button class="proceed-button">
+            Proceed
+        </button>
+
+    </a>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,10 @@
+#back{height: 200px; background-color: transparent; width: 300px; animation-iteration-count: infinite; animation-name: rocket; animation-duration: 3s;}
+
+@keyframes rocket{ 25%{margin-top: -10px}
+50%{margin-top: 10px}
+100%{margin-top: 0px}
+}
+
+
+
+

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Form with JavaScript</title>
+</head>
+<body>
+
+<div id="formContainer"></div>
+
+<script>
+    // Create form
+    const form = document.createElement("form");
+
+    // Create name label
+    const nameLabel = document.createElement("label");
+    nameLabel.textContent = "Name: ";
+
+    // Create name input
+    const nameInput = document.createElement("input");
+    nameInput.type = "text";
+    nameInput.name = "name";
+    nameInput.placeholder = "Enter your name";
+
+    // Line break
+    const br1 = document.createElement("br");
+    const br2 = document.createElement("br");
+
+    // Create email label
+    const emailLabel = document.createElement("label");
+    emailLabel.textContent = "Email: ";
+
+    // Create email input
+    const emailInput = document.createElement("input");
+    emailInput.type = "email";
+    emailInput.name = "email";
+    emailInput.placeholder = "Enter your email";
+
+    // Another line break
+    const br3 = document.createElement("br");
+    const br4 = document.createElement("br");
+
+    // Create submit button
+    const submitButton = document.createElement("button");
+    submitButton.type = "submit";
+    submitButton.textContent = "Submit";
+
+    // Add elements to form
+    form.appendChild(nameLabel);
+    form.appendChild(nameInput);
+    form.appendChild(br1);
+    form.appendChild(br2);
+
+    form.appendChild(emailLabel);
+    form.appendChild(emailInput);
+    form.appendChild(br3);
+    form.appendChild(br4);
+
+    form.appendChild(submitButton);
+
+    // Handle form submission
+    form.addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        alert(
+            `Name: ${nameInput.value}\nEmail: ${emailInput.value}`
+        );
+    });
+
+    // Add form to the page
+    document.getElementById("formContainer").appendChild(form);
+</script>
+
+</body>
+</html>

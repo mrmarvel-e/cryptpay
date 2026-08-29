@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create CP Account</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body style="background-color: #141414">
+
+    <div style="background-color: black; color: gold" class="register-container">
+
+        <h1>Create CP Account</h1>
+
+        <form id="registerForm">
+
+            <label for="name">Full Name</label>
+            <input
+                style=" background-color: gold; color: black; border-color: gold"
+                type="text"
+                id="name"
+                name="name"
+                required
+            >
+
+            <label for="email">Email</label>
+            <input
+                style=" background-color: gold; color: black; border-color: gold"
+                type="email"
+                id="email"
+                name="email"
+                required
+            >
+
+            <label for="username">Username</label>
+            <input
+                style=" background-color: gold; color: black; border-color: gold"
+                type="text"
+                id="username"
+                name="username"
+                required
+            >
+
+            <label for="password">Password</label>
+            <input
+                style=" background-color: gold; color: black; border-color: gold"
+                type="password"
+                id="password"
+                name="password"
+                required
+            >
+
+            <button style="background-color: black; color: gold; border-color: gold" type="submit">
+                Create Account
+            </button>
+            <h4>I have an account</h4>
+
+            <a style="margin-top: -75px; position: absolute; margin-left: 140px" href="login.html"><button style="background-color: black; color: white" type="button"><u>Login</u></button></a>
+
+        </form>
+
+        <p id="message"></p>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
