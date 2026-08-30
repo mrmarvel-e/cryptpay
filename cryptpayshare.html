@@ -33,20 +33,16 @@
             max-width: 500px;
             margin: 50px auto;
             padding: 30px 20px;
-
             border: 2px solid gold;
             border-radius: 25px;
-
             background-color: #080808;
         }
 
         .share-image {
             width: 100px;
             height: 100px;
-
             border-radius: 50%;
             object-fit: cover;
-
             margin-bottom: 20px;
         }
 
@@ -62,31 +58,22 @@
 
         .link-box {
             width: 100%;
-
             padding: 15px;
-
             border: 2px solid gold;
             border-radius: 12px;
-
             background-color: black;
             color: white;
-
             word-break: break-all;
-
             margin-bottom: 15px;
         }
 
         button {
             width: 100%;
-
             padding: 15px;
             margin-top: 10px;
-
             border-radius: 15px;
-
             font-size: 18px;
             font-weight: bold;
-
             cursor: pointer;
         }
 
@@ -104,22 +91,17 @@
 
         .back-button {
             display: inline-block;
-
             margin-top: 20px;
             padding: 12px 25px;
-
             color: gold;
-
             border: 2px solid gold;
             border-radius: 12px;
-
             text-decoration: none;
         }
 
         #message {
             margin-top: 20px;
             font-weight: bold;
-            line-height: 1.5;
         }
 
     </style>
@@ -159,7 +141,6 @@
 
     <button
         class="share-button"
-        id="shareButton"
         onclick="shareWebsite()"
     >
         SHARE WEBSITE
@@ -198,53 +179,7 @@ const websiteLink =
 
 document.getElementById(
     "websiteLink"
-).textContent =
-    websiteLink;
-
-
-
-// ==============================
-// CHECK LOGIN
-// ==============================
-
-async function checkLogin() {
-
-    try {
-
-        const response =
-            await fetch("/me");
-
-
-        const result =
-            await response.json();
-
-
-        if (!result.loggedIn) {
-
-            window.location.href =
-                "login.html";
-
-            return false;
-
-        }
-
-
-        return true;
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "Login check error:",
-            error
-        );
-
-        return false;
-
-    }
-
-}
+).textContent = websiteLink;
 
 
 
@@ -255,96 +190,79 @@ async function checkLogin() {
 async function shareWebsite() {
 
     const message =
-        document.getElementById(
-            "message"
-        );
-
-    const button =
-        document.getElementById(
-            "shareButton"
-        );
+        document.getElementById("message");
 
 
     try {
 
-        // Web Share API is required.
-        // Copying the link does NOT count
-        // as completing the Share goal.
+        if (navigator.share) {
 
-        if (!navigator.share) {
+            await navigator.share({
 
-            message.textContent =
-                "Your browser does not support website sharing. Please use a supported mobile browser.";
+                title: "CryptPay",
 
-            return;
+                text:
+                    "Check out CryptPay!",
 
-        }
+                url:
+                    websiteLink
 
-
-        button.disabled = true;
+            });
 
 
-        /*
-            Open the device's native
-            share menu.
-        */
+            /*
+                The browser's share operation
+                completed.
 
-        await navigator.share({
+                Tell the server that the
+                user completed the share
+                action.
+            */
 
-            title:
-                "CryptPay",
+            const response =
+                await fetch(
+                    "/complete-share",
+                    {
+                        method: "POST",
 
-            text:
-                "Check out CryptPay!",
-
-            url:
-                websiteLink
-
-        });
-
-
-        /*
-            navigator.share() resolving means
-            the native share operation was
-            completed from the browser's side.
-
-            Now tell the server.
-        */
-
-        const response =
-            await fetch(
-                "/complete-share",
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        }
                     }
-                }
-            );
+                );
 
 
-        const result =
-            await response.json();
+            const result =
+                await response.json();
 
 
-        if (!response.ok ||
-            !result.success) {
+            if (
+                response.ok &&
+                result.success
+            ) {
 
-            message.textContent =
-                result.message ||
-                "Share could not be recorded.";
+                message.textContent =
+                    "Share completed! You can now claim your NGN50,000 reward.";
 
-            button.disabled = false;
+            }
 
-            return;
+            else {
+
+                message.textContent =
+                    result.message ||
+                    "Unable to record share.";
+
+            }
 
         }
 
+        else {
 
-        message.textContent =
-            "Share completed! Return to Goals to claim your reward.";
+            message.textContent =
+                "Your browser does not support the share feature. Please use Copy Link.";
+
+        }
 
     }
 
@@ -352,21 +270,15 @@ async function shareWebsite() {
     catch (error) {
 
         /*
-            This normally happens when the
-            user closes/cancels the share menu.
+            If the user closes/cancels
+            the share menu, do NOT mark
+            the goal as completed.
         */
 
         console.log(
-            "Share cancelled:",
+            "Share cancelled or failed:",
             error
         );
-
-
-        button.disabled = false;
-
-
-        message.textContent =
-            "Share cancelled.";
 
     }
 
@@ -381,9 +293,7 @@ async function shareWebsite() {
 async function copyWebsite() {
 
     const message =
-        document.getElementById(
-            "message"
-        );
+        document.getElementById("message");
 
 
     try {
@@ -396,7 +306,6 @@ async function copyWebsite() {
         message.textContent =
             "Website link copied!";
 
-
     }
 
     catch (error) {
@@ -404,19 +313,13 @@ async function copyWebsite() {
         message.textContent =
             "Unable to copy the link.";
 
-        console.error(error);
+        console.error(
+            error
+        );
 
     }
 
 }
-
-
-
-// ==============================
-// PAGE LOAD
-// ==============================
-
-checkLogin();
 
 
 </script>
@@ -425,3 +328,4 @@ checkLogin();
 </body>
 
 </html>
+
