@@ -1,13 +1,13 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 
-<html lang="en"> 
+<html lang="en">
 
-<head> 
+<head>
 
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1546729568940222"
      crossorigin="anonymous"></script>
 
-<meta charset="UTF-8"> 
+<meta charset="UTF-8">
 
 <meta
 name="viewport"
@@ -15,888 +15,968 @@ content="width=device-width, initial-scale=1.0"
 
 >
 
-<title>CP Goals</title> 
+<title>CP Goals</title>
 
-<style> 
+<style>
 
-    * { 
-        box-sizing: border-box; 
-        margin: 0; 
-        padding: 0; 
-    } 
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
 
-    body { 
-        background-color: black; 
-        color: gold; 
-        font-family: Arial, sans-serif; 
-        min-height: 100vh; 
-        overflow-x: hidden; 
-    } 
+    body {
+        background-color: black;
+        color: gold;
+        font-family: Arial, sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
 
 
-    a { 
-        text-decoration: none; 
-        color: inherit; 
-    } 
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
 
 
-    a:visited, 
-    a:hover, 
-    a:active { 
-        text-decoration: none; 
-        color: inherit; 
-    } 
+    a:visited,
+    a:hover,
+    a:active {
+        text-decoration: none;
+        color: inherit;
+    }
 
 
-    .container { 
-        width: 100%; 
-        max-width: 550px; 
-        margin: auto; 
-        padding: 15px; 
-    } 
+    .container {
+        width: 100%;
+        max-width: 550px;
+        margin: auto;
+        padding: 15px;
+    }
 
 
-    /* NOTIFICATION */ 
+    /* NOTIFICATION */
 
-    #notification { 
-        position: fixed; 
+    #notification {
+        position: fixed;
 
-        top: 20px; 
-        left: 50%; 
+        top: 20px;
+        left: 50%;
 
-        transform: translateX(-50%); 
+        transform: translateX(-50%);
 
-        background-color: gold; 
-        color: black; 
+        background-color: gold;
+        color: black;
 
-        padding: 15px 25px; 
+        padding: 15px 25px;
 
-        border-radius: 15px; 
+        border-radius: 15px;
 
-        font-size: 18px; 
-        font-weight: bold; 
+        font-size: 18px;
+        font-weight: bold;
 
-        display: none; 
+        display: none;
 
-        z-index: 9999; 
+        z-index: 9999;
 
-        text-align: center; 
+        text-align: center;
 
-        width: max-content; 
-        max-width: 90%; 
-    } 
+        width: max-content;
+        max-width: 90%;
+    }
 
 
-    /* BACK BUTTON */ 
+    /* BACK BUTTON */
 
-    .back-button { 
-        width: 55px; 
-        height: 55px; 
+    .back-button {
+        width: 55px;
+        height: 55px;
 
-        background-color: transparent; 
-        color: gold; 
+        background-color: transparent;
+        color: gold;
 
-        border: 2px solid gold; 
-        border-radius: 50%; 
+        border: 2px solid gold;
+        border-radius: 50%;
 
-        padding: 2px; 
-        cursor: pointer; 
-    } 
+        padding: 2px;
+        cursor: pointer;
+    }
 
 
-    .back-button img { 
-        width: 100%; 
-        height: 100%; 
+    .back-button img {
+        width: 100%;
+        height: 100%;
 
-        border-radius: 50%; 
-        object-fit: cover; 
-    } 
+        border-radius: 50%;
+        object-fit: cover;
+    }
 
 
-    /* GOAL INTRODUCTION */ 
+    /* GOAL INTRODUCTION */
 
-    .goal-intro { 
-        width: 100%; 
-        min-height: 300px; 
+    .goal-intro {
+        width: 100%;
+        min-height: 300px;
 
-        background-color: black; 
-        color: gold; 
+        background-color: black;
+        color: gold;
 
-        border: 2px solid gold; 
-        border-radius: 30px; 
+        border: 2px solid gold;
+        border-radius: 30px;
 
-        margin-top: 30px; 
+        margin-top: 30px;
 
-        display: flex; 
-        flex-direction: column; 
-        align-items: center; 
-        justify-content: center; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
 
-        padding: 30px 20px; 
+        padding: 30px 20px;
 
-        text-align: center; 
-    } 
+        text-align: center;
+    }
 
 
-    .goal-intro img { 
-        width: 100px; 
-        height: 100px; 
+    .goal-intro img {
+        width: 100px;
+        height: 100px;
 
-        border-radius: 50%; 
-        object-fit: cover; 
+        border-radius: 50%;
+        object-fit: cover;
 
-        margin-bottom: 20px; 
-    } 
+        margin-bottom: 20px;
+    }
 
 
-    .goal-intro b { 
-        font-size: 32px; 
-        line-height: 1.3; 
-    } 
+    .goal-intro b {
+        font-size: 32px;
+        line-height: 1.3;
+    }
 
 
-    /* REWARDS */ 
+    /* REWARDS */
 
-    .rewards { 
-        display: flex; 
-        flex-direction: column; 
+    .rewards {
+        display: flex;
+        flex-direction: column;
 
-        gap: 20px; 
+        gap: 20px;
 
-        margin-top: 30px; 
-    } 
+        margin-top: 30px;
+    }
 
 
-    .reward-button { 
-        width: 100%; 
-        min-height: 70px; 
+    .reward-button {
+        width: 100%;
+        min-height: 70px;
 
-        background-color: transparent; 
-        color: gold; 
+        background-color: transparent;
+        color: gold;
 
-        border: 2px solid gold; 
-        border-radius: 30px; 
+        border: 2px solid gold;
+        border-radius: 30px;
 
-        padding: 10px 20px; 
+        padding: 10px 20px;
 
-        display: flex; 
-        align-items: center; 
-        justify-content: space-between; 
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
-        cursor: pointer; 
-    } 
+        cursor: pointer;
+    }
 
 
-    .reward-button:hover { 
-        background-color: rgba(255, 215, 0, 0.08); 
-    } 
+    .reward-button:hover {
+        background-color: rgba(255, 215, 0, 0.08);
+    }
 
 
-    .reward-button:disabled { 
-        opacity: 0.5; 
-        cursor: not-allowed; 
-    } 
+    .reward-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
 
 
-    .reward-left { 
-        display: flex; 
-        align-items: center; 
-        gap: 15px; 
-    } 
+    .reward-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
 
 
-    .reward-left h2 { 
-        font-size: 25px; 
-    } 
+    .reward-left h2 {
+        font-size: 25px;
+    }
 
 
-    .reward-left img { 
-        width: 55px; 
-        height: 45px; 
+    .reward-left img {
+        width: 55px;
+        height: 45px;
 
-        border-radius: 50%; 
-        object-fit: cover; 
-    } 
+        border-radius: 50%;
+        object-fit: cover;
+    }
 
 
-    .amount { 
-        font-size: 21px; 
-    } 
+    .amount {
+        font-size: 21px;
+    }
 
 
-    /* PHONE */ 
+    /* PHONE */
 
-    @media (max-width: 500px) { 
+    @media (max-width: 500px) {
 
-        .container { 
-            padding: 12px; 
-        } 
+        .container {
+            padding: 12px;
+        }
 
 
-        .goal-intro { 
-            min-height: 260px; 
+        .goal-intro {
+            min-height: 260px;
 
-            margin-top: 25px; 
+            margin-top: 25px;
 
-            padding: 25px 15px; 
-        } 
+            padding: 25px 15px;
+        }
 
 
-        .goal-intro img { 
-            width: 85px; 
-            height: 85px; 
-        } 
+        .goal-intro img {
+            width: 85px;
+            height: 85px;
+        }
 
 
-        .goal-intro b { 
-            font-size: 25px; 
-        } 
+        .goal-intro b {
+            font-size: 25px;
+        }
 
 
-        .reward-button { 
-            min-height: 65px; 
+        .reward-button {
+            min-height: 65px;
 
-            padding: 8px 15px; 
-        } 
+            padding: 8px 15px;
+        }
 
 
-        .reward-left { 
-            gap: 10px; 
-        } 
+        .reward-left {
+            gap: 10px;
+        }
 
 
-        .reward-left h2 { 
-            font-size: 19px; 
-        } 
+        .reward-left h2 {
+            font-size: 19px;
+        }
 
 
-        .reward-left img { 
-            width: 45px; 
-            height: 40px; 
-        } 
+        .reward-left img {
+            width: 45px;
+            height: 40px;
+        }
 
 
-        .amount { 
-            font-size: 17px; 
-        } 
+        .amount {
+            font-size: 17px;
+        }
 
 
-        #notification { 
-            font-size: 16px; 
-        } 
+        #notification {
+            font-size: 16px;
+        }
 
-    } 
+    }
 
 
-    /* SMALL PHONES */ 
+    /* SMALL PHONES */
 
-    @media (max-width: 350px) { 
+    @media (max-width: 350px) {
 
-        .goal-intro b { 
-            font-size: 21px; 
-        } 
+        .goal-intro b {
+            font-size: 21px;
+        }
 
 
-        .reward-left h2 { 
-            font-size: 16px; 
-        } 
+        .reward-left h2 {
+            font-size: 16px;
+        }
 
 
-        .amount { 
-            font-size: 14px; 
-        } 
+        .amount {
+            font-size: 14px;
+        }
 
 
-        .reward-left img { 
-            width: 40px; 
-            height: 35px; 
-        } 
+        .reward-left img {
+            width: 40px;
+            height: 35px;
+        }
 
-    } 
+    }
 
-</style> 
+</style>
 
-</head> 
+</head>
 
-<body> 
+<body>
 
-<!-- NOTIFICATION --> 
+<!-- NOTIFICATION -->
 
-<div id="notification"></div> 
+<div id="notification"></div>
 
-<div class="container"> 
+<div class="container">
 
-<!-- BACK BUTTON --> 
+<!-- BACK BUTTON -->
 
-<a href="cryptpay.html"> 
+<a href="cryptpay.html">
 
 ```
-<button 
-    class="back-button" 
-    type="button" 
-> 
+<button
+    class="back-button"
+    type="button"
+>
 
-    <img 
-        src="cryptpaybackkey.png" 
-        alt="Back" 
-    > 
+    <img
+        src="cryptpaybackkey.png"
+        alt="Back"
+    >
 
-</button> 
+</button>
 ```
 
-</a> 
+</a>
 
-<!-- GOAL INTRODUCTION --> 
+<!-- GOAL INTRODUCTION -->
 
-<div class="goal-intro"> 
-
-```
-<img 
-    src="cryptpayrocket3.copy.png" 
-    alt="Goals" 
-> 
-
-<b> 
-    Complete goals and<br> 
-    earn rewards!!! 
-</b> 
-```
-
-</div> 
-
-<!-- REWARDS --> 
-
-<div class="rewards"> 
+<div class="goal-intro">
 
 ```
-<!-- SHARE --> 
+<img
+    src="cryptpayrocket3.copy.png"
+    alt="Goals"
+>
 
-<button 
-    class="reward-button" 
-    id="shareButton" 
-    type="button" 
-    onclick="openSharePage()" 
-> 
-
-    <div class="reward-left"> 
-
-        <h2> 
-            Share 
-        </h2> 
-
-        <img 
-            src="cryptpayshare2.png" 
-            alt="Share" 
-        > 
-
-    </div> 
-
-
-    <b class="amount"> 
-        NGN50,000 
-    </b> 
-
-</button> 
-
-
-<!-- BUY CODE --> 
-
-<button 
-    class="reward-button" 
-    id="buyCodeButton" 
-    type="button" 
-    onclick="claimGoal('buycode')" 
-> 
-
-    <div class="reward-left"> 
-
-        <h2> 
-            Buy Code 
-        </h2> 
-
-        <img 
-            src="CPcodepurchase.png" 
-            alt="Buy Code" 
-        > 
-
-    </div> 
-
-
-    <b class="amount"> 
-        NGN50,000 
-    </b> 
-
-</button> 
-
-
-<!-- WATCH ADS --> 
-
-<button 
-    class="reward-button" 
-    id="watchAdsButton" 
-    type="button" 
-    onclick="startWatchAds()" 
-> 
-
-    <div class="reward-left"> 
-
-        <h2> 
-            Watch Ads 
-        </h2> 
-
-        <img 
-            src="cryptpayads.png" 
-            alt="Watch Ads" 
-        > 
-
-    </div> 
-
-
-    <b class="amount"> 
-        50,000 CP Points 
-    </b> 
-
-</button> 
+<b>
+    Complete goals and<br>
+    earn rewards!!!
+</b>
 ```
 
-</div> 
+</div>
 
-</div> 
+<!-- REWARDS -->
 
-<script> 
+<div class="rewards">
 
+```
+<!-- SHARE -->
 
-/* ========================================= 
-   OPEN SHARE PAGE 
-========================================= */ 
+<button
+    class="reward-button"
+    id="shareButton"
+    type="button"
+    onclick="openSharePage()"
+>
 
-function openSharePage() { 
+    <div class="reward-left">
 
-    const button = 
-        document.getElementById( 
-            "shareButton" 
-        ); 
+        <h2>
+            Share
+        </h2>
 
+        <img
+            src="cryptpayshare2.png"
+            alt="Share"
+        >
 
-    if (button.disabled) { 
+    </div>
 
-        return; 
 
-    } 
+    <b class="amount">
+        NGN50,000
+    </b>
 
+</button>
 
-    window.location.href = 
-        "cryptpayshare.html"; 
 
-} 
+<!-- BUY CODE -->
 
+<button
+    class="reward-button"
+    id="buyCodeButton"
+    type="button"
+    onclick="claimGoal('buycode')"
+>
 
+    <div class="reward-left">
 
-/* ========================================= 
-   CLAIM CP GOAL 
-========================================= */ 
+        <h2>
+            Buy Code
+        </h2>
 
-async function claimGoal(goal) { 
+        <img
+            src="CPcodepurchase.png"
+            alt="Buy Code"
+        >
 
-    const button = 
-        goal === "share" 
-            ? document.getElementById( 
-                "shareButton" 
-            ) 
-            : goal === "buycode" 
-                ? document.getElementById( 
-                    "buyCodeButton" 
-                ) 
-                : document.getElementById( 
-                    "watchAdsButton" 
-                ); 
+    </div>
 
 
-    if (button.disabled) { 
+    <b class="amount">
+        NGN50,000
+    </b>
 
-        return; 
+</button>
 
-    } 
 
+<!-- WATCH ADS -->
 
-    button.disabled = true; 
+<button
+    class="reward-button"
+    id="watchAdsButton"
+    type="button"
+    onclick="startWatchAds()"
+>
 
+    <div class="reward-left">
 
-    try { 
+        <h2>
+            Watch Ads
+        </h2>
 
-        const response = 
-            await fetch( 
-                "/claim-goal", 
-                { 
+        <img
+            src="cryptpayads.png"
+            alt="Watch Ads"
+        >
 
-                    method: "POST", 
+    </div>
 
-                    headers: { 
-                        "Content-Type": 
-                            "application/json" 
-                    }, 
 
-                    body: JSON.stringify({ 
+    <b class="amount">
+        50,000 CP Points
+    </b>
 
-                        goal: goal 
+</button>
+```
 
-                    }) 
+</div>
 
-                } 
-            ); 
+</div>
 
+<script>
 
-        const result = 
-            await response.json(); 
 
+/* =========================================
+   OPEN SHARE PAGE
+========================================= */
 
-        if ( 
-            !response.ok || 
-            !result.success 
-        ) { 
+function openSharePage() {
 
-            showNotification( 
+    const button =
+        document.getElementById(
+            "shareButton"
+        );
 
-                result.message || 
-                "Unable to claim goal." 
 
-            ); 
+    if (button.disabled) {
 
+        return;
 
-            button.disabled = false; 
+    }
 
 
-            return; 
+    window.location.href =
+        "cryptpayshare.html";
 
-        } 
+}
 
 
-        showNotification( 
-            result.message 
-        ); 
 
+/* =========================================
+   CLAIM CP GOAL
+========================================= */
 
-    } 
+async function claimGoal(goal) {
 
+    const button =
+        goal === "share"
+            ? document.getElementById(
+                "shareButton"
+            )
+            : goal === "buycode"
+                ? document.getElementById(
+                    "buyCodeButton"
+                )
+                : document.getElementById(
+                    "watchAdsButton"
+                );
 
-    catch (error) { 
 
-        console.error( 
-            "Goal claim error:", 
-            error 
-        ); 
+    if (button.disabled) {
 
+        return;
 
-        showNotification( 
-            "Unable to claim goal. Please try again." 
-        ); 
+    }
 
 
-        button.disabled = false; 
+    button.disabled = true;
 
-    } 
 
-} 
+    try {
 
+        const response =
+            await fetch(
+                "/claim-goal",
+                {
 
+                    method: "POST",
 
-/* ========================================= 
-   START WATCH ADS 
-========================================= */ 
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
 
-async function startWatchAds() { 
+                    body: JSON.stringify({
 
-    const button = 
-        document.getElementById( 
-            "watchAdsButton" 
-        ); 
+                        goal: goal
 
+                    })
 
-    if (button.disabled) { 
+                }
+            );
 
-        return; 
 
-    } 
+        const result =
+            await response.json();
 
 
-    try { 
+        if (
+            !response.ok ||
+            !result.success
+        ) {
 
-        const response = 
-            await fetch( 
-                "/ad-progress" 
-            ); 
+            showNotification(
 
+                result.message ||
+                "Unable to claim goal."
 
-        const result = 
-            await response.json(); 
+            );
 
 
-        if ( 
-            !response.ok || 
-            !result.success 
-        ) { 
+            /*
+             * IMPORTANT:
+             *
+             * The Buy Code button is
+             * re-enabled after a failed
+             * claim.
+             *
+             * This allows the server to
+             * check again when the user
+             * later obtains another
+             * eligible code.
+             */
 
-            showNotification( 
-                "Unable to check ad progress." 
-            ); 
+            button.disabled = false;
 
-            return; 
+            return;
 
-        } 
+        }
 
 
-        if (result.claimed) { 
+        showNotification(
+            result.message
+        );
 
-            button.disabled = true; 
 
-            return; 
+        /*
+         * SHARE:
+         *
+         * Keep the share button disabled
+         * after a successful claim.
+         */
 
-        } 
+        if (goal === "share") {
 
+            button.disabled = true;
 
-        if (result.adsWatched >= 2) { 
+        }
 
-            await claimGoal( 
-                "watchads" 
-            ); 
 
-            return; 
+        /*
+         * BUY CODE:
+         *
+         * Do NOT permanently disable this
+         * button.
+         *
+         * The server checks each purchased
+         * CP code individually.
+         *
+         * Therefore, after another eligible
+         * code exists, the user can click
+         * this button again.
+         */
 
-        } 
+        if (goal === "buycode") {
 
+            button.disabled = false;
 
-        showNotification( 
+        }
 
-            "Watch 2 rewarded ads to receive 50,000 CP Points." 
 
-        ); 
+        /*
+         * WATCH ADS:
+         *
+         * This remains a one-time goal
+         * according to the current server
+         * implementation.
+         */
 
+        if (goal === "watchads") {
 
-        /* 
-           The actual Google rewarded-ad 
-           presentation must be connected 
-           here using the supported Google 
-           rewarded-ad implementation. 
+            button.disabled = true;
 
-           Do NOT simply increase the 
-           counter from this browser code. 
-        */ 
+        }
 
+    }
 
-    } 
 
+    catch (error) {
 
-    catch (error) { 
+        console.error(
+            "Goal claim error:",
+            error
+        );
 
-        console.error( 
-            "Ad progress error:", 
-            error 
-        ); 
 
+        showNotification(
+            "Unable to claim goal. Please try again."
+        );
 
-        showNotification( 
-            "Unable to start the ad reward." 
-        ); 
 
-    } 
+        button.disabled = false;
 
-} 
+    }
 
+}
 
 
-/* ========================================= 
-   NOTIFICATION 
-========================================= */ 
 
-function showNotification(message) { 
+/* =========================================
+   START WATCH ADS
+========================================= */
 
-    const notification = 
-        document.getElementById( 
-            "notification" 
-        ); 
+async function startWatchAds() {
 
+    const button =
+        document.getElementById(
+            "watchAdsButton"
+        );
 
-    notification.textContent = 
-        message; 
 
+    if (button.disabled) {
 
-    notification.style.display = 
-        "block"; 
+        return;
 
+    }
 
-    setTimeout(function() { 
 
-        notification.style.display = 
-            "none"; 
+    try {
 
-    }, 3000); 
+        const response =
+            await fetch(
+                "/ad-progress"
+            );
 
-} 
 
+        const result =
+            await response.json();
 
 
-/* ========================================= 
-   CHECK LOGIN 
-========================================= */ 
+        if (
+            !response.ok ||
+            !result.success
+        ) {
 
-async function checkLogin() { 
+            showNotification(
+                "Unable to check ad progress."
+            );
 
-    try { 
+            return;
 
-        const response = 
-            await fetch("/me"); 
+        }
 
 
-        const result = 
-            await response.json(); 
+        if (result.claimed) {
 
+            button.disabled = true;
 
-        if (!result.loggedIn) { 
+            return;
 
-            window.location.href = 
-                "login.html"; 
+        }
 
-            return false; 
 
-        } 
+        if (result.adsWatched >= 2) {
 
+            await claimGoal(
+                "watchads"
+            );
 
-        return true; 
+            return;
 
-    } 
+        }
 
 
-    catch (error) { 
+        showNotification(
 
-        console.error( 
-            "Login check error:", 
-            error 
-        ); 
+            "Watch 2 rewarded ads to receive 50,000 CP Points."
 
-        return false; 
+        );
 
-    } 
 
-} 
+        /*
+           The actual Google rewarded-ad
+           presentation must be connected
+           here using the supported Google
+           rewarded-ad implementation.
 
+           Do NOT simply increase the
+           counter from this browser code.
+        */
 
 
-/* ========================================= 
-   CHECK CLAIMED CP GOALS 
-========================================= */ 
+    }
 
-async function checkClaimedGoals() { 
 
-    try { 
+    catch (error) {
 
-        const response = 
-            await fetch( 
-                "/claimed-goals" 
-            ); 
+        console.error(
+            "Ad progress error:",
+            error
+        );
 
 
-        if (!response.ok) { 
+        showNotification(
+            "Unable to start the ad reward."
+        );
 
-            return; 
+    }
 
-        } 
+}
 
 
-        const result = 
-            await response.json(); 
 
+/* =========================================
+   NOTIFICATION
+========================================= */
 
-        if (!result.success) { 
+function showNotification(message) {
 
-            return; 
+    const notification =
+        document.getElementById(
+            "notification"
+        );
 
-        } 
 
+    notification.textContent =
+        message;
 
-        /* 
-           SHARE REMAINS INDEPENDENT 
-           OF CP CODE. 
-        */ 
 
+    notification.style.display =
+        "block";
 
-        if ( 
-            result.claimed.includes( 
-                "share" 
-            ) 
-        ) { 
 
-            document.getElementById( 
-                "shareButton" 
-            ).disabled = true; 
+    setTimeout(function() {
 
-        } 
+        notification.style.display =
+            "none";
 
+    }, 3000);
 
-        /* 
-           BUY CODE IS CHECKED BY THE 
-           SERVER WHEN THE USER CLICKS IT. 
-           This allows a new purchase to 
-           create another opportunity to 
-           claim the reward. 
-        */ 
+}
 
 
-        if ( 
-            result.claimed.includes( 
-                "watchads" 
-            ) 
-        ) { 
 
-            document.getElementById( 
-                "watchAdsButton" 
-            ).disabled = true; 
+/* =========================================
+   CHECK LOGIN
+========================================= */
 
-        } 
+async function checkLogin() {
 
-    } 
+    try {
 
+        const response =
+            await fetch("/me");
 
-    catch (error) { 
 
-        console.error( 
-            "Goal status error:", 
-            error 
-        ); 
+        const result =
+            await response.json();
 
-    } 
 
-} 
+        if (!result.loggedIn) {
 
+            window.location.href =
+                "login.html";
 
+            return false;
 
-/* ========================================= 
-   PAGE LOAD 
-========================================= */ 
+        }
 
-async function initializePage() { 
 
-    const loggedIn = 
-        await checkLogin(); 
+        return true;
 
+    }
 
-    if (!loggedIn) { 
 
-        return; 
+    catch (error) {
 
-    } 
+        console.error(
+            "Login check error:",
+            error
+        );
 
+        return false;
 
-    await checkClaimedGoals(); 
+    }
 
-} 
+}
 
 
-initializePage(); 
 
+/* =========================================
+   CHECK CLAIMED CP GOALS
+========================================= */
 
-</script> 
+async function checkClaimedGoals() {
 
-</body> 
+    try {
+
+        const response =
+            await fetch(
+                "/claimed-goals"
+            );
+
+
+        if (!response.ok) {
+
+            return;
+
+        }
+
+
+        const result =
+            await response.json();
+
+
+        if (!result.success) {
+
+            return;
+
+        }
+
+
+        /*
+         * SHARE
+         *
+         * Share remains a one-time
+         * claimed goal.
+         */
+
+        if (
+            result.claimed.includes(
+                "share"
+            )
+        ) {
+
+            document.getElementById(
+                "shareButton"
+            ).disabled = true;
+
+        }
+
+
+        /*
+         * BUY CODE
+         *
+         * IMPORTANT:
+         *
+         * Do NOT disable this button
+         * based on "buycode" appearing
+         * in goal_claims.
+         *
+         * Your server uses each purchased
+         * CP code's buycode_claimed value
+         * separately.
+         *
+         * Therefore this button must remain
+         * available so another purchased
+         * code can be used for another
+         * reward.
+         */
+
+
+        /*
+         * WATCH ADS
+         *
+         * Keep the existing one-time
+         * behavior.
+         */
+
+        if (
+            result.claimed.includes(
+                "watchads"
+            )
+        ) {
+
+            document.getElementById(
+                "watchAdsButton"
+            ).disabled = true;
+
+        }
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "Goal status error:",
+            error
+        );
+
+    }
+
+}
+
+
+
+/* =========================================
+   PAGE LOAD
+========================================= */
+
+async function initializePage() {
+
+    const loggedIn =
+        await checkLogin();
+
+
+    if (!loggedIn) {
+
+        return;
+
+    }
+
+
+    await checkClaimedGoals();
+
+}
+
+
+initializePage();
+
+
+</script>
+
+</body>
 
 </html>
