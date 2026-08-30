@@ -149,14 +149,9 @@ function requireLogin(req, res, next) {
 
     if (!req.session.userId) {
 
-        return res.status(401).json({
-
-            success: false,
-
-            message:
-                "Please log in first."
-
-        });
+        return res.redirect(
+            "/login.html"
+        );
 
     }
 
@@ -286,13 +281,8 @@ const upload =
 
 
 // ==================================================
-// PUBLIC PAGES
+// PUBLIC HOMEPAGE
 // ==================================================
-
-
-// HOMEPAGE
-// Anyone can open the homepage.
-// No automatic redirect to login.
 
 app.get(
     "/",
@@ -309,7 +299,9 @@ app.get(
 );
 
 
+// ==================================================
 // LOGIN PAGE
+// ==================================================
 
 app.get(
     "/login.html",
@@ -326,7 +318,9 @@ app.get(
 );
 
 
+// ==================================================
 // REGISTER PAGE
+// ==================================================
 
 app.get(
     "/register.html",
@@ -344,15 +338,7 @@ app.get(
 
 
 // ==================================================
-// CRYPTPAY HOMEPAGE
-// ==================================================
-//
-// IMPORTANT:
-// This page is PUBLIC.
-// It does not redirect visitors to login.
-//
-// Users can click the Login button
-// on the homepage when they want to log in.
+// PUBLIC CRYPTPAY HOMEPAGE
 // ==================================================
 
 app.get(
@@ -483,13 +469,8 @@ app.post(
 
                 );
 
-
-            // Automatically log the newly
-            // registered user in.
-
             req.session.userId =
                 result.lastInsertRowid;
-
 
             res.json({
 
@@ -534,22 +515,6 @@ app.post(
             password
         } = req.body;
 
-        if (
-            !username ||
-            !password
-        ) {
-
-            return res.json({
-
-                success: false,
-
-                message:
-                    "Please enter your username and password."
-
-            });
-
-        }
-
         try {
 
             const user =
@@ -557,10 +522,7 @@ app.post(
                     SELECT *
                     FROM users
                     WHERE username = ?
-                `).get(
-                    username.trim()
-                );
-
+                `).get(username);
 
             if (!user) {
 
@@ -575,13 +537,11 @@ app.post(
 
             }
 
-
             const passwordCorrect =
                 await bcrypt.compare(
                     password,
                     user.password
                 );
-
 
             if (!passwordCorrect) {
 
@@ -596,17 +556,12 @@ app.post(
 
             }
 
-
             req.session.userId =
                 user.id;
 
-
             res.json({
 
-                success: true,
-
-                message:
-                    "Login successful."
+                success: true
 
             });
 
@@ -619,7 +574,7 @@ app.post(
                 error
             );
 
-            res.status(500).json({
+            res.json({
 
                 success: false,
 
@@ -652,7 +607,6 @@ app.get(
 
         }
 
-
         const user =
             db.prepare(`
                 SELECT
@@ -669,7 +623,6 @@ app.get(
                 req.session.userId
             );
 
-
         if (!user) {
 
             return res.json({
@@ -679,7 +632,6 @@ app.get(
             });
 
         }
-
 
         res.json({
 
@@ -724,7 +676,6 @@ app.get(
                 `).get(
                     req.session.userId
                 );
-
 
             res.json({
 
@@ -782,13 +733,11 @@ app.put(
 
         }
 
-
         const {
             name,
             email,
             username
         } = req.body;
-
 
         if (
             !name ||
@@ -806,7 +755,6 @@ app.put(
             });
 
         }
-
 
         try {
 
@@ -827,7 +775,6 @@ app.put(
                 req.session.userId
 
             );
-
 
             res.json({
 
@@ -881,7 +828,6 @@ app.post(
 
             }
 
-
             return res.status(401).json({
 
                 success: false,
@@ -892,7 +838,6 @@ app.post(
             });
 
         }
-
 
         if (!req.file) {
 
@@ -907,42 +852,34 @@ app.post(
 
         }
 
-
         try {
 
             console.log(
                 "Starting OCR..."
             );
 
-
             const worker =
                 await createWorker(
                     "eng"
                 );
-
 
             const result =
                 await worker.recognize(
                     req.file.path
                 );
 
-
             const extractedText =
                 result.data.text;
-
 
             console.log(
                 "OCR TEXT:"
             );
 
-
             console.log(
                 extractedText
             );
 
-
             await worker.terminate();
-
 
             const cleanedText =
                 extractedText
@@ -964,11 +901,9 @@ app.post(
                         ""
                     );
 
-
             console.log(
                 "CLEANED OCR TEXT:"
             );
-
 
             console.log(
                 cleanedText
@@ -1000,7 +935,6 @@ app.post(
                     () => {}
                 );
 
-
                 return res.json({
 
                     success: false,
@@ -1016,14 +950,11 @@ app.post(
             const characters =
                 "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-
             let code;
-
 
             do {
 
                 code = "";
-
 
                 for (
                     let i = 0;
@@ -1036,7 +967,6 @@ app.post(
                             Math.random() *
                             characters.length
                         );
-
 
                     code +=
                         characters[
@@ -1103,7 +1033,6 @@ app.post(
                 error
             );
 
-
             if (req.file) {
 
                 fs.unlink(
@@ -1112,7 +1041,6 @@ app.post(
                 );
 
             }
-
 
             res.status(500).json({
 
@@ -1149,7 +1077,6 @@ app.post(
             });
 
         }
-
 
         const {
             accountNumber,
@@ -1379,9 +1306,7 @@ app.post(
 
         }
 
-
         const reward = 100000;
-
 
         try {
 
@@ -1481,7 +1406,6 @@ app.post(
                 error
             );
 
-
             res.status(500).json({
 
                 success: false,
@@ -1517,7 +1441,6 @@ app.post(
             });
 
         }
-
 
         try {
 
@@ -1578,7 +1501,6 @@ app.post(
                 error
             );
 
-
             res.status(500).json({
 
                 success: false,
@@ -1614,7 +1536,6 @@ app.get(
             });
 
         }
-
 
         try {
 
@@ -1672,7 +1593,6 @@ app.get(
                 "Ad progress error:",
                 error
             );
-
 
             res.status(500).json({
 
@@ -2057,7 +1977,6 @@ app.post(
                 error
             );
 
-
             res.status(500).json({
 
                 success: false,
@@ -2094,7 +2013,6 @@ app.get(
 
         }
 
-
         try {
 
             const rows =
@@ -2130,7 +2048,6 @@ app.get(
                 "Claimed CP goals error:",
                 error
             );
-
 
             res.status(500).json({
 
@@ -2188,6 +2105,12 @@ app.post(
 // ==================================================
 // STATIC FILES
 // ==================================================
+//
+// All files can remain in the SAME directory.
+//
+// HTML files are handled by their routes.
+// CSS, JavaScript, images, etc. are served here.
+// ==================================================
 
 app.use(
     (req, res, next) => {
@@ -2206,6 +2129,7 @@ app.use(
 
 
         // Never automatically serve HTML.
+
         if (extension === ".html") {
 
             return next();
