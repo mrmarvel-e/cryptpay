@@ -2121,21 +2121,17 @@ app.use(
 // START SERVER
 // ==================================================
 
+const PORT = process.env.PORT || 3000;
+
 app.listen(
-3000,
+    PORT,
+    "0.0.0.0",
+    () => {
 
-```
-() => {
+        console.log(
+            "CryptPay is running on port:",
+            PORT
+        );
 
-    console.log(
-        "CryptPay is running at:"
-    );
-
-    console.log(
-        "http://localhost:3000"
-    );
-
-}
-```
-
+    }
 );
