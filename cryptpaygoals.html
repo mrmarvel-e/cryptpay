@@ -1,748 +1,682 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>CP Goals</title>
-
-
-    <style>
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-
-        body {
-            background-color: black;
-            color: gold;
-            font-family: Arial, sans-serif;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-
-        a:visited,
-        a:hover,
-        a:active {
-            text-decoration: none;
-            color: inherit;
-        }
-
-
-        .container {
-            width: 100%;
-            max-width: 550px;
-            margin: auto;
-            padding: 15px;
-        }
-
-
-        /* NOTIFICATION */
-
-        #notification {
-            position: fixed;
-
-            top: 20px;
-            left: 50%;
-
-            transform: translateX(-50%);
-
-            background-color: gold;
-            color: black;
-
-            padding: 15px 25px;
-
-            border-radius: 15px;
-
-            font-size: 18px;
-            font-weight: bold;
-
-            display: none;
-
-            z-index: 9999;
-
-            text-align: center;
-
-            width: max-content;
-            max-width: 90%;
-        }
-
-
-        /* BACK BUTTON */
-
-        .back-button {
-            width: 55px;
-            height: 55px;
-
-            background-color: transparent;
-            color: gold;
-
-            border: 2px solid gold;
-            border-radius: 50%;
-
-            padding: 2px;
-            cursor: pointer;
-        }
-
-
-        .back-button img {
-            width: 100%;
-            height: 100%;
-
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-
-        /* GOAL INTRODUCTION */
-
-        .goal-intro {
-            width: 100%;
-            min-height: 300px;
-
-            background-color: black;
-            color: gold;
-
-            border: 2px solid gold;
-            border-radius: 30px;
-
-            margin-top: 30px;
-
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-
-            padding: 30px 20px;
-
-            text-align: center;
-        }
-
-
-        .goal-intro img {
-            width: 100px;
-            height: 100px;
-
-            border-radius: 50%;
-            object-fit: cover;
-
-            margin-bottom: 20px;
-        }
-
-
-        .goal-intro b {
-            font-size: 32px;
-            line-height: 1.3;
-        }
-
-
-        /* REWARDS */
-
-        .rewards {
-            display: flex;
-            flex-direction: column;
-
-            gap: 20px;
-
-            margin-top: 30px;
-        }
-
-
-        .reward-button {
-            width: 100%;
-            min-height: 70px;
-
-            background-color: transparent;
-            color: gold;
-
-            border: 2px solid gold;
-            border-radius: 30px;
-
-            padding: 10px 20px;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            cursor: pointer;
-        }
-
-
-        .reward-button:hover {
-            background-color: rgba(255, 215, 0, 0.08);
-        }
-
-
-        .reward-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-
-        .reward-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-
-        .reward-left h2 {
-            font-size: 25px;
-        }
-
-
-        .reward-left img {
-            width: 55px;
-            height: 45px;
-
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-
-        .amount {
-            font-size: 21px;
-        }
-
-
-        /* PHONE */
-
-        @media (max-width: 500px) {
-
-            .container {
-                padding: 12px;
-            }
-
-
-            .goal-intro {
-                min-height: 260px;
-
-                margin-top: 25px;
-
-                padding: 25px 15px;
-            }
-
-
-            .goal-intro img {
-                width: 85px;
-                height: 85px;
-            }
-
-
-            .goal-intro b {
-                font-size: 25px;
-            }
-
-
-            .reward-button {
-                min-height: 65px;
-
-                padding: 8px 15px;
-            }
-
-
-            .reward-left {
-                gap: 10px;
-            }
-
-
-            .reward-left h2 {
-                font-size: 19px;
-            }
-
-
-            .reward-left img {
-                width: 45px;
-                height: 40px;
-            }
-
-
-            .amount {
-                font-size: 17px;
-            }
-
-
-            #notification {
-                font-size: 16px;
-            }
-
-        }
-
-
-        /* SMALL PHONES */
-
-        @media (max-width: 350px) {
-
-            .goal-intro b {
-                font-size: 21px;
-            }
-
-
-            .reward-left h2 {
-                font-size: 16px;
-            }
-
-
-            .amount {
-                font-size: 14px;
-            }
-
-
-            .reward-left img {
-                width: 40px;
-                height: 35px;
-            }
-
-        }
-
-    </style>
-
-</head>
-
-
-<body>
-
-
-<!-- NOTIFICATION -->
-
-<div id="notification"></div>
-
-
-<div class="container">
-
-
-    <!-- BACK BUTTON -->
-
-    <a href="cryptpay.html">
-
-        <button
-            class="back-button"
-            type="button"
-        >
-
-            <img
-                src="cryptpaybackkey.png"
-                alt="Back"
-            >
-
-        </button>
-
-    </a>
-
-
-    <!-- GOAL INTRODUCTION -->
-
-    <div class="goal-intro">
-
-        <img
-            src="cryptpayrocket3.copy.png"
-            alt="Goals"
-        >
-
-        <b>
-            Complete goals and<br>
-            earn rewards!!!
-        </b>
-
-    </div>
-
-
-    <!-- REWARDS -->
-
-    <div class="rewards">
-
-
-        <!-- SHARE -->
-
-        <button
-            class="reward-button"
-            id="shareButton"
-            type="button"
-            onclick="openSharePage()"
-        >
-
-            <div class="reward-left">
-
-                <h2>
-                    Share
-                </h2>
-
-                <img
-                    src="cryptpayshare2.png"
-                    alt="Share"
-                >
-
-            </div>
-
-
-            <b class="amount">
-                NGN50,000
-            </b>
-
-        </button>
-
-
-        <!-- BUY CODE -->
-
-        <button
-            class="reward-button"
-            id="buyCodeButton"
-            type="button"
-            onclick="claimGoal('buycode')"
-        >
-
-            <div class="reward-left">
-
-                <h2>
-                    Buy Code
-                </h2>
-
-                <img
-                    src="CPcodepurchase.png"
-                    alt="Buy Code"
-                >
-
-            </div>
-
-
-            <b class="amount">
-                NGN50,000
-            </b>
-
-        </button>
-
-
-    </div>
-
-</div>
-
-
-<script>
-
-
-/* =========================================
-   OPEN SHARE PAGE
-========================================= */
-
-function openSharePage() {
-
-    const button =
-        document.getElementById(
-            "shareButton"
-        );
-
-
-    if (button.disabled) {
-
-        return;
-
-    }
-
-
-    window.location.href =
-        "cryptpayshare.html";
-
-}
-
-
-
-/* =========================================
-   CLAIM CP GOAL
-========================================= */
-
-async function claimGoal(goal) {
-
-    const button =
-        goal === "share"
-            ? document.getElementById(
-                "shareButton"
-            )
-            : document.getElementById(
-                "buyCodeButton"
-            );
-
-
-    if (button.disabled) {
-
-        return;
-
-    }
-
-
-    button.disabled = true;
-
-
-    try {
-
-        const response =
-            await fetch(
-                "/claim-goal",
-                {
-
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body: JSON.stringify({
-
-                        goal: goal
-
-                    })
-
-                }
-            );
-
-
-        const result =
-            await response.json();
-
-
-        if (
-            !response.ok ||
-            !result.success
-        ) {
-
-            showNotification(
-
-                result.message ||
-                "Unable to claim goal."
-
-            );
-
-
-            button.disabled = false;
-
-
-            return;
-
-        }
-
-
-        showNotification(
-            result.message
-        );
-
-    }
-
-
-    catch (error) {
-
-        console.error(
-            "Goal claim error:",
-            error
-        );
-
-
-        showNotification(
-            "Unable to claim goal. Please try again."
-        );
-
-
-        button.disabled = false;
-
-    }
-
-}
-
-
-
-/* =========================================
-   NOTIFICATION
-========================================= */
-
-function showNotification(message) {
-
-    const notification =
-        document.getElementById(
-            "notification"
-        );
-
-
-    notification.textContent =
-        message;
-
-
-    notification.style.display =
-        "block";
-
-
-    setTimeout(function() {
-
-        notification.style.display =
-            "none";
-
-    }, 3000);
-
-}
-
-
-
-/* =========================================
-   CHECK LOGIN
-========================================= */
-
-async function checkLogin() {
-
-    try {
-
-        const response =
-            await fetch("/me");
-
-
-        const result =
-            await response.json();
-
-
-        if (!result.loggedIn) {
-
-            window.location.href =
-                "login.html";
-
-            return false;
-
-        }
-
-
-        return true;
-
-    }
-
-
-    catch (error) {
-
-        console.error(
-            "Login check error:",
-            error
-        );
-
-        return false;
-
-    }
-
-}
-
-
-
-/* =========================================
-   CHECK CLAIMED CP GOALS
-========================================= */
-
-async function checkClaimedGoals() {
-
-    try {
-
-        const response =
-            await fetch(
-                "/claimed-goals"
-            );
-
-
-        if (!response.ok) {
-
-            return;
-
-        }
-
-
-        const result =
-            await response.json();
-
-
-        if (!result.success) {
-
-            return;
-
-        }
-
-
-        if (
-            result.claimed.includes(
-                "share"
-            )
-        ) {
-
-            document.getElementById(
-                "shareButton"
-            ).disabled = true;
-
-        }
-
-
-        if (
-            result.claimed.includes(
-                "buycode"
-            )
-        ) {
-
-            document.getElementById(
-                "buyCodeButton"
-            ).disabled = true;
-
-        }
-
-    }
-
-
-    catch (error) {
-
-        console.error(
-            "Goal status error:",
-            error
-        );
-
-    }
-
-}
-
-
-
-/* =========================================
-   PAGE LOAD
-========================================= */
-
-async function initializePage() {
-
-    const loggedIn =
-        await checkLogin();
-
-
-    if (!loggedIn) {
-
-        return;
-
-    }
-
-
-    await checkClaimedGoals();
-
-}
-
-
-initializePage();
-
-
-</script>
-
-
-</body>
-
+<!DOCTYPE html> 
+<html lang="en"> 
+ 
+<head> 
+ 
+    <meta charset="UTF-8"> 
+ 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+ 
+    <title>CP Goals</title> 
+ 
+    <style> 
+ 
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+        } 
+ 
+        body { 
+            background-color: black; 
+            color: gold; 
+            font-family: Arial, sans-serif; 
+            min-height: 100vh; 
+            overflow-x: hidden; 
+        } 
+ 
+        a { 
+            text-decoration: none; 
+            color: inherit; 
+        } 
+ 
+        a:visited, 
+        a:hover, 
+        a:active { 
+            text-decoration: none; 
+            color: inherit; 
+        } 
+ 
+        .container { 
+            width: 100%; 
+            max-width: 550px; 
+            margin: auto; 
+            padding: 15px; 
+        } 
+ 
+        /* NOTIFICATION */ 
+ 
+        #notification { 
+            position: fixed; 
+            top: 20px; 
+            left: 50%; 
+ 
+            transform: translateX(-50%); 
+ 
+            background-color: gold; 
+            color: black; 
+ 
+            padding: 15px 25px; 
+ 
+            border-radius: 15px; 
+ 
+            font-size: 18px; 
+            font-weight: bold; 
+ 
+            display: none; 
+ 
+            z-index: 9999; 
+ 
+            text-align: center; 
+ 
+            width: max-content; 
+            max-width: 90%; 
+        } 
+ 
+        /* BACK BUTTON */ 
+ 
+        .back-button { 
+            width: 55px; 
+            height: 55px; 
+ 
+            background-color: transparent; 
+            color: gold; 
+ 
+            border: 2px solid gold; 
+            border-radius: 50%; 
+ 
+            padding: 2px; 
+            cursor: pointer; 
+        } 
+ 
+        .back-button img { 
+            width: 100%; 
+            height: 100%; 
+ 
+            border-radius: 50%; 
+            object-fit: cover; 
+        } 
+ 
+        /* GOAL INTRODUCTION */ 
+ 
+        .goal-intro { 
+            width: 100%; 
+            min-height: 300px; 
+ 
+            background-color: black; 
+            color: gold; 
+ 
+            border: 2px solid gold; 
+            border-radius: 30px; 
+ 
+            margin-top: 30px; 
+ 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+ 
+            padding: 30px 20px; 
+ 
+            text-align: center; 
+        } 
+ 
+        .goal-intro img { 
+            width: 100px; 
+            height: 100px; 
+ 
+            border-radius: 50%; 
+            object-fit: cover; 
+ 
+            margin-bottom: 20px; 
+        } 
+ 
+        .goal-intro b { 
+            font-size: 32px; 
+            line-height: 1.3; 
+        } 
+ 
+        /* REWARDS */ 
+ 
+        .rewards { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 20px; 
+            margin-top: 30px; 
+        } 
+ 
+        .reward-button { 
+            width: 100%; 
+            min-height: 70px; 
+ 
+            background-color: transparent; 
+            color: gold; 
+ 
+            border: 2px solid gold; 
+            border-radius: 30px; 
+ 
+            padding: 10px 20px; 
+ 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+ 
+            cursor: pointer; 
+        } 
+ 
+        .reward-button:hover { 
+            background-color: rgba(255, 215, 0, 0.08); 
+        } 
+ 
+        .reward-button:disabled { 
+            opacity: 0.5; 
+            cursor: not-allowed; 
+        } 
+ 
+        .reward-left { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+        } 
+ 
+        .reward-left h2 { 
+            font-size: 25px; 
+        } 
+ 
+        .reward-left img { 
+            width: 55px; 
+            height: 45px; 
+ 
+            border-radius: 50%; 
+            object-fit: cover; 
+        } 
+ 
+        .amount { 
+            font-size: 21px; 
+        } 
+ 
+        /* PHONE */ 
+ 
+        @media (max-width: 500px) { 
+ 
+            .container { 
+                padding: 12px; 
+            } 
+ 
+            .goal-intro { 
+                min-height: 260px; 
+                margin-top: 25px; 
+                padding: 25px 15px; 
+            } 
+ 
+            .goal-intro img { 
+                width: 85px; 
+                height: 85px; 
+            } 
+ 
+            .goal-intro b { 
+                font-size: 25px; 
+            } 
+ 
+            .reward-button { 
+                min-height: 65px; 
+                padding: 8px 15px; 
+            } 
+ 
+            .reward-left { 
+                gap: 10px; 
+            } 
+ 
+            .reward-left h2 { 
+                font-size: 19px; 
+            } 
+ 
+            .reward-left img { 
+                width: 45px; 
+                height: 40px; 
+            } 
+ 
+            .amount { 
+                font-size: 17px; 
+            } 
+ 
+            #notification { 
+                font-size: 16px; 
+            } 
+ 
+        } 
+ 
+        /* SMALL PHONES */ 
+ 
+        @media (max-width: 350px) { 
+ 
+            .goal-intro b { 
+                font-size: 21px; 
+            } 
+ 
+            .reward-left h2 { 
+                font-size: 16px; 
+            } 
+ 
+            .amount { 
+                font-size: 14px; 
+            } 
+ 
+            .reward-left img { 
+                width: 40px; 
+                height: 35px; 
+            } 
+ 
+        } 
+ 
+    </style> 
+ 
+</head> 
+ 
+ 
+<body> 
+ 
+ 
+<!-- NOTIFICATION --> 
+ 
+<div id="notification"></div> 
+ 
+ 
+<div class="container"> 
+ 
+ 
+    <!-- BACK BUTTON --> 
+ 
+    <a href="cryptpay.html"> 
+ 
+        <button class="back-button" type="button"> 
+ 
+            <img 
+                src="cryptpaybackkey.png" 
+                alt="Back" 
+            > 
+ 
+        </button> 
+ 
+    </a> 
+ 
+ 
+    <!-- GOAL INTRODUCTION --> 
+ 
+    <div class="goal-intro"> 
+ 
+        <img 
+            src="cryptpayrocket3.copy.png" 
+            alt="Goals" 
+        > 
+ 
+        <b> 
+            Complete goals and<br> 
+            earn rewards!!! 
+        </b> 
+ 
+    </div> 
+ 
+ 
+    <!-- REWARDS --> 
+ 
+    <div class="rewards"> 
+ 
+ 
+        <!-- SHARE --> 
+ 
+        <button 
+            class="reward-button" 
+            id="shareButton" 
+            type="button" 
+            onclick="openSharePage()" 
+        > 
+ 
+            <div class="reward-left"> 
+ 
+                <h2> 
+                    Share 
+                </h2> 
+ 
+                <img 
+                    src="cryptpayshare2.png" 
+                    alt="Share" 
+                > 
+ 
+            </div> 
+ 
+            <b class="amount"> 
+                NGN50,000 
+            </b> 
+ 
+        </button> 
+ 
+ 
+        <!-- BUY CODE --> 
+ 
+        <button 
+            class="reward-button" 
+            id="buyCodeButton" 
+            type="button" 
+            onclick="claimGoal('buycode')" 
+        > 
+ 
+            <div class="reward-left"> 
+ 
+                <h2> 
+                    Buy Code 
+                </h2> 
+ 
+                <img 
+                    src="CPcodepurchase.png" 
+                    alt="Buy Code" 
+                > 
+ 
+            </div> 
+ 
+            <b class="amount"> 
+                NGN50,000 
+            </b> 
+ 
+        </button> 
+ 
+ 
+    </div> 
+ 
+</div> 
+ 
+ 
+<script> 
+ 
+ 
+/* ========================================= 
+   OPEN SHARE PAGE 
+========================================= */ 
+ 
+function openSharePage() { 
+ 
+    const button = 
+        document.getElementById( 
+            "shareButton" 
+        ); 
+ 
+ 
+    if (button.disabled) { 
+        return; 
+    } 
+ 
+ 
+    window.location.href = 
+        "cryptpayshare.html"; 
+ 
+} 
+ 
+ 
+/* ========================================= 
+   CLAIM CP GOAL 
+========================================= */ 
+ 
+async function claimGoal(goal) { 
+ 
+    const button = 
+        goal === "share" 
+            ? document.getElementById( 
+                "shareButton" 
+            ) 
+            : document.getElementById( 
+                "buyCodeButton" 
+            ); 
+ 
+ 
+    if (button.disabled) { 
+        return; 
+    } 
+ 
+ 
+    button.disabled = true; 
+ 
+ 
+    try { 
+ 
+        const response = 
+            await fetch( 
+                "/claim-goal", 
+                { 
+ 
+                    method: "POST", 
+ 
+                    headers: { 
+                        "Content-Type": 
+                            "application/json" 
+                    }, 
+ 
+                    body: JSON.stringify({ 
+                        goal: goal 
+                    }) 
+ 
+                } 
+            ); 
+ 
+ 
+        const result = 
+            await response.json(); 
+ 
+ 
+        if ( 
+            !response.ok || 
+            !result.success 
+        ) { 
+ 
+            showNotification( 
+                result.message || 
+                "Unable to claim goal." 
+            ); 
+ 
+ 
+            button.disabled = false; 
+ 
+            return; 
+ 
+        } 
+ 
+ 
+        showNotification( 
+            result.message 
+        ); 
+ 
+ 
+    } 
+ 
+ 
+    catch (error) { 
+ 
+        console.error( 
+            "Goal claim error:", 
+            error 
+        ); 
+ 
+ 
+        showNotification( 
+            "Unable to claim goal. Please try again." 
+        ); 
+ 
+ 
+        button.disabled = false; 
+ 
+    } 
+ 
+} 
+ 
+ 
+/* ========================================= 
+   NOTIFICATION 
+========================================= */ 
+ 
+function showNotification(message) { 
+ 
+    const notification = 
+        document.getElementById( 
+            "notification" 
+        ); 
+ 
+ 
+    notification.textContent = 
+        message; 
+ 
+ 
+    notification.style.display = 
+        "block"; 
+ 
+ 
+    setTimeout(function() { 
+ 
+        notification.style.display = 
+            "none"; 
+ 
+    }, 3000); 
+ 
+} 
+ 
+ 
+/* ========================================= 
+   CHECK LOGIN 
+========================================= */ 
+ 
+async function checkLogin() { 
+ 
+    try { 
+ 
+        const response = 
+            await fetch("/me"); 
+ 
+ 
+        const result = 
+            await response.json(); 
+ 
+ 
+        if (!result.loggedIn) { 
+ 
+            window.location.href = 
+                "login.html"; 
+ 
+            return false; 
+ 
+        } 
+ 
+ 
+        return true; 
+ 
+    } 
+ 
+ 
+    catch (error) { 
+ 
+        console.error( 
+            "Login check error:", 
+            error 
+        ); 
+ 
+        return false; 
+ 
+    } 
+ 
+} 
+ 
+ 
+/* ========================================= 
+   CHECK CLAIMED CP GOALS 
+========================================= */ 
+ 
+async function checkClaimedGoals() { 
+ 
+    try { 
+ 
+        const response = 
+            await fetch( 
+                "/claimed-goals" 
+            ); 
+ 
+ 
+        if (!response.ok) { 
+            return; 
+        } 
+ 
+ 
+        const result = 
+            await response.json(); 
+ 
+ 
+        if (!result.success) { 
+            return; 
+        } 
+ 
+ 
+        if ( 
+            result.claimed.includes( 
+                "share" 
+            ) 
+        ) { 
+ 
+            document.getElementById( 
+                "shareButton" 
+            ).disabled = true; 
+ 
+        } 
+ 
+ 
+        if ( 
+            result.claimed.includes( 
+                "buycode" 
+            ) 
+        ) { 
+ 
+            document.getElementById( 
+                "buyCodeButton" 
+            ).disabled = true; 
+ 
+        } 
+ 
+    } 
+ 
+ 
+    catch (error) { 
+ 
+        console.error( 
+            "Goal status error:", 
+            error 
+        ); 
+ 
+    } 
+ 
+} 
+ 
+ 
+/* ========================================= 
+   PAGE LOAD 
+========================================= */ 
+ 
+async function initializePage() { 
+ 
+    const loggedIn = 
+        await checkLogin(); 
+ 
+ 
+    if (!loggedIn) { 
+        return; 
+    } 
+ 
+ 
+    await checkClaimedGoals(); 
+ 
+} 
+ 
+ 
+initializePage(); 
+ 
+ 
+</script> 
+ 
+ 
+</body> 
+ 
 </html>
