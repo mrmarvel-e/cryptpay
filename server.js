@@ -1,3 +1,4 @@
+```javascript
 const express = require("express");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
@@ -12,10 +13,9 @@ const app = express();
 
 
 // ==================================================
-// CP GOALS TABLES
+// CP GOALS TABLE
 // ==================================================
 
-// Stores rewards that have actually been claimed
 db.exec(`
     CREATE TABLE IF NOT EXISTS goal_claims (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -27,15 +27,16 @@ db.exec(`
 `);
 
 
-// Stores goals that the user has completed
-// but has NOT necessarily claimed the reward for yet
+// ==================================================
+// CP SHARE COMPLETIONS TABLE
+// ==================================================
+
 db.exec(`
-    CREATE TABLE IF NOT EXISTS goal_completions (
+    CREATE TABLE IF NOT EXISTS share_completions (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
-        goal TEXT NOT NULL,
         completed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        UNIQUE(user_id, goal)
+        UNIQUE(user_id)
     )
 `);
 
@@ -1299,111 +1300,6 @@ app.post(
 
 
 // ==================================================
-// COMPLETE CP SHARE GOAL
-// ==================================================
-
-app.post(
-    "/complete-share",
-    (req, res) => {
-
-        if (!req.session.userId) {
-
-            return res.status(401).json({
-
-                success: false,
-
-                message:
-                    "Please log in first."
-
-            });
-
-        }
-
-
-        try {
-
-            // ========================================
-            // CHECK IF SHARE WAS ALREADY COMPLETED
-            // ========================================
-
-            const alreadyCompleted =
-                db.prepare(`
-                    SELECT id
-                    FROM goal_completions
-                    WHERE user_id = ?
-                    AND goal = 'share'
-                    LIMIT 1
-                `).get(
-                    req.session.userId
-                );
-
-
-            if (alreadyCompleted) {
-
-                return res.json({
-
-                    success: true,
-
-                    message:
-                        "Share goal already completed."
-
-                });
-
-            }
-
-
-            // ========================================
-            // RECORD SHARE COMPLETION
-            // ========================================
-
-            db.prepare(`
-                INSERT INTO goal_completions
-                (
-                    user_id,
-                    goal
-                )
-
-                VALUES (?, 'share')
-            `).run(
-                req.session.userId
-            );
-
-
-            res.json({
-
-                success: true,
-
-                message:
-                    "Share goal completed."
-
-            });
-
-        }
-
-        catch (error) {
-
-            console.error(
-                "Share completion error:",
-                error
-            );
-
-
-            res.status(500).json({
-
-                success: false,
-
-                message:
-                    "Unable to record the share."
-
-            });
-
-        }
-
-    }
-);
-
-
-// ==================================================
 // CLAIM CP GOAL
 // ==================================================
 
@@ -1411,6 +1307,7 @@ app.post(
     "/claim-goal",
     (req, res) => {
 
+        // Check login
         if (!req.session.userId) {
 
             return res.status(401).json({
@@ -1425,14 +1322,10 @@ app.post(
         }
 
 
-        const { goal } =
-            req.body;
+        const { goal } = req.body;
 
 
-        // ========================================
-        // CP GOAL REWARDS
-        // ========================================
-
+        // CP Goal rewards
         const rewards = {
 
             share: 50000,
@@ -1442,10 +1335,7 @@ app.post(
         };
 
 
-        // ========================================
-        // CHECK VALID GOAL
-        // ========================================
-
+        // Check valid goal
         if (
             !Object.prototype.hasOwnProperty.call(
                 rewards,
@@ -1471,8 +1361,76 @@ app.post(
 
         try {
 
+
+            // ==========================================
+            // CHECK SHARE COMPLETION
+            // ==========================================
+
+            if (goal === "share") {
+
+                const shareCompleted =
+                    db.prepare(`
+                        SELECT id
+                        FROM share_completions
+                        WHERE user_id = ?
+                        LIMIT 1
+                    `).get(
+                        req.session.userId
+                    );
+
+
+                if (!shareCompleted) {
+
+                    return res.json({
+
+                        success: false,
+
+                        message:
+                            "Please share the website before claiming this reward."
+
+                    });
+
+                }
+
+            }
+
+
+            // ==========================================
+            // CHECK BUY CODE PURCHASE
+            // ==========================================
+
+            if (goal === "buycode") {
+
+                const purchasedCode =
+                    db.prepare(`
+                        SELECT id
+                        FROM cp_codes
+                        WHERE user_id = ?
+                        LIMIT 1
+                    `).get(
+                        req.session.userId
+                    );
+
+
+                if (!purchasedCode) {
+
+                    return res.json({
+
+                        success: false,
+
+                        message:
+                            "Please buy CP code before claiming this reward."
+
+                    });
+
+                }
+
+            }
+
+
             // ========================================
-            // CHECK IF REWARD WAS ALREADY CLAIMED
+            // CHECK WHETHER THIS GOAL
+            // WAS ALREADY CLAIMED
             // ========================================
 
             const alreadyClaimed =
@@ -1501,40 +1459,6 @@ app.post(
                         "You have already claimed this goal."
 
                 });
-
-            }
-
-
-            // ========================================
-            // SHARE GOAL REQUIREMENT
-            // ========================================
-
-            if (goal === "share") {
-
-                const shareCompleted =
-                    db.prepare(`
-                        SELECT id
-                        FROM goal_completions
-                        WHERE user_id = ?
-                        AND goal = 'share'
-                        LIMIT 1
-                    `).get(
-                        req.session.userId
-                    );
-
-
-                if (!shareCompleted) {
-
-                    return res.json({
-
-                        success: false,
-
-                        message:
-                            "You must share the CryptPay website before claiming this reward."
-
-                    });
-
-                }
 
             }
 
@@ -1588,7 +1512,7 @@ app.post(
 
 
             // ========================================
-            // RECORD CLAIM
+            // RECORD GOAL CLAIM
             // ========================================
 
             db.prepare(`
@@ -1609,7 +1533,7 @@ app.post(
 
 
             // ========================================
-            // SUCCESS
+            // SUCCESS MESSAGE
             // ========================================
 
             res.json({
@@ -1624,6 +1548,7 @@ app.post(
             });
 
         }
+
 
         catch (error) {
 
@@ -1698,6 +1623,7 @@ app.get(
 
         }
 
+
         catch (error) {
 
             console.error(
@@ -1712,6 +1638,115 @@ app.get(
 
                 message:
                     "Unable to check goals."
+
+            });
+
+        }
+
+    }
+);
+
+
+// ==================================================
+// COMPLETE CP SHARE
+// ==================================================
+
+app.post(
+    "/complete-share",
+    (req, res) => {
+
+        if (!req.session.userId) {
+
+            return res.status(401).json({
+
+                success: false,
+
+                message:
+                    "Please log in first."
+
+            });
+
+        }
+
+
+        try {
+
+            /*
+                Check whether the user has
+                already completed the Share
+                action.
+            */
+
+            const existing =
+                db.prepare(`
+                    SELECT id
+                    FROM share_completions
+                    WHERE user_id = ?
+                    LIMIT 1
+                `).get(
+                    req.session.userId
+                );
+
+
+            if (existing) {
+
+                return res.json({
+
+                    success: true,
+
+                    message:
+                        "Share completed."
+
+                });
+
+            }
+
+
+            /*
+                Record that the browser's
+                share operation completed.
+
+                The reward is NOT added here.
+            */
+
+            db.prepare(`
+                INSERT INTO share_completions
+                (
+                    user_id
+                )
+
+                VALUES (?)
+            `).run(
+                req.session.userId
+            );
+
+
+            res.json({
+
+                success: true,
+
+                message:
+                    "Share completed. You can now claim your reward."
+
+            });
+
+        }
+
+
+        catch (error) {
+
+            console.error(
+                "Share completion error:",
+                error
+            );
+
+
+            res.status(500).json({
+
+                success: false,
+
+                message:
+                    "Unable to record the share."
 
             });
 
@@ -1820,3 +1855,4 @@ app.listen(
 
     }
 );
+```
