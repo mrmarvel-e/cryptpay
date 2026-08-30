@@ -562,6 +562,27 @@ app.get(
 
 
 // ==================================================
+// ADDED MODIFICATION
+// PROTECTED BUY CODE PAYMENT PAGE
+// ==================================================
+
+app.get(
+    "/buycppayment.html",
+    requireLogin,
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "buycppayment.html"
+            )
+        );
+
+    }
+);
+
+
+// ==================================================
 // REGISTER
 // ==================================================
 
@@ -2268,81 +2289,13 @@ app.post(
     }
 );
 
-
 // ==================================================
-// STATIC FILES
-// ==================================================
-//
-// This serves CSS, JavaScript, images, etc.
-//
-// HTML files are handled by the routes above,
-// so protected HTML pages cannot bypass login.
-//
+// SERVE WEBSITE FILES
 // ==================================================
 
 app.use(
-    (req, res, next) => {
-
-        const requestedPath =
-            path.join(
-                __dirname,
-                req.path
-            );
-
-
-        const extension =
-            path.extname(
-                requestedPath
-            ).toLowerCase();
-
-
-        // Do not automatically serve HTML files.
-
-        if (
-            extension === ".html"
-        ) {
-
-            return next();
-
-        }
-
-
-        if (
-            fs.existsSync(
-                requestedPath
-            ) &&
-            fs.statSync(
-                requestedPath
-            ).isFile()
-        ) {
-
-            return res.sendFile(
-                requestedPath
-            );
-
-        }
-
-
-        next();
-
-    }
+    express.static(__dirname)
 );
-
-
-// ==================================================
-// 404
-// ==================================================
-
-app.use(
-    (req, res) => {
-
-        res.status(404).send(
-            "Page not found."
-        );
-
-    }
-);
-
 
 // ==================================================
 // ERROR HANDLER
@@ -2356,10 +2309,8 @@ app.use(
             error
         );
 
-
         if (
-            error instanceof
-            multer.MulterError
+            error instanceof multer.MulterError
         ) {
 
             return res.status(400).json({
@@ -2372,7 +2323,6 @@ app.use(
             });
 
         }
-
 
         res.status(500).json({
 
