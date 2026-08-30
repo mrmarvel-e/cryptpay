@@ -12,6 +12,13 @@ const app = express();
 
 
 // ==================================================
+// TRUST ABasthan PROXY
+// ==================================================
+
+app.set("trust proxy", 1);
+
+
+// ==================================================
 // CP GOALS TABLES
 // ==================================================
 
@@ -130,7 +137,9 @@ app.use(
 
             httpOnly: true,
 
-            secure: false,
+            secure: true,
+
+            sameSite: "lax",
 
             maxAge:
                 1000 * 60 * 60 * 24
@@ -466,14 +475,48 @@ app.post(
 
                 );
 
+
+            // ==========================================
+            // AUTOMATICALLY LOG USER IN
+            // ==========================================
+
             req.session.userId =
                 result.lastInsertRowid;
 
-            res.json({
 
-                success: true
+            // Make sure the session is saved
+            // before sending the response.
 
-            });
+            req.session.save(
+                (sessionError) => {
+
+                    if (sessionError) {
+
+                        console.error(
+                            "Session save error:",
+                            sessionError
+                        );
+
+                        return res.status(500).json({
+
+                            success: false,
+
+                            message:
+                                "Account created, but login session could not be created."
+
+                        });
+
+                    }
+
+
+                    res.json({
+
+                        success: true
+
+                    });
+
+                }
+            );
 
         }
 
@@ -556,11 +599,37 @@ app.post(
             req.session.userId =
                 user.id;
 
-            res.json({
 
-                success: true
+            req.session.save(
+                (sessionError) => {
 
-            });
+                    if (sessionError) {
+
+                        console.error(
+                            "Login session error:",
+                            sessionError
+                        );
+
+                        return res.status(500).json({
+
+                            success: false,
+
+                            message:
+                                "Unable to create login session."
+
+                        });
+
+                    }
+
+
+                    res.json({
+
+                        success: true
+
+                    });
+
+                }
+            );
 
         }
 
@@ -2102,18 +2171,6 @@ app.post(
 // ==================================================
 // STATIC FILES
 // ==================================================
-//
-// IMPORTANT:
-//
-// All files can remain in the SAME directory.
-//
-// This middleware serves images, CSS, JavaScript,
-// etc., but deliberately does NOT automatically
-// serve HTML files.
-//
-// HTML files are served through the protected routes
-// above.
-// ==================================================
 
 app.use(
     (req, res, next) => {
@@ -2239,4 +2296,3 @@ app.listen(
 
     }
 );
-
