@@ -1,5 +1,5 @@
-
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -7,545 +7,596 @@
      crossorigin="anonymous"></script>
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+```
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
-    <title>Cryptpay</title>
+<title>Cryptpay</title>
 
-    <style>
+<style>
 
-        a {
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
+    a {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
 
-        a:visited,
-        a:hover,
-        a:active {
-            text-decoration: none;
-            color: inherit;
-        }
-
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    a:visited,
+    a:hover,
+    a:active {
+        text-decoration: none;
+        color: inherit;
+    }
 
 
-        body {
-            background-color: black;
-            color: gold;
-            font-family: Arial, sans-serif;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
 
-        /* MAIN CONTAINER */
+    body {
+        background-color: black;
+        color: gold;
+        font-family: Arial, sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+
+    /* MAIN CONTAINER */
+
+    .container {
+        width: 100%;
+        max-width: 700px;
+        margin: auto;
+        padding: 15px;
+    }
+
+
+    /* TOP SECTION */
+
+    .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+
+    /* LOGO */
+
+    .logo-button {
+        background-color: black;
+        border: 2px solid gold;
+        border-radius: 20px;
+        width: 100%;
+        max-width: 400px;
+        height: 80px;
+        padding: 0;
+        overflow: hidden;
+        cursor: pointer;
+    }
+
+
+    .logo-button img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 18px;
+    }
+
+
+    /* PROFILE BUTTON */
+
+    .profile-button {
+        background-color: transparent;
+        border: 2px solid gold;
+        border-radius: 50%;
+        width: 65px;
+        height: 65px;
+        padding: 5px;
+        flex-shrink: 0;
+        cursor: pointer;
+    }
+
+
+    .profile-button img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+
+    /* LOGIN BUTTON */
+
+    .login-button {
+        background-color: black;
+        color: gold;
+        border: 2px solid gold;
+        border-radius: 20px;
+        min-width: 90px;
+        height: 50px;
+        padding: 0 15px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+
+    .login-button:hover {
+        background-color: rgba(255, 215, 0, 0.08);
+    }
+
+
+    /* WELCOME */
+
+    .welcome {
+        margin-top: 25px;
+        margin-bottom: 25px;
+        text-align: center;
+    }
+
+
+    .welcome h2 {
+        font-size: 24px;
+        line-height: 1.4;
+    }
+
+
+    /* MENU GRID */
+
+    .menu {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        width: 100%;
+    }
+
+
+    /* MENU BUTTON */
+
+    .menu-button {
+        background-color: transparent;
+        color: gold;
+        border: 2px solid gold;
+        border-radius: 30px;
+        min-height: 150px;
+        width: 100%;
+        cursor: pointer;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        padding: 10px;
+    }
+
+
+    .menu-button:hover {
+        background-color: rgba(255, 215, 0, 0.08);
+    }
+
+
+    .menu-button img {
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 10px;
+    }
+
+
+    .menu-button h2 {
+        font-size: 18px;
+    }
+
+
+    /* BALANCE AND WITHDRAW */
+
+    .wide-menu {
+        grid-column: span 2;
+        min-height: 65px;
+        flex-direction: row;
+        justify-content: center;
+        gap: 15px;
+    }
+
+
+    .wide-menu img {
+        width: 40px;
+        height: 40px;
+        margin: 0;
+    }
+
+
+    .wide-menu h2 {
+        margin: 0;
+        font-size: 20px;
+    }
+
+
+    /* TRADEMARK */
+
+    .trademark {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+
+    .trademark img {
+        max-width: 200px;
+        width: 70%;
+        height: auto;
+    }
+
+
+    /* PHONE DESIGN */
+
+    @media (max-width: 500px) {
 
         .container {
-            width: 100%;
-            max-width: 700px;
-            margin: auto;
-            padding: 15px;
+            padding: 12px;
         }
 
-
-        /* TOP SECTION */
-
-        .top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-
-        /* LOGO */
 
         .logo-button {
-            background-color: black;
-            border: 2px solid gold;
-            border-radius: 20px;
-            width: 100%;
-            max-width: 400px;
-            height: 80px;
-            padding: 0;
-            overflow: hidden;
-            cursor: pointer;
+            height: 65px;
         }
 
-
-        .logo-button img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 18px;
-        }
-
-
-        /* PROFILE BUTTON */
 
         .profile-button {
-            background-color: transparent;
-            border: 2px solid gold;
-            border-radius: 50%;
-            width: 65px;
-            height: 65px;
-            padding: 5px;
-            flex-shrink: 0;
-            cursor: pointer;
-        }
-
-
-        .profile-button img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-
-        /* WELCOME */
-
-        .welcome {
-            margin-top: 25px;
-            margin-bottom: 25px;
-            text-align: center;
-        }
-
-
-        .welcome h2 {
-            font-size: 24px;
-            line-height: 1.4;
-        }
-
-
-        /* MENU GRID */
-
-        .menu {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            width: 100%;
-        }
-
-
-        /* MENU BUTTON */
-
-        .menu-button {
-            background-color: transparent;
-            color: gold;
-            border: 2px solid gold;
-            border-radius: 30px;
-            min-height: 150px;
-            width: 100%;
-            cursor: pointer;
-
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-
-            padding: 10px;
-        }
-
-
-        .menu-button:hover {
-            background-color: rgba(255, 215, 0, 0.08);
-        }
-
-
-        .menu-button img {
             width: 55px;
             height: 55px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 10px;
         }
 
 
-        .menu-button h2 {
-            font-size: 18px;
+        .login-button {
+            min-width: 75px;
+            height: 45px;
+            padding: 0 10px;
+            font-size: 14px;
         }
 
 
-        /* BALANCE AND WITHDRAW */
-
-        .wide-menu {
-            grid-column: span 2;
-            min-height: 65px;
-            flex-direction: row;
-            justify-content: center;
-            gap: 15px;
-        }
-
-
-        .wide-menu img {
-            width: 40px;
-            height: 40px;
-            margin: 0;
-        }
-
-
-        .wide-menu h2 {
-            margin: 0;
-            font-size: 20px;
-        }
-
-
-        /* TRADEMARK */
-
-        .trademark {
-            display: flex;
-            justify-content: center;
+        .welcome {
             margin-top: 20px;
             margin-bottom: 20px;
         }
 
 
-        .trademark img {
-            max-width: 200px;
-            width: 70%;
-            height: auto;
+        .welcome h2 {
+            font-size: 18px;
         }
 
 
-        /* PHONE DESIGN */
-
-        @media (max-width: 500px) {
-
-            .container {
-                padding: 12px;
-            }
-
-
-            .logo-button {
-                height: 65px;
-            }
-
-
-            .profile-button {
-                width: 55px;
-                height: 55px;
-            }
-
-
-            .welcome {
-                margin-top: 20px;
-                margin-bottom: 20px;
-            }
-
-
-            .welcome h2 {
-                font-size: 18px;
-            }
-
-
-            .menu {
-                gap: 12px;
-            }
-
-
-            .menu-button {
-                min-height: 135px;
-                border-radius: 25px;
-            }
-
-
-            .menu-button img {
-                width: 45px;
-                height: 45px;
-            }
-
-
-            .menu-button h2 {
-                font-size: 16px;
-            }
-
-
-            .wide-menu {
-                min-height: 60px;
-            }
-
-
-            .wide-menu h2 {
-                font-size: 17px;
-            }
-
-
-            .wide-menu img {
-                width: 35px;
-                height: 35px;
-            }
-
+        .menu {
+            gap: 12px;
         }
 
 
-        /* VERY SMALL PHONES */
-
-        @media (max-width: 350px) {
-
-            .top {
-                gap: 5px;
-            }
-
-
-            .logo-button {
-                height: 55px;
-            }
-
-
-            .profile-button {
-                width: 50px;
-                height: 50px;
-            }
-
-
-            .welcome h2 {
-                font-size: 16px;
-            }
-
-
-            .menu {
-                gap: 8px;
-            }
-
-
-            .menu-button {
-                min-height: 120px;
-            }
-
-
-            .menu-button h2 {
-                font-size: 14px;
-            }
-
-
-            .menu-button img {
-                width: 40px;
-                height: 40px;
-            }
-
-
-            .wide-menu h2 {
-                font-size: 15px;
-            }
-
+        .menu-button {
+            min-height: 135px;
+            border-radius: 25px;
         }
 
-    </style>
+
+        .menu-button img {
+            width: 45px;
+            height: 45px;
+        }
+
+
+        .menu-button h2 {
+            font-size: 16px;
+        }
+
+
+        .wide-menu {
+            min-height: 60px;
+        }
+
+
+        .wide-menu h2 {
+            font-size: 17px;
+        }
+
+
+        .wide-menu img {
+            width: 35px;
+            height: 35px;
+        }
+
+    }
+
+
+    /* VERY SMALL PHONES */
+
+    @media (max-width: 350px) {
+
+        .top {
+            gap: 5px;
+        }
+
+
+        .logo-button {
+            height: 55px;
+        }
+
+
+        .profile-button {
+            width: 50px;
+            height: 50px;
+        }
+
+
+        .login-button {
+            min-width: 65px;
+            height: 40px;
+            padding: 0 8px;
+            font-size: 13px;
+        }
+
+
+        .welcome h2 {
+            font-size: 16px;
+        }
+
+
+        .menu {
+            gap: 8px;
+        }
+
+
+        .menu-button {
+            min-height: 120px;
+        }
+
+
+        .menu-button h2 {
+            font-size: 14px;
+        }
+
+
+        .menu-button img {
+            width: 40px;
+            height: 40px;
+        }
+
+
+        .wide-menu h2 {
+            font-size: 15px;
+        }
+
+    }
+
+</style>
+```
 
 </head>
 
-
 <body>
-
 
 <div class="container">
 
+```
+<!-- TOP SECTION -->
 
-    <!-- TOP SECTION -->
+<div class="top">
 
-    <div class="top">
+    <a href="aboutcryptpay.html">
 
-        <a href="aboutcryptpay.html">
+        <button class="logo-button">
 
-            <button class="logo-button">
+            <img
+                src="cryptpay logo.png"
+                alt="Cryptpay Logo"
+            >
 
-                <img
-                    src="cryptpay logo.png"
-                    alt="Cryptpay Logo"
-                >
+        </button>
 
-            </button>
+    </a>
 
-        </a>
 
+    <!-- LOGIN BUTTON -->
 
-        <a href="cryptpayprofile.html">
+    <a href="login.html">
 
-            <button class="profile-button">
-
-                <img
-                    src="cryptpayprofile.png"
-                    alt="Profile"
-                >
-
-            </button>
-
-        </a>
-
-    </div>
-
-
-
-    <!-- WELCOME MESSAGE -->
-
-    <div class="welcome">
-
-        <h2 id="welcome">
-
-            Welcome to cryptpay.ng!
-
-        </h2>
-
-    </div>
-
-
-
-    <!-- MENU -->
-
-    <div class="menu">
-
-
-        <!-- DAILY REWARD -->
-
-        <a href="dailyrewardcryptpay.html">
-
-            <button class="menu-button">
-
-                <img
-                    src="cryptpaysublogo.png"
-                    alt="Daily Reward"
-                >
-
-                <h2>
-                    Daily Reward
-                </h2>
-
-            </button>
-
-        </a>
-
-
-
-        <!-- GOALS -->
-
-        <a href="cryptpaygoals.html">
-
-            <button class="menu-button">
-
-                <img
-                    src="cryptpayrocket3.copy.png"
-                    alt="Goals"
-                >
-
-                <h2>
-                    Goals
-                </h2>
-
-            </button>
-
-        </a>
-
-
-
-        <!-- VIEW BALANCE -->
-
-        <a href="cryptpaybalance.html">
-
-            <button class="menu-button wide-menu">
-
-                <h2>
-                    View Balance
-                </h2>
-
-                <img
-                    src="cryptpayunseen.png"
-                    alt="View Balance"
-                >
-
-            </button>
-
-        </a>
-
-
-
-        <!-- WITHDRAW -->
-
-        <a href="cryptpaywithdraw.html">
-
-            <button class="menu-button wide-menu">
-
-                <h2>
-                    Withdraw Funds
-                </h2>
-
-                <img
-                    src="cryptpaywithdrawpic.png"
-                    alt="Withdraw"
-                >
-
-            </button>
-
-        </a>
-
-
-
-        <!-- BUY CODE -->
-
-        <a href="buycodecryptpay.html">
-
-            <button class="menu-button">
-
-                <img
-                    src="CPcodepurchase.png"
-                    alt="Buy Code"
-                >
-
-                <h2>
-                    Buy Code
-                </h2>
-
-            </button>
-
-        </a>
-
-
-
-        <!-- MORE -->
-
-        <a href="cryptpaymore.html">
-
-            <button class="menu-button">
-
-                <img
-                    src="cryptpaymore.png"
-                    alt="More"
-                >
-
-                <h2>
-                    More
-                </h2>
-
-            </button>
-
-        </a>
-
-
-    </div>
-
-
-
-    <!-- TRADEMARK -->
-
-    <div class="trademark">
-
-        <img
-            src="extechtrademark.png"
-            alt="Extech"
+        <button
+            class="login-button"
+            type="button"
         >
 
-    </div>
+            Login
+
+        </button>
+
+    </a>
+
+
+    <a href="cryptpayprofile.html">
+
+        <button class="profile-button">
+
+            <img
+                src="cryptpayprofile.png"
+                alt="Profile"
+            >
+
+        </button>
+
+    </a>
+
+</div>
+
+
+
+<!-- WELCOME MESSAGE -->
+
+<div class="welcome">
+
+    <h2 id="welcome">
+
+        Welcome to cryptpay.ng!
+
+    </h2>
+
+</div>
+
+
+
+<!-- MENU -->
+
+<div class="menu">
+
+
+    <!-- DAILY REWARD -->
+
+    <a href="dailyrewardcryptpay.html">
+
+        <button class="menu-button">
+
+            <img
+                src="cryptpaysublogo.png"
+                alt="Daily Reward"
+            >
+
+            <h2>
+                Daily Reward
+            </h2>
+
+        </button>
+
+    </a>
+
+
+
+    <!-- GOALS -->
+
+    <a href="cryptpaygoals.html">
+
+        <button class="menu-button">
+
+            <img
+                src="cryptpayrocket3.copy.png"
+                alt="Goals"
+            >
+
+            <h2>
+                Goals
+            </h2>
+
+        </button>
+
+    </a>
+
+
+
+    <!-- VIEW BALANCE -->
+
+    <a href="cryptpaybalance.html">
+
+        <button class="menu-button wide-menu">
+
+            <h2>
+                View Balance
+            </h2>
+
+            <img
+                src="cryptpayunseen.png"
+                alt="View Balance"
+            >
+
+        </button>
+
+    </a>
+
+
+
+    <!-- WITHDRAW -->
+
+    <a href="cryptpaywithdraw.html">
+
+        <button class="menu-button wide-menu">
+
+            <h2>
+                Withdraw Funds
+            </h2>
+
+            <img
+                src="cryptpaywithdrawpic.png"
+                alt="Withdraw"
+            >
+
+        </button>
+
+    </a>
+
+
+
+    <!-- BUY CODE -->
+
+    <a href="buycodecryptpay.html">
+
+        <button class="menu-button">
+
+            <img
+                src="CPcodepurchase.png"
+                alt="Buy Code"
+            >
+
+            <h2>
+                Buy Code
+            </h2>
+
+        </button>
+
+    </a>
+
+
+
+    <!-- MORE -->
+
+    <a href="cryptpaymore.html">
+
+        <button class="menu-button">
+
+            <img
+                src="cryptpaymore.png"
+                alt="More"
+            >
+
+            <h2>
+                More
+            </h2>
+
+        </button>
+
+    </a>
 
 
 </div>
 
 
+
+<!-- TRADEMARK -->
+
+<div class="trademark">
+
+    <img
+        src="extechtrademark.png"
+        alt="Extech"
+    >
+
+</div>
+```
+
+</div>
 
 <script>
 
@@ -562,12 +613,22 @@ async function loadUser() {
             await response.json();
 
 
-        // Check if logged in
+        /*
+         * IMPORTANT:
+         *
+         * The homepage is now PUBLIC.
+         *
+         * If the visitor is not logged in,
+         * do NOT redirect to login.html.
+         *
+         * Simply keep the default welcome
+         * message:
+         *
+         * "Welcome to cryptpay.ng!"
+         */
+
 
         if (!result.loggedIn) {
-
-            window.location.href =
-                "login.html";
 
             return;
 
@@ -607,7 +668,6 @@ loadUser();
 
 
 </script>
-
 
 </body>
 
