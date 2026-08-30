@@ -465,40 +465,40 @@ content="width=device-width, initial-scale=1.0"
 </div> 
 
 <script> 
- 
- 
+
+
 /* ========================================= 
    OPEN SHARE PAGE 
 ========================================= */ 
- 
+
 function openSharePage() { 
- 
+
     const button = 
         document.getElementById( 
             "shareButton" 
         ); 
- 
- 
+
+
     if (button.disabled) { 
- 
+
         return; 
- 
+
     } 
- 
- 
+
+
     window.location.href = 
         "cryptpayshare.html"; 
- 
+
 } 
- 
- 
- 
+
+
+
 /* ========================================= 
    CLAIM CP GOAL 
 ========================================= */ 
- 
+
 async function claimGoal(goal) { 
- 
+
     const button = 
         goal === "share" 
             ? document.getElementById( 
@@ -511,372 +511,390 @@ async function claimGoal(goal) {
                 : document.getElementById( 
                     "watchAdsButton" 
                 ); 
- 
- 
+
+
     if (button.disabled) { 
- 
+
         return; 
- 
+
     } 
- 
- 
+
+
     button.disabled = true; 
- 
- 
+
+
     try { 
- 
+
         const response = 
             await fetch( 
                 "/claim-goal", 
                 { 
- 
+
                     method: "POST", 
- 
+
                     headers: { 
                         "Content-Type": 
                             "application/json" 
                     }, 
- 
+
                     body: JSON.stringify({ 
- 
+
                         goal: goal 
- 
+
                     }) 
- 
+
                 } 
             ); 
- 
- 
+
+
         const result = 
             await response.json(); 
- 
- 
+
+
         if ( 
             !response.ok || 
             !result.success 
         ) { 
- 
+
             showNotification( 
- 
+
                 result.message || 
                 "Unable to claim goal." 
- 
+
             ); 
- 
- 
+
+
             button.disabled = false; 
- 
+
+
             return; 
- 
+
         } 
- 
+
+
         showNotification( 
             result.message 
         ); 
- 
+
+
     } 
- 
- 
+
+
     catch (error) { 
- 
+
         console.error( 
             "Goal claim error:", 
             error 
         ); 
- 
- 
+
+
         showNotification( 
             "Unable to claim goal. Please try again." 
         ); 
- 
+
+
         button.disabled = false; 
- 
+
     } 
- 
+
 } 
- 
- 
- 
+
+
+
 /* ========================================= 
    START WATCH ADS 
 ========================================= */ 
- 
+
 async function startWatchAds() { 
- 
+
     const button = 
         document.getElementById( 
             "watchAdsButton" 
         ); 
- 
- 
+
+
     if (button.disabled) { 
- 
+
         return; 
- 
+
     } 
- 
- 
+
+
     try { 
- 
+
         const response = 
             await fetch( 
                 "/ad-progress" 
             ); 
- 
- 
+
+
         const result = 
             await response.json(); 
- 
- 
+
+
         if ( 
             !response.ok || 
             !result.success 
         ) { 
- 
+
             showNotification( 
                 "Unable to check ad progress." 
             ); 
- 
+
             return; 
- 
+
         } 
- 
- 
+
+
         if (result.claimed) { 
- 
+
             button.disabled = true; 
- 
+
             return; 
- 
+
         } 
- 
- 
+
+
         if (result.adsWatched >= 2) { 
- 
+
             await claimGoal( 
                 "watchads" 
             ); 
- 
+
             return; 
- 
+
         } 
- 
- 
+
+
         showNotification( 
- 
+
             "Watch 2 rewarded ads to receive 50,000 CP Points." 
- 
+
         ); 
- 
- 
+
+
+        /* 
+           The actual Google rewarded-ad 
+           presentation must be connected 
+           here using the supported Google 
+           rewarded-ad implementation. 
+
+           Do NOT simply increase the 
+           counter from this browser code. 
+        */ 
+
+
     } 
- 
- 
+
+
     catch (error) { 
- 
+
         console.error( 
             "Ad progress error:", 
             error 
         ); 
- 
- 
+
+
         showNotification( 
             "Unable to start the ad reward." 
         ); 
- 
+
     } 
- 
+
 } 
- 
- 
- 
+
+
+
 /* ========================================= 
    NOTIFICATION 
 ========================================= */ 
- 
+
 function showNotification(message) { 
- 
+
     const notification = 
         document.getElementById( 
             "notification" 
         ); 
- 
- 
+
+
     notification.textContent = 
         message; 
- 
- 
+
+
     notification.style.display = 
         "block"; 
- 
- 
+
+
     setTimeout(function() { 
- 
+
         notification.style.display = 
             "none"; 
- 
+
     }, 3000); 
- 
+
 } 
- 
- 
- 
+
+
+
 /* ========================================= 
    CHECK LOGIN 
 ========================================= */ 
- 
+
 async function checkLogin() { 
- 
+
     try { 
- 
+
         const response = 
             await fetch("/me"); 
- 
- 
+
+
         const result = 
             await response.json(); 
- 
- 
+
+
         if (!result.loggedIn) { 
- 
+
             window.location.href = 
                 "login.html"; 
- 
+
             return false; 
- 
+
         } 
- 
- 
+
+
         return true; 
- 
+
     } 
- 
- 
+
+
     catch (error) { 
- 
+
         console.error( 
             "Login check error:", 
             error 
         ); 
- 
+
         return false; 
- 
+
     } 
- 
+
 } 
- 
- 
- 
+
+
+
 /* ========================================= 
    CHECK CLAIMED CP GOALS 
 ========================================= */ 
- 
+
 async function checkClaimedGoals() { 
- 
+
     try { 
- 
+
         const response = 
             await fetch( 
                 "/claimed-goals" 
             ); 
- 
- 
+
+
         if (!response.ok) { 
- 
+
             return; 
- 
+
         } 
- 
- 
+
+
         const result = 
             await response.json(); 
- 
- 
+
+
         if (!result.success) { 
- 
+
             return; 
- 
+
         } 
- 
- 
+
+
+        /* 
+           SHARE REMAINS INDEPENDENT 
+           OF CP CODE. 
+        */ 
+
+
         if ( 
             result.claimed.includes( 
                 "share" 
             ) 
         ) { 
- 
+
             document.getElementById( 
                 "shareButton" 
             ).disabled = true; 
- 
+
         } 
- 
- 
+
+
         /* 
-           IMPORTANT:
-
-           The Buy Code button is NOT disabled
-           here anymore.
-
-           The server will decide whether the
-           user has purchased a CP code and
-           whether another reward is available.
+           BUY CODE IS CHECKED BY THE 
+           SERVER WHEN THE USER CLICKS IT. 
+           This allows a new purchase to 
+           create another opportunity to 
+           claim the reward. 
         */ 
- 
- 
+
+
         if ( 
             result.claimed.includes( 
                 "watchads" 
             ) 
         ) { 
- 
+
             document.getElementById( 
                 "watchAdsButton" 
             ).disabled = true; 
- 
+
         } 
- 
+
     } 
- 
- 
+
+
     catch (error) { 
- 
+
         console.error( 
             "Goal status error:", 
             error 
         ); 
- 
+
     } 
- 
+
 } 
- 
- 
- 
+
+
+
 /* ========================================= 
    PAGE LOAD 
 ========================================= */ 
- 
+
 async function initializePage() { 
- 
+
     const loggedIn = 
         await checkLogin(); 
- 
- 
+
+
     if (!loggedIn) { 
- 
+
         return; 
- 
+
     } 
- 
- 
+
+
     await checkClaimedGoals(); 
- 
+
 } 
- 
- 
+
+
 initializePage(); 
- 
- 
+
+
 </script> 
 
 </body> 
