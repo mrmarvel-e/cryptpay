@@ -17,37 +17,70 @@ form.addEventListener("submit", async function(event) {
         document.getElementById("password").value;
 
 
-    const response = await fetch("/register", {
+    try {
 
-        method: "POST",
+        const response =
+            await fetch("/register", {
 
-        headers: {
-            "Content-Type": "application/json"
-        },
+                method: "POST",
 
-        body: JSON.stringify({
-            name,
-            email,
-            username,
-            password
-        })
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
 
-    });
+                body: JSON.stringify({
+
+                    name: name,
+
+                    email: email,
+
+                    username: username,
+
+                    password: password
+
+                })
+
+            });
 
 
-    const result =
-        await response.json();
+        const result =
+            await response.json();
 
 
-    if (result.success) {
+        if (result.success) {
 
-        window.location.href =
-            "cryptpay.html";
+            // Registration successful.
+            // The server already logs the user in.
 
-    } else {
+            window.location.href =
+                "cryptpay.html";
 
-        document.getElementById("message").textContent =
-            result.message;
+        }
+
+        else {
+
+            document.getElementById(
+                "message"
+            ).textContent =
+                result.message ||
+                "Registration failed.";
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Registration error:",
+            error
+        );
+
+        document.getElementById(
+            "message"
+        ).textContent =
+            "Unable to create account. Please try again.";
 
     }
 
