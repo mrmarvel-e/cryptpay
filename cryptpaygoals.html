@@ -6,15 +6,16 @@
 
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1546729568940222"
      crossorigin="anonymous"></script>
+
 <meta charset="UTF-8"> 
 
-<meta 
-    name="viewport" 
-    content="width=device-width, initial-scale=1.0" 
-> 
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+
+>
 
 <title>CP Goals</title> 
-
 
 <style> 
 
@@ -315,7 +316,6 @@
     } 
 
 </style> 
-```
 
 </head> 
 
@@ -327,140 +327,140 @@
 
 <div class="container"> 
 
-```
 <!-- BACK BUTTON --> 
 
 <a href="cryptpay.html"> 
 
-    <button 
-        class="back-button" 
-        type="button" 
+```
+<button 
+    class="back-button" 
+    type="button" 
+> 
+
+    <img 
+        src="cryptpaybackkey.png" 
+        alt="Back" 
     > 
 
-        <img 
-            src="cryptpaybackkey.png" 
-            alt="Back" 
-        > 
-
-    </button> 
+</button> 
+```
 
 </a> 
-
 
 <!-- GOAL INTRODUCTION --> 
 
 <div class="goal-intro"> 
 
-    <img 
-        src="cryptpayrocket3.copy.png" 
-        alt="Goals" 
-    > 
+```
+<img 
+    src="cryptpayrocket3.copy.png" 
+    alt="Goals" 
+> 
 
-    <b> 
-        Complete goals and<br> 
-        earn rewards!!! 
-    </b> 
+<b> 
+    Complete goals and<br> 
+    earn rewards!!! 
+</b> 
+```
 
 </div> 
-
 
 <!-- REWARDS --> 
 
 <div class="rewards"> 
 
+```
+<!-- SHARE --> 
 
-    <!-- SHARE --> 
+<button 
+    class="reward-button" 
+    id="shareButton" 
+    type="button" 
+    onclick="openSharePage()" 
+> 
 
-    <button 
-        class="reward-button" 
-        id="shareButton" 
-        type="button" 
-        onclick="openSharePage()" 
-    > 
+    <div class="reward-left"> 
 
-        <div class="reward-left"> 
+        <h2> 
+            Share 
+        </h2> 
 
-            <h2> 
-                Share 
-            </h2> 
+        <img 
+            src="cryptpayshare2.png" 
+            alt="Share" 
+        > 
 
-            <img 
-                src="cryptpayshare2.png" 
-                alt="Share" 
-            > 
-
-        </div> 
-
-
-        <b class="amount"> 
-            NGN50,000 
-        </b> 
-
-    </button> 
+    </div> 
 
 
-    <!-- BUY CODE --> 
+    <b class="amount"> 
+        NGN50,000 
+    </b> 
 
-    <button 
-        class="reward-button" 
-        id="buyCodeButton" 
-        type="button" 
-        onclick="claimGoal('buycode')" 
-    > 
-
-        <div class="reward-left"> 
-
-            <h2> 
-                Buy Code 
-            </h2> 
-
-            <img 
-                src="CPcodepurchase.png" 
-                alt="Buy Code" 
-            > 
-
-        </div> 
+</button> 
 
 
-        <b class="amount"> 
-            NGN50,000 
-        </b> 
+<!-- BUY CODE --> 
 
-    </button> 
+<button 
+    class="reward-button" 
+    id="buyCodeButton" 
+    type="button" 
+    onclick="claimGoal('buycode')" 
+> 
 
+    <div class="reward-left"> 
 
-    <!-- WATCH ADS --> 
+        <h2> 
+            Buy Code 
+        </h2> 
 
-    <button 
-        class="reward-button" 
-        id="watchAdsButton" 
-        type="button" 
-        onclick="startWatchAds()" 
-    > 
+        <img 
+            src="CPcodepurchase.png" 
+            alt="Buy Code" 
+        > 
 
-        <div class="reward-left"> 
-
-            <h2> 
-                Watch Ads 
-            </h2> 
-
-            <img 
-                src="cryptpayads.png" 
-                alt="Watch Ads" 
-            > 
-
-        </div> 
+    </div> 
 
 
-        <b class="amount"> 
-            50,000 CP Points 
-        </b> 
+    <b class="amount"> 
+        NGN50,000 
+    </b> 
 
-    </button> 
+</button> 
 
+
+<!-- WATCH ADS --> 
+
+<button 
+    class="reward-button" 
+    id="watchAdsButton" 
+    type="button" 
+    onclick="startWatchAds()" 
+> 
+
+    <div class="reward-left"> 
+
+        <h2> 
+            Watch Ads 
+        </h2> 
+
+        <img 
+            src="cryptpayads.png" 
+            alt="Watch Ads" 
+        > 
+
+    </div> 
+
+
+    <b class="amount"> 
+        50,000 CP Points 
+    </b> 
+
+</button> 
+```
 
 </div> 
-```
 
 </div> 
 
@@ -566,11 +566,9 @@ async function claimGoal(goal) {
  
             button.disabled = false; 
  
- 
             return; 
  
         } 
- 
  
         showNotification( 
             result.message 
@@ -590,7 +588,6 @@ async function claimGoal(goal) {
         showNotification( 
             "Unable to claim goal. Please try again." 
         ); 
- 
  
         button.disabled = false; 
  
@@ -671,16 +668,6 @@ async function startWatchAds() {
  
         ); 
  
- 
-        /* 
-           The actual Google rewarded-ad 
-           presentation must be connected 
-           here using the supported Google 
-           rewarded-ad implementation. 
- 
-           Do NOT simply increase the 
-           counter from this browser code. 
-        */ 
  
     } 
  
@@ -825,17 +812,16 @@ async function checkClaimedGoals() {
         } 
  
  
-        if ( 
-            result.claimed.includes( 
-                "buycode" 
-            ) 
-        ) { 
- 
-            document.getElementById( 
-                "buyCodeButton" 
-            ).disabled = true; 
- 
-        } 
+        /* 
+           IMPORTANT:
+
+           The Buy Code button is NOT disabled
+           here anymore.
+
+           The server will decide whether the
+           user has purchased a CP code and
+           whether another reward is available.
+        */ 
  
  
         if ( 
