@@ -126,10 +126,13 @@ app.set(
 // SESSIONS
 // ==================================================
 
+app.set("trust proxy", 1);
+
 app.use(
     session({
 
         secret:
+            process.env.SESSION_SECRET ||
             "change-this-to-a-long-random-secret",
 
         resave: false,
@@ -151,7 +154,6 @@ app.use(
 
     })
 );
-
 
 // ==================================================
 // LOGIN PROTECTION
