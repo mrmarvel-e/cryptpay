@@ -75,6 +75,18 @@ app.use(
     })
 );
 
+// ==================================================
+// DIRECT WEBSITE ROOT TO LOGIN PAGE
+// ==================================================
+
+app.get("/", (req, res) => {
+
+    res.sendFile(
+        path.join(__dirname, "login.html")
+    );
+
+});
+
 app.use(express.static("."));
 
 // ==================================================
