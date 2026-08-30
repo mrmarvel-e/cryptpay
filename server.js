@@ -562,6 +562,19 @@ app.post(
             password
         } = req.body;
 
+        if (!username || !password) {
+
+            return res.json({
+
+                success: false,
+
+                message:
+                    "Please enter your username and password."
+
+            });
+
+        }
+
         try {
 
             const user =
@@ -569,7 +582,9 @@ app.post(
                     SELECT *
                     FROM users
                     WHERE username = ?
-                `).get(username);
+                `).get(
+                    username.trim()
+                );
 
             if (!user) {
 
@@ -606,15 +621,14 @@ app.post(
             req.session.userId =
                 user.id;
 
-
             req.session.save(
-                (sessionError) => {
+                (error) => {
 
-                    if (sessionError) {
+                    if (error) {
 
                         console.error(
-                            "Login session error:",
-                            sessionError
+                            "Session save error:",
+                            error
                         );
 
                         return res.status(500).json({
@@ -628,10 +642,17 @@ app.post(
 
                     }
 
+                    console.log(
+                        "User logged in:",
+                        user.username
+                    );
 
                     res.json({
 
-                        success: true
+                        success: true,
+
+                        message:
+                            "Login successful."
 
                     });
 
@@ -647,12 +668,12 @@ app.post(
                 error
             );
 
-            res.json({
+            res.status(500).json({
 
                 success: false,
 
                 message:
-                    "Something went wrong."
+                    "Something went wrong while logging in."
 
             });
 
@@ -660,7 +681,6 @@ app.post(
 
     }
 );
-
 
 // ==================================================
 // GET CURRENT USER
