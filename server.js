@@ -10,11 +10,11 @@ const db = require("./database");
 
 const app = express();
 
+
 // ==================================================
 // CP GOALS TABLES
 // ==================================================
 
-// Stores rewards that have actually been claimed
 db.exec(`
     CREATE TABLE IF NOT EXISTS goal_claims (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,8 +25,6 @@ db.exec(`
     )
 `);
 
-// Stores goals that the user has completed
-// but has NOT necessarily claimed the reward for yet
 db.exec(`
     CREATE TABLE IF NOT EXISTS goal_completions (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -36,6 +34,7 @@ db.exec(`
         UNIQUE(user_id, goal)
     )
 `);
+
 
 // ==================================================
 // CP POINTS
@@ -50,6 +49,7 @@ db.exec(`
     )
 `);
 
+
 // ==================================================
 // WATCH ADS PROGRESS
 // ==================================================
@@ -63,13 +63,10 @@ db.exec(`
     )
 `);
 
+
 // ==================================================
 // BUY CODE REWARD TRACKING
 // ==================================================
-
-// Adds a column to existing cp_codes tables so that
-// every purchased CP code can provide one Buy Code
-// reward opportunity.
 
 try {
 
@@ -78,7 +75,9 @@ try {
         ADD COLUMN buycode_claimed INTEGER DEFAULT 0
     `);
 
-    console.log("Buy Code reward column added.");
+    console.log(
+        "Buy Code reward column added."
+    );
 
 }
 
@@ -99,6 +98,7 @@ catch (error) {
 
 }
 
+
 // ==================================================
 // BASIC SETUP
 // ==================================================
@@ -110,6 +110,7 @@ app.use(
         extended: true
     })
 );
+
 
 // ==================================================
 // SESSIONS
@@ -139,141 +140,25 @@ app.use(
     })
 );
 
+
 // ==================================================
-// SHARE LINK ENTRY
-// ==================================================
-//
-// This is the special URL that should be shared.
-//
-// Example:
-//
-// https://cryptpay.name.ng/share
-//
-// When someone opens it:
-// - The server records that they arrived through
-//   the share link.
-// - If they are not logged in, they are sent
-//   to login.html.
-// - After login, the share requirement remains
-//   available.
+// LOGIN PROTECTION
 // ==================================================
 
-app.get(
-    "/share",
-    (req, res) => {
+function requireLogin(req, res, next) {
 
-        // Store the fact that the visitor entered
-        // through the CryptPay share link.
-
-        req.session.shareIntent = true;
-
-        // If the visitor is not logged in,
-        // send them to the login page.
-
-        if (!req.session.userId) {
-
-            return res.redirect(
-                "/login.html"
-            );
-
-        }
-
-        // If already logged in, send them
-        // directly to the CryptPay main page.
+    if (!req.session.userId) {
 
         return res.redirect(
-            "/cryptpay.html"
+            "/login.html"
         );
 
     }
-);
 
-// ==================================================
-// MAIN WEBSITE LOGIN PROTECTION
-// ==================================================
-//
-// Anyone visiting the main website while logged out
-// is redirected to login.html.
-//
-// This also applies when someone searches for the
-// website and opens it directly.
-// ==================================================
+    next();
 
-app.get(
-    "/",
-    (req, res) => {
+}
 
-        if (!req.session.userId) {
-
-            return res.redirect(
-                "/login.html"
-            );
-
-        }
-
-        return res.sendFile(
-            path.join(
-                __dirname,
-                "cryptpay.html"
-            )
-        );
-
-    }
-);
-
-// ==================================================
-// PROTECTED CRYPTPAY PAGES
-// ==================================================
-
-const protectedPages = [
-
-    "/cryptpay.html",
-
-    "/cryptpaygoals.html",
-
-    "/cpgoals.html",
-
-    "/cryptpayprofile.html",
-
-    "/dailyrewardcryptpay.html",
-
-    "/balance.html",
-
-    "/buycpcode.html",
-
-    "/aboutcryptpay.html"
-
-];
-
-app.use(
-    (req, res, next) => {
-
-        if (
-            protectedPages.includes(
-                req.path
-            )
-            &&
-            !req.session.userId
-        ) {
-
-            return res.redirect(
-                "/login.html"
-            );
-
-        }
-
-        next();
-
-    }
-);
-
-// ==================================================
-// STATIC WEBSITE FILES
-// ==================================================
-
-app.use(
-    express.static(".")
-);
 
 // ==================================================
 // PAYMENT PROOF DIRECTORY
@@ -296,6 +181,7 @@ if (!fs.existsSync(proofFolder)) {
 
 }
 
+
 // ==================================================
 // ALLOW PAYMENT-PROOF IMAGES TO BE SERVED
 // ==================================================
@@ -304,6 +190,7 @@ app.use(
     "/payment-proofs",
     express.static(proofFolder)
 );
+
 
 // ==================================================
 // MULTER IMAGE UPLOAD
@@ -348,6 +235,7 @@ const storage =
 
     });
 
+
 const upload =
     multer({
 
@@ -390,6 +278,132 @@ const upload =
             }
 
     });
+
+
+// ==================================================
+// PUBLIC PAGES
+// ==================================================
+
+app.get(
+    "/",
+    (req, res) => {
+
+        if (!req.session.userId) {
+
+            return res.redirect(
+                "/login.html"
+            );
+
+        }
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "cryptpay.html"
+            )
+        );
+
+    }
+);
+
+
+app.get(
+    "/login.html",
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "login.html"
+            )
+        );
+
+    }
+);
+
+
+app.get(
+    "/register.html",
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "register.html"
+            )
+        );
+
+    }
+);
+
+
+// ==================================================
+// PROTECTED PAGES
+// ==================================================
+
+app.get(
+    "/cryptpay.html",
+    requireLogin,
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "cryptpay.html"
+            )
+        );
+
+    }
+);
+
+
+app.get(
+    "/cpgoals.html",
+    requireLogin,
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "cpgoals.html"
+            )
+        );
+
+    }
+);
+
+
+app.get(
+    "/cryptpayshare.html",
+    requireLogin,
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "cryptpayshare.html"
+            )
+        );
+
+    }
+);
+
+
+app.get(
+    "/cryptpayprofile.html",
+    requireLogin,
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "cryptpayprofile.html"
+            )
+        );
+
+    }
+);
+
 
 // ==================================================
 // REGISTER
@@ -484,6 +498,7 @@ app.post(
     }
 );
 
+
 // ==================================================
 // LOGIN
 // ==================================================
@@ -541,18 +556,9 @@ app.post(
             req.session.userId =
                 user.id;
 
-            // ------------------------------------------
-            // If the user entered through the share
-            // link before logging in, keep that
-            // requirement active.
-            // ------------------------------------------
-
             res.json({
 
-                success: true,
-
-                sharePending:
-                    !!req.session.shareIntent
+                success: true
 
             });
 
@@ -578,6 +584,7 @@ app.post(
 
     }
 );
+
 
 // ==================================================
 // GET CURRENT USER
@@ -627,15 +634,13 @@ app.get(
 
             loggedIn: true,
 
-            user: user,
-
-            sharePending:
-                !!req.session.shareIntent
+            user: user
 
         });
 
     }
 );
+
 
 // ==================================================
 // GET CP POINTS
@@ -702,6 +707,7 @@ app.get(
 
     }
 );
+
 
 // ==================================================
 // UPDATE PROFILE
@@ -796,6 +802,7 @@ app.put(
     }
 );
 
+
 // ==================================================
 // PAYMENT PROOF + OCR
 // ==================================================
@@ -806,10 +813,6 @@ app.post(
     upload.single("proof"),
 
     async (req, res) => {
-
-        // ------------------------------
-        // CHECK LOGIN
-        // ------------------------------
 
         if (!req.session.userId) {
 
@@ -833,10 +836,6 @@ app.post(
 
         }
 
-        // ------------------------------
-        // CHECK IMAGE
-        // ------------------------------
-
         if (!req.file) {
 
             return res.json({
@@ -855,10 +854,6 @@ app.post(
             console.log(
                 "Starting OCR..."
             );
-
-            // ==========================
-            // OCR WORKER
-            // ==========================
 
             const worker =
                 await createWorker(
@@ -882,10 +877,6 @@ app.post(
             );
 
             await worker.terminate();
-
-            // ==========================
-            // CLEAN OCR TEXT
-            // ==========================
 
             const cleanedText =
                 extractedText
@@ -915,30 +906,22 @@ app.post(
                 cleanedText
             );
 
-            // ==================================================
-            // EXPECTED PAYMENT DETAILS
-            // ==================================================
 
             const expectedAccountNumber =
                 "7064985861";
 
-            // ==================================================
-            // CHECK ACCOUNT NUMBER
-            // ==================================================
 
             const accountNumberDetected =
                 cleanedText.includes(
                     expectedAccountNumber
                 );
 
+
             console.log(
                 "Account number detected:",
                 accountNumberDetected
             );
 
-            // ==================================================
-            // REQUIRE ACCOUNT NUMBER
-            // ==================================================
 
             if (
                 !accountNumberDetected
@@ -960,9 +943,6 @@ app.post(
 
             }
 
-            // ==================================================
-            // GENERATE 8-CHARACTER CP CODE
-            // ==================================================
 
             const characters =
                 "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -1004,13 +984,11 @@ app.post(
 
             );
 
-            // ==================================================
-            // SAVE CP CODE
-            // ==================================================
 
             const proofPath =
                 "/payment-proofs/" +
                 req.file.filename;
+
 
             db.prepare(`
                 INSERT INTO cp_codes
@@ -1031,9 +1009,6 @@ app.post(
 
             );
 
-            // ==================================================
-            // SUCCESS
-            // ==================================================
 
             res.json({
 
@@ -1078,6 +1053,7 @@ app.post(
     }
 );
 
+
 // ==================================================
 // WITHDRAW
 // ==================================================
@@ -1106,9 +1082,6 @@ app.post(
             cpCode
         } = req.body;
 
-        // ==========================
-        // CHECK FIELDS
-        // ==========================
 
         if (
             !accountNumber ||
@@ -1128,9 +1101,6 @@ app.post(
 
         }
 
-        // ==========================
-        // CHECK ACCOUNT NUMBER
-        // ==========================
 
         if (
             !/^\d{10}$/.test(
@@ -1149,12 +1119,10 @@ app.post(
 
         }
 
-        // ==========================
-        // CHECK AMOUNT
-        // ==========================
 
         const withdrawalAmount =
             Number(amount);
+
 
         if (
             !Number.isFinite(
@@ -1174,11 +1142,8 @@ app.post(
 
         }
 
-        try {
 
-            // ==========================
-            // GET USER
-            // ==========================
+        try {
 
             const user =
                 db.prepare(`
@@ -1188,6 +1153,7 @@ app.post(
                 `).get(
                     req.session.userId
                 );
+
 
             if (!user) {
 
@@ -1202,9 +1168,6 @@ app.post(
 
             }
 
-            // ==========================
-            // CHECK BALANCE
-            // ==========================
 
             if (
                 withdrawalAmount >
@@ -1222,9 +1185,6 @@ app.post(
 
             }
 
-            // ==========================
-            // CHECK CP CODE
-            // ==========================
 
             const codeRecord =
                 db.prepare(`
@@ -1247,6 +1207,7 @@ app.post(
 
                 );
 
+
             if (!codeRecord) {
 
                 return res.json({
@@ -1260,9 +1221,6 @@ app.post(
 
             }
 
-            // ==========================
-            // DEDUCT BALANCE
-            // ==========================
 
             db.prepare(`
                 UPDATE users
@@ -1279,9 +1237,6 @@ app.post(
 
             );
 
-            // ==========================
-            // MARK CODE USED
-            // ==========================
 
             db.prepare(`
                 UPDATE cp_codes
@@ -1293,9 +1248,6 @@ app.post(
                 codeRecord.id
             );
 
-            // ==========================
-            // SUCCESS
-            // ==========================
 
             res.json({
 
@@ -1329,12 +1281,9 @@ app.post(
     }
 );
 
+
 // ==================================================
 // CLAIM DAILY REWARD
-// ==================================================
-//
-// DAILY REWARD IS FREE.
-// NO CP CODE IS REQUIRED.
 // ==================================================
 
 app.post(
@@ -1354,14 +1303,9 @@ app.post(
 
         }
 
-        const reward =
-            100000;
+        const reward = 100000;
 
         try {
-
-            // ========================================
-            // CHECK WHETHER USER ALREADY CLAIMED TODAY
-            // ========================================
 
             const alreadyClaimed =
                 db.prepare(`
@@ -1373,6 +1317,7 @@ app.post(
                 `).get(
                     req.session.userId
                 );
+
 
             if (alreadyClaimed) {
 
@@ -1387,9 +1332,6 @@ app.post(
 
             }
 
-            // ========================================
-            // FIND CURRENT USER
-            // ========================================
 
             const user =
                 db.prepare(`
@@ -1399,6 +1341,7 @@ app.post(
                 `).get(
                     req.session.userId
                 );
+
 
             if (!user) {
 
@@ -1413,9 +1356,6 @@ app.post(
 
             }
 
-            // ========================================
-            // ADD FREE REWARD TO BALANCE
-            // ========================================
 
             db.prepare(`
                 UPDATE users
@@ -1432,9 +1372,6 @@ app.post(
 
             );
 
-            // ========================================
-            // RECORD TODAY'S CLAIM
-            // ========================================
 
             db.prepare(`
                 INSERT INTO daily_claims
@@ -1447,9 +1384,6 @@ app.post(
                 req.session.userId
             );
 
-            // ========================================
-            // SEND NOTIFICATION
-            // ========================================
 
             res.json({
 
@@ -1483,23 +1417,9 @@ app.post(
     }
 );
 
+
 // ==================================================
 // COMPLETE CP SHARE GOAL
-// ==================================================
-//
-// The Share Goal DOES NOT require a CP Code.
-//
-// The user must first enter through:
-//
-// /share
-//
-// The /share route records shareIntent in the
-// session. If the user is logged out, they are
-// sent to login.html.
-//
-// After login, the share requirement remains
-// active.
-//
 // ==================================================
 
 app.post(
@@ -1521,56 +1441,6 @@ app.post(
 
         try {
 
-            // ========================================
-            // CHECK WHETHER SHARE REWARD WAS ALREADY
-            // CLAIMED
-            // ========================================
-
-            const alreadyClaimed =
-                db.prepare(`
-                    SELECT id
-                    FROM goal_claims
-                    WHERE user_id = ?
-                    AND goal = 'share'
-                    LIMIT 1
-                `).get(
-                    req.session.userId
-                );
-
-            if (alreadyClaimed) {
-
-                return res.json({
-
-                    success: false,
-
-                    message:
-                        "You have already claimed this goal."
-
-                });
-
-            }
-
-            // ========================================
-            // REQUIRE ENTRY THROUGH SHARE LINK
-            // ========================================
-
-            if (!req.session.shareIntent) {
-
-                return res.json({
-
-                    success: false,
-
-                    message:
-                        "Please open the CryptPay website using the Share Website link before claiming this reward."
-
-                });
-
-            }
-
-            // ========================================
-            // RECORD SHARE COMPLETION
-            // ========================================
-
             const alreadyCompleted =
                 db.prepare(`
                     SELECT id
@@ -1582,32 +1452,40 @@ app.post(
                     req.session.userId
                 );
 
-            if (!alreadyCompleted) {
 
-                db.prepare(`
-                    INSERT INTO goal_completions
-                    (
-                        user_id,
-                        goal
-                    )
+            if (alreadyCompleted) {
 
-                    VALUES (?, 'share')
-                `).run(
-                    req.session.userId
-                );
+                return res.json({
+
+                    success: true,
+
+                    message:
+                        "Share goal already completed."
+
+                });
 
             }
 
-            // ========================================
-            // SHARE REQUIREMENT COMPLETED
-            // ========================================
+
+            db.prepare(`
+                INSERT INTO goal_completions
+                (
+                    user_id,
+                    goal
+                )
+
+                VALUES (?, 'share')
+            `).run(
+                req.session.userId
+            );
+
 
             res.json({
 
                 success: true,
 
                 message:
-                    "Share goal completed. You can now claim your NGN50,000 reward."
+                    "Share goal completed."
 
             });
 
@@ -1633,6 +1511,7 @@ app.post(
 
     }
 );
+
 
 // ==================================================
 // AD PROGRESS
@@ -1666,10 +1545,12 @@ app.get(
                     req.session.userId
                 );
 
+
             const adsWatched =
                 progress
                     ? progress.ads_watched
                     : 0;
+
 
             const claimed =
                 db.prepare(`
@@ -1681,6 +1562,7 @@ app.get(
                 `).get(
                     req.session.userId
                 );
+
 
             res.json({
 
@@ -1723,6 +1605,7 @@ app.get(
     }
 );
 
+
 // ==================================================
 // CLAIM CP GOAL
 // ==================================================
@@ -1744,26 +1627,19 @@ app.post(
 
         }
 
+
         const { goal } =
             req.body;
 
-        // ========================================
-        // CP GOAL REWARDS
-        // ========================================
 
         const rewards = {
 
-            share:
-                50000,
+            share: 50000,
 
-            buycode:
-                50000
+            buycode: 50000
 
         };
 
-        // ========================================
-        // CHECK VALID GOAL
-        // ========================================
 
         const validGoals = [
 
@@ -1774,6 +1650,7 @@ app.post(
             "watchads"
 
         ];
+
 
         if (
             !validGoals.includes(
@@ -1792,17 +1669,15 @@ app.post(
 
         }
 
+
         try {
+
 
             // ==================================================
             // SHARE GOAL
             // ==================================================
 
             if (goal === "share") {
-
-                // ------------------------------------------
-                // CHECK ALREADY CLAIMED
-                // ------------------------------------------
 
                 const alreadyClaimed =
                     db.prepare(`
@@ -1814,6 +1689,7 @@ app.post(
                     `).get(
                         req.session.userId
                     );
+
 
                 if (alreadyClaimed) {
 
@@ -1828,26 +1704,6 @@ app.post(
 
                 }
 
-                // ------------------------------------------
-                // REQUIRE SHARE LINK ENTRY
-                // ------------------------------------------
-
-                if (!req.session.shareIntent) {
-
-                    return res.json({
-
-                        success: false,
-
-                        message:
-                            "Please open the CryptPay website using the Share Website link first."
-
-                    });
-
-                }
-
-                // ------------------------------------------
-                // CHECK SHARE COMPLETION
-                // ------------------------------------------
 
                 const shareCompleted =
                     db.prepare(`
@@ -1860,6 +1716,7 @@ app.post(
                         req.session.userId
                     );
 
+
                 if (!shareCompleted) {
 
                     return res.json({
@@ -1867,15 +1724,12 @@ app.post(
                         success: false,
 
                         message:
-                            "You must complete the Share Website requirement before claiming this reward."
+                            "You must complete the Share requirement before claiming this reward."
 
                     });
 
                 }
 
-                // ------------------------------------------
-                // ADD SHARE REWARD
-                // ------------------------------------------
 
                 db.prepare(`
                     UPDATE users
@@ -1892,9 +1746,6 @@ app.post(
 
                 );
 
-                // ------------------------------------------
-                // RECORD CLAIM
-                // ------------------------------------------
 
                 db.prepare(`
                     INSERT INTO goal_claims
@@ -1908,12 +1759,6 @@ app.post(
                     req.session.userId
                 );
 
-                // ------------------------------------------
-                // REMOVE SHARE INTENT
-                // ------------------------------------------
-
-                req.session.shareIntent =
-                    false;
 
                 return res.json({
 
@@ -1926,17 +1771,12 @@ app.post(
 
             }
 
+
             // ==================================================
             // BUY CODE GOAL
             // ==================================================
 
             if (goal === "buycode") {
-
-                // ------------------------------------------
-                // Find a purchased CP code belonging to
-                // this user that has not already been used
-                // for the Buy Code reward.
-                // ------------------------------------------
 
                 const availableCode =
                     db.prepare(`
@@ -1958,9 +1798,6 @@ app.post(
                         req.session.userId
                     );
 
-                // ------------------------------------------
-                // No purchased code
-                // ------------------------------------------
 
                 if (!availableCode) {
 
@@ -1975,9 +1812,6 @@ app.post(
 
                 }
 
-                // ------------------------------------------
-                // Add NGN50,000
-                // ------------------------------------------
 
                 db.prepare(`
                     UPDATE users
@@ -1994,10 +1828,6 @@ app.post(
 
                 );
 
-                // ------------------------------------------
-                // Mark CP code as used for Buy Code
-                // reward
-                // ------------------------------------------
 
                 db.prepare(`
                     UPDATE cp_codes
@@ -2008,6 +1838,7 @@ app.post(
                 `).run(
                     availableCode.id
                 );
+
 
                 return res.json({
 
@@ -2020,15 +1851,12 @@ app.post(
 
             }
 
+
             // ==================================================
             // WATCH ADS GOAL
             // ==================================================
 
             if (goal === "watchads") {
-
-                // ========================================
-                // CHECK IF REWARD WAS ALREADY CLAIMED
-                // ========================================
 
                 const alreadyClaimed =
                     db.prepare(`
@@ -2045,6 +1873,7 @@ app.post(
 
                     );
 
+
                 if (alreadyClaimed) {
 
                     return res.json({
@@ -2058,9 +1887,6 @@ app.post(
 
                 }
 
-                // ========================================
-                // WATCH ADS REQUIREMENT
-                // ========================================
 
                 const progress =
                     db.prepare(`
@@ -2070,6 +1896,7 @@ app.post(
                     `).get(
                         req.session.userId
                     );
+
 
                 if (
                     !progress ||
@@ -2087,9 +1914,6 @@ app.post(
 
                 }
 
-                // ========================================
-                // ADD NON-CASH CP POINTS
-                // ========================================
 
                 db.prepare(`
                     INSERT INTO cp_points
@@ -2103,7 +1927,6 @@ app.post(
                     ON CONFLICT(user_id)
 
                     DO UPDATE SET
-
                         points =
                             points + 50000,
 
@@ -2113,9 +1936,6 @@ app.post(
                     req.session.userId
                 );
 
-                // ========================================
-                // RECORD CLAIM
-                // ========================================
 
                 db.prepare(`
                     INSERT INTO goal_claims
@@ -2133,9 +1953,6 @@ app.post(
 
                 );
 
-                // ========================================
-                // SUCCESS
-                // ========================================
 
                 return res.json({
 
@@ -2171,6 +1988,7 @@ app.post(
     }
 );
 
+
 // ==================================================
 // GET CLAIMED CP GOALS
 // ==================================================
@@ -2203,25 +2021,19 @@ app.get(
                     req.session.userId
                 );
 
+
             const claimed =
                 rows.map(
                     row => row.goal
                 );
 
-            // Check whether the user entered through
-            // the share link.
-
-            const sharePending =
-                !!req.session.shareIntent;
 
             res.json({
 
                 success: true,
 
-                claimed: claimed,
-
-                sharePending:
-                    sharePending
+                claimed:
+                    claimed
 
             });
 
@@ -2248,6 +2060,7 @@ app.get(
     }
 );
 
+
 // ==================================================
 // LOGOUT
 // ==================================================
@@ -2272,6 +2085,7 @@ app.post(
 
                 }
 
+
                 res.json({
 
                     success: true
@@ -2283,6 +2097,84 @@ app.post(
 
     }
 );
+
+
+// ==================================================
+// STATIC FILES
+// ==================================================
+//
+// IMPORTANT:
+//
+// All files can remain in the SAME directory.
+//
+// This middleware serves images, CSS, JavaScript,
+// etc., but deliberately does NOT automatically
+// serve HTML files.
+//
+// HTML files are served through the protected routes
+// above.
+// ==================================================
+
+app.use(
+    (req, res, next) => {
+
+        const requestedPath =
+            path.join(
+                __dirname,
+                req.path
+            );
+
+
+        const extension =
+            path.extname(
+                requestedPath
+            ).toLowerCase();
+
+
+        // Never automatically serve HTML.
+        if (extension === ".html") {
+
+            return next();
+
+        }
+
+
+        if (
+            fs.existsSync(
+                requestedPath
+            ) &&
+            fs.statSync(
+                requestedPath
+            ).isFile()
+        ) {
+
+            return res.sendFile(
+                requestedPath
+            );
+
+        }
+
+
+        next();
+
+    }
+);
+
+
+// ==================================================
+// 404
+// ==================================================
+
+app.use(
+    (req, res) => {
+
+        res.status(404).send(
+            "Page not found."
+        );
+
+    }
+);
+
 
 // ==================================================
 // ERROR HANDLER
@@ -2296,8 +2188,10 @@ app.use(
             error
         );
 
+
         if (
-            error instanceof multer.MulterError
+            error instanceof
+            multer.MulterError
         ) {
 
             return res.status(400).json({
@@ -2311,6 +2205,7 @@ app.use(
 
         }
 
+
         res.status(500).json({
 
             success: false,
@@ -2323,12 +2218,14 @@ app.use(
     }
 );
 
+
 // ==================================================
 // START SERVER
 // ==================================================
 
 const PORT =
     process.env.PORT || 3000;
+
 
 app.listen(
     PORT,
@@ -2342,3 +2239,4 @@ app.listen(
 
     }
 );
+
