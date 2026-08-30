@@ -3,11 +3,13 @@
 <html lang="en">
 
 <head>
+
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1546729568940222"
      crossorigin="anonymous"></script>
-    <meta charset="UTF-8">
 
 ```
+<meta charset="UTF-8">
+
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
 
@@ -110,32 +112,11 @@
     }
 
 
-    /* LOGIN BUTTON */
-
-    .login-button {
-        background-color: black;
-        color: gold;
-        border: 2px solid gold;
-        border-radius: 20px;
-        min-width: 90px;
-        height: 50px;
-        padding: 0 15px;
-        cursor: pointer;
-        font-size: 16px;
-        font-weight: bold;
-    }
-
-
-    .login-button:hover {
-        background-color: rgba(255, 215, 0, 0.08);
-    }
-
-
     /* WELCOME */
 
     .welcome {
         margin-top: 25px;
-        margin-bottom: 25px;
+        margin-bottom: 20px;
         text-align: center;
     }
 
@@ -143,6 +124,32 @@
     .welcome h2 {
         font-size: 24px;
         line-height: 1.4;
+    }
+
+
+    /* LOGIN BUTTON */
+
+    .login-section {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 25px;
+    }
+
+
+    .login-button {
+        background-color: black;
+        color: gold;
+        border: 2px solid gold;
+        border-radius: 25px;
+        padding: 12px 30px;
+        font-size: 17px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+
+    .login-button:hover {
+        background-color: rgba(255, 215, 0, 0.08);
     }
 
 
@@ -256,14 +263,6 @@
         }
 
 
-        .login-button {
-            min-width: 75px;
-            height: 45px;
-            padding: 0 10px;
-            font-size: 14px;
-        }
-
-
         .welcome {
             margin-top: 20px;
             margin-bottom: 20px;
@@ -272,6 +271,12 @@
 
         .welcome h2 {
             font-size: 18px;
+        }
+
+
+        .login-button {
+            font-size: 15px;
+            padding: 10px 25px;
         }
 
 
@@ -335,16 +340,14 @@
         }
 
 
-        .login-button {
-            min-width: 65px;
-            height: 40px;
-            padding: 0 8px;
-            font-size: 13px;
+        .welcome h2 {
+            font-size: 16px;
         }
 
 
-        .welcome h2 {
-            font-size: 16px;
+        .login-button {
+            font-size: 14px;
+            padding: 9px 20px;
         }
 
 
@@ -403,22 +406,6 @@
     </a>
 
 
-    <!-- LOGIN BUTTON -->
-
-    <a href="login.html">
-
-        <button
-            class="login-button"
-            type="button"
-        >
-
-            Login
-
-        </button>
-
-    </a>
-
-
     <a href="cryptpayprofile.html">
 
         <button class="profile-button">
@@ -445,6 +432,27 @@
         Welcome to cryptpay.ng!
 
     </h2>
+
+</div>
+
+
+
+<!-- LOGIN BUTTON -->
+
+<div class="login-section">
+
+    <a href="login.html">
+
+        <button
+            class="login-button"
+            type="button"
+        >
+
+            Login
+
+        </button>
+
+    </a>
 
 </div>
 
@@ -600,7 +608,6 @@
 
 <script>
 
-
 async function loadUser() {
 
     try {
@@ -616,39 +623,39 @@ async function loadUser() {
         /*
          * IMPORTANT:
          *
-         * The homepage is now PUBLIC.
+         * Do NOT redirect to login if the
+         * visitor is not logged in.
          *
-         * If the visitor is not logged in,
-         * do NOT redirect to login.html.
-         *
-         * Simply keep the default welcome
-         * message:
-         *
-         * "Welcome to cryptpay.ng!"
+         * The homepage is public.
          */
 
-
         if (!result.loggedIn) {
+
+            document.getElementById(
+                "welcome"
+            ).textContent =
+
+                "Welcome to cryptpay.ng!";
 
             return;
 
         }
 
 
-        // Get logged-in user
+        /*
+         * If the user is logged in,
+         * personalize the welcome message.
+         */
 
         const user =
             result.user;
 
-
-        // Display USERNAME
 
         document.getElementById(
             "welcome"
         ).textContent =
 
             `Welcome, ${user.username}! Ready to start earning today? Complete daily goals, earn big and withdraw.`;
-
 
     }
 
@@ -658,6 +665,17 @@ async function loadUser() {
             "Error loading user:",
             error
         );
+
+        /*
+         * If /me fails, simply keep
+         * the public homepage visible.
+         */
+
+        document.getElementById(
+            "welcome"
+        ).textContent =
+
+            "Welcome to cryptpay.ng!";
 
     }
 
