@@ -283,6 +283,17 @@ const upload =
 // ==================================================
 // PUBLIC HOMEPAGE
 // ==================================================
+//
+// IMPORTANT:
+// The homepage does NOT require login.
+//
+// A visitor can open:
+// /
+// /cryptpay.html
+//
+// without being logged in.
+//
+// ==================================================
 
 app.get(
     "/",
@@ -299,8 +310,23 @@ app.get(
 );
 
 
+app.get(
+    "/cryptpay.html",
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "cryptpay.html"
+            )
+        );
+
+    }
+);
+
+
 // ==================================================
-// LOGIN PAGE
+// PUBLIC LOGIN PAGE
 // ==================================================
 
 app.get(
@@ -319,7 +345,7 @@ app.get(
 
 
 // ==================================================
-// REGISTER PAGE
+// PUBLIC REGISTER PAGE
 // ==================================================
 
 app.get(
@@ -338,17 +364,17 @@ app.get(
 
 
 // ==================================================
-// PUBLIC CRYPTPAY HOMEPAGE
+// PUBLIC ABOUT PAGE
 // ==================================================
 
 app.get(
-    "/cryptpay.html",
+    "/aboutcryptpay.html",
     (req, res) => {
 
         res.sendFile(
             path.join(
                 __dirname,
-                "cryptpay.html"
+                "aboutcryptpay.html"
             )
         );
 
@@ -357,7 +383,66 @@ app.get(
 
 
 // ==================================================
-// PROTECTED PAGES
+// PUBLIC MORE PAGE
+// ==================================================
+
+app.get(
+    "/cryptpaymore.html",
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "cryptpaymore.html"
+            )
+        );
+
+    }
+);
+
+
+// ==================================================
+// PROTECTED PROFILE PAGE
+// ==================================================
+
+app.get(
+    "/cryptpayprofile.html",
+    requireLogin,
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "cryptpayprofile.html"
+            )
+        );
+
+    }
+);
+
+
+// ==================================================
+// PROTECTED GOALS PAGE
+// ==================================================
+
+app.get(
+    "/cryptpaygoals.html",
+    requireLogin,
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "cryptpaygoals.html"
+            )
+        );
+
+    }
+);
+
+
+// ==================================================
+// BACKWARD COMPATIBILITY FOR cpgoals.html
 // ==================================================
 
 app.get(
@@ -376,6 +461,10 @@ app.get(
 );
 
 
+// ==================================================
+// PROTECTED SHARE PAGE
+// ==================================================
+
 app.get(
     "/cryptpayshare.html",
     requireLogin,
@@ -392,15 +481,79 @@ app.get(
 );
 
 
+// ==================================================
+// PROTECTED DAILY REWARD PAGE
+// ==================================================
+
 app.get(
-    "/cryptpayprofile.html",
+    "/dailyrewardcryptpay.html",
     requireLogin,
     (req, res) => {
 
         res.sendFile(
             path.join(
                 __dirname,
-                "cryptpayprofile.html"
+                "dailyrewardcryptpay.html"
+            )
+        );
+
+    }
+);
+
+
+// ==================================================
+// PROTECTED BALANCE PAGE
+// ==================================================
+
+app.get(
+    "/cryptpaybalance.html",
+    requireLogin,
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "cryptpaybalance.html"
+            )
+        );
+
+    }
+);
+
+
+// ==================================================
+// PROTECTED WITHDRAW PAGE
+// ==================================================
+
+app.get(
+    "/cryptpaywithdraw.html",
+    requireLogin,
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "cryptpaywithdraw.html"
+            )
+        );
+
+    }
+);
+
+
+// ==================================================
+// PROTECTED BUY CODE PAGE
+// ==================================================
+
+app.get(
+    "/buycodecryptpay.html",
+    requireLogin,
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "buycodecryptpay.html"
             )
         );
 
@@ -469,12 +622,20 @@ app.post(
 
                 );
 
+
+            // Automatically log the newly
+            // registered user in.
+
             req.session.userId =
                 result.lastInsertRowid;
 
+
             res.json({
 
-                success: true
+                success: true,
+
+                message:
+                    "Account created successfully."
 
             });
 
@@ -881,6 +1042,7 @@ app.post(
 
             await worker.terminate();
 
+
             const cleanedText =
                 extractedText
                     .toUpperCase()
@@ -900,6 +1062,7 @@ app.post(
                         /NGN/g,
                         ""
                     );
+
 
             console.log(
                 "CLEANED OCR TEXT:"
@@ -946,6 +1109,10 @@ app.post(
 
             }
 
+
+            // ==================================================
+            // GENERATE 8-CHARACTER CP CODE
+            // ==================================================
 
             const characters =
                 "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -2106,10 +2273,11 @@ app.post(
 // STATIC FILES
 // ==================================================
 //
-// All files can remain in the SAME directory.
+// This serves CSS, JavaScript, images, etc.
 //
-// HTML files are handled by their routes.
-// CSS, JavaScript, images, etc. are served here.
+// HTML files are handled by the routes above,
+// so protected HTML pages cannot bypass login.
+//
 // ==================================================
 
 app.use(
@@ -2128,9 +2296,11 @@ app.use(
             ).toLowerCase();
 
 
-        // Never automatically serve HTML.
+        // Do not automatically serve HTML files.
 
-        if (extension === ".html") {
+        if (
+            extension === ".html"
+        ) {
 
             return next();
 
