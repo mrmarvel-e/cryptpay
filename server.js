@@ -12,13 +12,6 @@ const app = express();
 
 
 // ==================================================
-// TRUST ABasthan PROXY
-// ==================================================
-
-app.set("trust proxy", 1);
-
-
-// ==================================================
 // CP GOALS TABLES
 // ==================================================
 
@@ -116,6 +109,16 @@ app.use(
     express.urlencoded({
         extended: true
     })
+);
+
+
+// ==================================================
+// TRUST ABASthan PROXY
+// ==================================================
+
+app.set(
+    "trust proxy",
+    1
 );
 
 
@@ -476,16 +479,15 @@ app.post(
                 );
 
 
-            // ==========================================
-            // AUTOMATICALLY LOG USER IN
-            // ==========================================
+            // Automatically log the
+            // newly registered user in.
 
             req.session.userId =
                 result.lastInsertRowid;
 
 
             // Make sure the session is saved
-            // before sending the response.
+            // before responding.
 
             req.session.save(
                 (sessionError) => {
@@ -502,7 +504,7 @@ app.post(
                             success: false,
 
                             message:
-                                "Account created, but login session could not be created."
+                                "Account created, but login session could not be saved."
 
                         });
 
@@ -511,7 +513,10 @@ app.post(
 
                     res.json({
 
-                        success: true
+                        success: true,
+
+                        message:
+                            "Account created successfully."
 
                     });
 
@@ -2188,7 +2193,6 @@ app.use(
             ).toLowerCase();
 
 
-        // Never automatically serve HTML.
         if (extension === ".html") {
 
             return next();
