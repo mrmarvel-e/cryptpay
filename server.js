@@ -38,33 +38,6 @@ db.exec(`
 `);
 
 // ==================================================
-// BUY CODE REWARD CLAIMS
-// ==================================================
-//
-// One row represents one Buy Code reward claim.
-// This allows the user to claim the Buy Code reward
-// once for each CP code that has been purchased.
-//
-
-db.exec(`
-    CREATE TABLE IF NOT EXISTS buycode_reward_claims (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-        user_id INTEGER NOT NULL,
-
-        cp_code_id INTEGER NOT NULL UNIQUE,
-
-        claimed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-
-        FOREIGN KEY (user_id)
-            REFERENCES users(id),
-
-        FOREIGN KEY (cp_code_id)
-            REFERENCES cp_codes(id)
-    )
-`);
-
-// ==================================================
 // CP POINTS
 // ==================================================
 
@@ -91,6 +64,42 @@ db.exec(`
 `);
 
 // ==================================================
+// BUY CODE REWARD TRACKING
+// ==================================================
+
+// Adds a column to existing cp_codes tables so that
+// every purchased CP code can provide one Buy Code
+// reward opportunity.
+//
+// If the column already exists, nothing is changed.
+
+try {
+    db.exec(`
+        ALTER TABLE cp_codes
+        ADD COLUMN buycode_claimed INTEGER DEFAULT 0
+    `);
+
+    console.log("Buy Code reward column added.");
+}
+
+catch (error) {
+
+    if (
+        !String(error.message).includes(
+            "duplicate column name"
+        )
+    ) {
+
+        console.error(
+            "Buy Code column setup error:",
+            error
+        );
+
+    }
+
+}
+
+// ==================================================
 // BASIC SETUP
 // ==================================================
 
@@ -110,6 +119,7 @@ app.use(express.static("."));
 
 app.use(
     session({
+
         secret:
             "change-this-to-a-long-random-secret",
 
@@ -118,13 +128,16 @@ app.use(
         saveUninitialized: false,
 
         cookie: {
+
             httpOnly: true,
 
             secure: false,
 
             maxAge:
                 1000 * 60 * 60 * 24
+
         }
+
     })
 );
 
@@ -146,6 +159,7 @@ if (!fs.existsSync(proofFolder)) {
             recursive: true
         }
     );
+
 }
 
 // ==================================================
@@ -227,7 +241,9 @@ const upload =
                         true
                     );
 
-                } else {
+                }
+
+                else {
 
                     cb(
                         new Error(
@@ -1575,185 +1591,36 @@ app.post(
         try {
 
             // ==================================================
-            // BUY CODE GOAL
+            // SHARE GOAL
             // ==================================================
 
-            if (goal === "buycode") {
+            // Share does NOT require a CP code.
 
-                // ==============================================
-                // GET ALL CP CODES PURCHASED BY THIS USER
-                // ==============================================
+            if (goal === "share") {
 
-                const purchasedCodes =
+                const alreadyClaimed =
                     db.prepare(`
                         SELECT id
-                        FROM cp_codes
+                        FROM goal_claims
                         WHERE user_id = ?
-                        ORDER BY id ASC
-                    `).all(
+                        AND goal = 'share'
+                        LIMIT 1
+                    `).get(
                         req.session.userId
                     );
 
-                // ==============================================
-                // CHECK WHETHER USER HAS PURCHASED A CODE
-                // ==============================================
-
-                if (
-                    purchasedCodes.length === 0
-                ) {
+                if (alreadyClaimed) {
 
                     return res.json({
 
                         success: false,
 
                         message:
-                            "Please purchase CP code before claiming this reward"
+                            "You have already claimed this goal."
 
                     });
 
                 }
-
-                // ==============================================
-                // FIND A CP CODE THAT HAS NOT YET BEEN USED
-                // FOR A BUY CODE REWARD
-                // ==============================================
-
-                let availableCode = null;
-
-                for (
-                    const purchasedCode
-                    of purchasedCodes
-                ) {
-
-                    const alreadyClaimed =
-                        db.prepare(`
-                            SELECT id
-                            FROM buycode_reward_claims
-                            WHERE cp_code_id = ?
-                            LIMIT 1
-                        `).get(
-                            purchasedCode.id
-                        );
-
-                    if (!alreadyClaimed) {
-
-                        availableCode =
-                            purchasedCode;
-
-                        break;
-
-                    }
-
-                }
-
-                // ==============================================
-                // ALL PURCHASED CODES HAVE ALREADY BEEN CLAIMED
-                // ==============================================
-
-                if (!availableCode) {
-
-                    return res.json({
-
-                        success: false,
-
-                        message:
-                            "Please purchase CP code before claiming this reward"
-
-                    });
-
-                }
-
-                // ==============================================
-                // ADD DEMO REWARD TO BALANCE
-                // ==============================================
-
-                db.prepare(`
-                    UPDATE users
-
-                    SET balance =
-                        balance + ?
-
-                    WHERE id = ?
-                `).run(
-
-                    rewards.buycode,
-
-                    req.session.userId
-
-                );
-
-                // ==============================================
-                // RECORD THIS SPECIFIC CODE'S REWARD CLAIM
-                // ==============================================
-
-                db.prepare(`
-                    INSERT INTO buycode_reward_claims
-                    (
-                        user_id,
-                        cp_code_id
-                    )
-
-                    VALUES (?, ?)
-                `).run(
-
-                    req.session.userId,
-
-                    availableCode.id
-
-                );
-
-                // ==============================================
-                // SUCCESS
-                // ==============================================
-
-                return res.json({
-
-                    success: true,
-
-                    message:
-                        "Buy Code goal claimed: NGN50,000"
-
-                });
-
-            }
-
-            // ========================================
-            // CHECK IF REWARD WAS ALREADY CLAIMED
-            // ========================================
-
-            const alreadyClaimed =
-                db.prepare(`
-                    SELECT id
-                    FROM goal_claims
-                    WHERE user_id = ?
-                    AND goal = ?
-                    LIMIT 1
-                `).get(
-
-                    req.session.userId,
-
-                    goal
-
-                );
-
-            if (alreadyClaimed) {
-
-                return res.json({
-
-                    success: false,
-
-                    message:
-                        "You have already claimed this goal."
-
-                });
-
-            }
-
-            // ========================================
-            // SHARE GOAL REQUIREMENT
-            // ========================================
-
-            if (goal === "share") {
 
                 const shareCompleted =
                     db.prepare(`
@@ -1779,13 +1646,190 @@ app.post(
 
                 }
 
+                db.prepare(`
+                    UPDATE users
+
+                    SET balance =
+                        balance + ?
+
+                    WHERE id = ?
+                `).run(
+
+                    rewards.share,
+
+                    req.session.userId
+
+                );
+
+                db.prepare(`
+                    INSERT INTO goal_claims
+                    (
+                        user_id,
+                        goal
+                    )
+
+                    VALUES (?, 'share')
+                `).run(
+                    req.session.userId
+                );
+
+                return res.json({
+
+                    success: true,
+
+                    message:
+                        "Share goal claimed: NGN50,000"
+
+                });
+
             }
 
-            // ========================================
-            // WATCH ADS REQUIREMENT
-            // ========================================
+            // ==================================================
+            // BUY CODE GOAL
+            // ==================================================
+
+            if (goal === "buycode") {
+
+                // --------------------------------------------------
+                // Find a purchased CP code belonging to this user
+                // that has not already been used for the Buy Code
+                // reward.
+                // --------------------------------------------------
+
+                const availableCode =
+                    db.prepare(`
+                        SELECT
+                            id,
+                            code
+
+                        FROM cp_codes
+
+                        WHERE
+                            user_id = ?
+
+                            AND buycode_claimed = 0
+
+                        ORDER BY id ASC
+
+                        LIMIT 1
+                    `).get(
+                        req.session.userId
+                    );
+
+                // --------------------------------------------------
+                // No purchased code
+                // --------------------------------------------------
+
+                if (!availableCode) {
+
+                    return res.json({
+
+                        success: false,
+
+                        message:
+                            "Please purchase CP code before claiming this reward."
+
+                    });
+
+                }
+
+                // --------------------------------------------------
+                // Add NGN50,000 to the user's balance
+                // --------------------------------------------------
+
+                db.prepare(`
+                    UPDATE users
+
+                    SET balance =
+                        balance + ?
+
+                    WHERE id = ?
+                `).run(
+
+                    rewards.buycode,
+
+                    req.session.userId
+
+                );
+
+                // --------------------------------------------------
+                // Mark this specific CP code as having been used
+                // for the Buy Code reward.
+                // --------------------------------------------------
+
+                db.prepare(`
+                    UPDATE cp_codes
+
+                    SET buycode_claimed = 1
+
+                    WHERE id = ?
+                `).run(
+                    availableCode.id
+                );
+
+                // --------------------------------------------------
+                // IMPORTANT:
+                //
+                // We intentionally DO NOT put "buycode" into
+                // goal_claims because doing that would make the
+                // reward permanently claimable only once.
+                //
+                // Instead, each purchased CP code has its own
+                // buycode_claimed value.
+                // --------------------------------------------------
+
+                return res.json({
+
+                    success: true,
+
+                    message:
+                        "Buy Code goal claimed: NGN50,000"
+
+                });
+
+            }
+
+            // ==================================================
+            // WATCH ADS GOAL
+            // ==================================================
 
             if (goal === "watchads") {
+
+                // ========================================
+                // CHECK IF REWARD WAS ALREADY CLAIMED
+                // ========================================
+
+                const alreadyClaimed =
+                    db.prepare(`
+                        SELECT id
+                        FROM goal_claims
+                        WHERE user_id = ?
+                        AND goal = ?
+                        LIMIT 1
+                    `).get(
+
+                        req.session.userId,
+
+                        goal
+
+                    );
+
+                if (alreadyClaimed) {
+
+                    return res.json({
+
+                        success: false,
+
+                        message:
+                            "You have already claimed this goal."
+
+                    });
+
+                }
+
+                // ========================================
+                // WATCH ADS REQUIREMENT
+                // ========================================
 
                 const progress =
                     db.prepare(`
@@ -1871,93 +1915,6 @@ app.post(
                 });
 
             }
-
-            // ========================================
-            // GET NORMAL GOAL REWARD
-            // ========================================
-
-            const reward =
-                rewards[goal];
-
-            // ========================================
-            // CHECK USER
-            // ========================================
-
-            const user =
-                db.prepare(`
-                    SELECT id
-                    FROM users
-                    WHERE id = ?
-                `).get(
-                    req.session.userId
-                );
-
-            if (!user) {
-
-                return res.status(404).json({
-
-                    success: false,
-
-                    message:
-                        "User not found."
-
-                });
-
-            }
-
-            // ========================================
-            // ADD NORMAL REWARD TO BALANCE
-            // ========================================
-
-            db.prepare(`
-                UPDATE users
-
-                SET balance =
-                    balance + ?
-
-                WHERE id = ?
-            `).run(
-
-                reward,
-
-                req.session.userId
-
-            );
-
-            // ========================================
-            // RECORD CLAIM
-            // ========================================
-
-            db.prepare(`
-                INSERT INTO goal_claims
-                (
-                    user_id,
-                    goal
-                )
-
-                VALUES (?, ?)
-            `).run(
-
-                req.session.userId,
-
-                goal
-
-            );
-
-            // ========================================
-            // SUCCESS
-            // ========================================
-
-            res.json({
-
-                success: true,
-
-                message:
-                    goal === "share"
-                        ? "Share goal claimed: NGN50,000"
-                        : "Buy Code goal claimed: NGN50,000"
-
-            });
 
         }
 
@@ -2134,7 +2091,7 @@ const PORT =
 
 app.listen(
     PORT,
-
+    "0.0.0.0",
     () => {
 
         console.log(
