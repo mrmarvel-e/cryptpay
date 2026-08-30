@@ -12,9 +12,10 @@ const app = express();
 
 
 // ==================================================
-// CP GOALS TABLE
+// CP GOALS TABLES
 // ==================================================
 
+// Stores rewards that have actually been claimed
 db.exec(`
     CREATE TABLE IF NOT EXISTS goal_claims (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -26,16 +27,29 @@ db.exec(`
 `);
 
 
+// Stores goals that the user has completed
+// but has NOT necessarily claimed the reward for yet
+db.exec(`
+    CREATE TABLE IF NOT EXISTS goal_completions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        goal TEXT NOT NULL,
+        completed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE(user_id, goal)
+    )
+`);
+
+
 // ==================================================
-// CP SHARE COMPLETIONS TABLE
+// WATCH ADS PROGRESS
 // ==================================================
 
 db.exec(`
-    CREATE TABLE IF NOT EXISTS share_completions (
+    CREATE TABLE IF NOT EXISTS ad_progress (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER NOT NULL,
-        completed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        UNIQUE(user_id)
+        user_id INTEGER NOT NULL UNIQUE,
+        ads_watched INTEGER DEFAULT 0,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
 `);
 
@@ -1299,14 +1313,13 @@ app.post(
 
 
 // ==================================================
-// CLAIM CP GOAL
+// COMPLETE CP SHARE GOAL
 // ==================================================
 
 app.post(
-    "/claim-goal",
+    "/complete-share",
     (req, res) => {
 
-        // Check login
         if (!req.session.userId) {
 
             return res.status(401).json({
@@ -1321,20 +1334,566 @@ app.post(
         }
 
 
-        const { goal } = req.body;
+        try {
+
+            // ========================================
+            // CHECK IF SHARE WAS ALREADY COMPLETED
+            // ========================================
+
+            const alreadyCompleted =
+                db.prepare(`
+                    SELECT id
+                    FROM goal_completions
+                    WHERE user_id = ?
+                    AND goal = 'share'
+                    LIMIT 1
+                `).get(
+                    req.session.userId
+                );
 
 
-        // CP Goal rewards
+            if (alreadyCompleted) {
+
+                return res.json({
+
+                    success: true,
+
+                    message:
+                        "Share goal already completed."
+
+                });
+
+            }
+
+
+            // ========================================
+            // RECORD SHARE COMPLETION
+            // ========================================
+
+            db.prepare(`
+                INSERT INTO goal_completions
+                (
+                    user_id,
+                    goal
+                )
+
+                VALUES (?, 'share')
+            `).run(
+                req.session.userId
+            );
+
+
+            res.json({
+
+                success: true,
+
+                message:
+                    "Share goal completed."
+
+            });
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Share completion error:",
+                error
+            );
+
+
+            res.status(500).json({
+
+                success: false,
+
+                message:
+                    "Unable to record the share."
+
+            });
+
+        }
+
+    }
+);
+
+
+// ==================================================
+// WATCH ADS
+// ==================================================
+
+app.post(
+    "/watch-ads",
+    (req, res) => {
+
+        if (!req.session.userId) {
+
+            return res.status(401).json({
+
+                success: false,
+
+                message:
+                    "Please log in first."
+
+            });
+
+        }
+
+
+        try {
+
+            // ========================================
+            // CHECK IF ALREADY CLAIMED
+            // ========================================
+
+            const alreadyClaimed =
+                db.prepare(`
+                    SELECT id
+                    FROM goal_claims
+                    WHERE user_id = ?
+                    AND goal = 'watchads'
+                    LIMIT 1
+                `).get(
+                    req.session.userId
+                );
+
+
+            if (alreadyClaimed) {
+
+                return res.json({
+
+                    success: false,
+
+                    message:
+                        "You have already claimed the Watch Ads reward."
+
+                });
+
+            }
+
+
+            // ========================================
+            // GET AD PROGRESS
+            // ========================================
+
+            const progress =
+                db.prepare(`
+                    SELECT ads_watched
+                    FROM ad_progress
+                    WHERE user_id = ?
+                `).get(
+                    req.session.userId
+                );
+
+
+            const adsWatched =
+                progress
+                    ? progress.ads_watched
+                    : 0;
+
+
+            // ========================================
+            // CHECK WHETHER 2 ADS ARE COMPLETED
+            // ========================================
+
+            if (adsWatched < 2) {
+
+                return res.json({
+
+                    success: false,
+
+                    message:
+                        `You have watched ${adsWatched} of 2 ads.`
+
+                });
+
+            }
+
+
+            // ========================================
+            // ADD REWARD
+            // ========================================
+
+            db.prepare(`
+                UPDATE users
+
+                SET balance =
+                    balance + 50000
+
+                WHERE id = ?
+            `).run(
+                req.session.userId
+            );
+
+
+            // ========================================
+            // RECORD CLAIM
+            // ========================================
+
+            db.prepare(`
+                INSERT INTO goal_claims
+                (
+                    user_id,
+                    goal
+                )
+
+                VALUES (?, 'watchads')
+            `).run(
+                req.session.userId
+            );
+
+
+            // ========================================
+            // SUCCESS
+            // ========================================
+
+            res.json({
+
+                success: true,
+
+                message:
+                    "Watch Ads goal claimed: NGN50,000"
+
+            });
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Watch Ads error:",
+                error
+            );
+
+
+            res.status(500).json({
+
+                success: false,
+
+                message:
+                    "Unable to claim Watch Ads reward."
+
+            });
+
+        }
+
+    }
+);
+
+
+// ==================================================
+// RECORD COMPLETED AD
+// ==================================================
+
+app.post(
+    "/complete-ad",
+    (req, res) => {
+
+        if (!req.session.userId) {
+
+            return res.status(401).json({
+
+                success: false,
+
+                message:
+                    "Please log in first."
+
+            });
+
+        }
+
+
+        try {
+
+            // ========================================
+            // CHECK IF ALREADY CLAIMED
+            // ========================================
+
+            const alreadyClaimed =
+                db.prepare(`
+                    SELECT id
+                    FROM goal_claims
+                    WHERE user_id = ?
+                    AND goal = 'watchads'
+                    LIMIT 1
+                `).get(
+                    req.session.userId
+                );
+
+
+            if (alreadyClaimed) {
+
+                return res.json({
+
+                    success: false,
+
+                    message:
+                        "Watch Ads reward has already been claimed."
+
+                });
+
+            }
+
+
+            // ========================================
+            // GET CURRENT PROGRESS
+            // ========================================
+
+            const progress =
+                db.prepare(`
+                    SELECT ads_watched
+                    FROM ad_progress
+                    WHERE user_id = ?
+                `).get(
+                    req.session.userId
+                );
+
+
+            const currentCount =
+                progress
+                    ? progress.ads_watched
+                    : 0;
+
+
+            // ========================================
+            // STOP AFTER 2 ADS
+            // ========================================
+
+            if (currentCount >= 2) {
+
+                return res.json({
+
+                    success: true,
+
+                    adsWatched: 2,
+
+                    message:
+                        "You have completed 2 ads."
+
+                });
+
+            }
+
+
+            // ========================================
+            // ADD ONE COMPLETED AD
+            // ========================================
+
+            const newCount =
+                currentCount + 1;
+
+
+            db.prepare(`
+                INSERT INTO ad_progress
+                (
+                    user_id,
+                    ads_watched
+                )
+
+                VALUES (?, ?)
+
+                ON CONFLICT(user_id)
+
+                DO UPDATE SET
+                    ads_watched = excluded.ads_watched,
+                    updated_at = CURRENT_TIMESTAMP
+            `).run(
+
+                req.session.userId,
+
+                newCount
+
+            );
+
+
+            // ========================================
+            // RESPONSE
+            // ========================================
+
+            res.json({
+
+                success: true,
+
+                adsWatched:
+                    newCount,
+
+                remaining:
+                    Math.max(
+                        0,
+                        2 - newCount
+                    ),
+
+                message:
+                    newCount >= 2
+                        ? "You have completed 2 ads. You can now claim your NGN50,000 reward."
+                        : `Ad completed. ${2 - newCount} ad remaining.`
+
+            });
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Complete ad error:",
+                error
+            );
+
+
+            res.status(500).json({
+
+                success: false,
+
+                message:
+                    "Unable to record ad completion."
+
+            });
+
+        }
+
+    }
+);
+
+
+// ==================================================
+// GET AD PROGRESS
+// ==================================================
+
+app.get(
+    "/ad-progress",
+    (req, res) => {
+
+        if (!req.session.userId) {
+
+            return res.status(401).json({
+
+                success: false,
+
+                message:
+                    "Please log in first."
+
+            });
+
+        }
+
+
+        try {
+
+            const progress =
+                db.prepare(`
+                    SELECT ads_watched
+                    FROM ad_progress
+                    WHERE user_id = ?
+                `).get(
+                    req.session.userId
+                );
+
+
+            const adsWatched =
+                progress
+                    ? progress.ads_watched
+                    : 0;
+
+
+            const claimed =
+                db.prepare(`
+                    SELECT id
+                    FROM goal_claims
+                    WHERE user_id = ?
+                    AND goal = 'watchads'
+                    LIMIT 1
+                `).get(
+                    req.session.userId
+                );
+
+
+            res.json({
+
+                success: true,
+
+                adsWatched:
+                    Math.min(
+                        adsWatched,
+                        2
+                    ),
+
+                required:
+                    2,
+
+                claimed:
+                    !!claimed
+
+            });
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Ad progress error:",
+                error
+            );
+
+
+            res.status(500).json({
+
+                success: false,
+
+                message:
+                    "Unable to check ad progress."
+
+            });
+
+        }
+
+    }
+);
+
+
+// ==================================================
+// CLAIM CP GOAL
+// ==================================================
+
+app.post(
+    "/claim-goal",
+    (req, res) => {
+
+        if (!req.session.userId) {
+
+            return res.status(401).json({
+
+                success: false,
+
+                message:
+                    "Please log in first."
+
+            });
+
+        }
+
+
+        const { goal } =
+            req.body;
+
+
+        // ========================================
+        // CP GOAL REWARDS
+        // ========================================
+
         const rewards = {
 
             share: 50000,
 
-            buycode: 50000
+            buycode: 50000,
+
+            watchads: 50000
 
         };
 
 
-        // Check valid goal
+        // ========================================
+        // CHECK VALID GOAL
+        // ========================================
+
         if (
             !Object.prototype.hasOwnProperty.call(
                 rewards,
@@ -1360,76 +1919,8 @@ app.post(
 
         try {
 
-
-            // ==========================================
-            // CHECK SHARE COMPLETION
-            // ==========================================
-
-            if (goal === "share") {
-
-                const shareCompleted =
-                    db.prepare(`
-                        SELECT id
-                        FROM share_completions
-                        WHERE user_id = ?
-                        LIMIT 1
-                    `).get(
-                        req.session.userId
-                    );
-
-
-                if (!shareCompleted) {
-
-                    return res.json({
-
-                        success: false,
-
-                        message:
-                            "Please share the website before claiming this reward."
-
-                    });
-
-                }
-
-            }
-
-
-            // ==========================================
-            // CHECK BUY CODE PURCHASE
-            // ==========================================
-
-            if (goal === "buycode") {
-
-                const purchasedCode =
-                    db.prepare(`
-                        SELECT id
-                        FROM cp_codes
-                        WHERE user_id = ?
-                        LIMIT 1
-                    `).get(
-                        req.session.userId
-                    );
-
-
-                if (!purchasedCode) {
-
-                    return res.json({
-
-                        success: false,
-
-                        message:
-                            "Please buy CP code before claiming this reward."
-
-                    });
-
-                }
-
-            }
-
-
             // ========================================
-            // CHECK WHETHER THIS GOAL
-            // WAS ALREADY CLAIMED
+            // CHECK IF REWARD WAS ALREADY CLAIMED
             // ========================================
 
             const alreadyClaimed =
@@ -1458,6 +1949,75 @@ app.post(
                         "You have already claimed this goal."
 
                 });
+
+            }
+
+
+            // ========================================
+            // SHARE GOAL REQUIREMENT
+            // ========================================
+
+            if (goal === "share") {
+
+                const shareCompleted =
+                    db.prepare(`
+                        SELECT id
+                        FROM goal_completions
+                        WHERE user_id = ?
+                        AND goal = 'share'
+                        LIMIT 1
+                    `).get(
+                        req.session.userId
+                    );
+
+
+                if (!shareCompleted) {
+
+                    return res.json({
+
+                        success: false,
+
+                        message:
+                            "You must share the CryptPay website before claiming this reward."
+
+                    });
+
+                }
+
+            }
+
+
+            // ========================================
+            // WATCH ADS REQUIREMENT
+            // ========================================
+
+            if (goal === "watchads") {
+
+                const progress =
+                    db.prepare(`
+                        SELECT ads_watched
+                        FROM ad_progress
+                        WHERE user_id = ?
+                    `).get(
+                        req.session.userId
+                    );
+
+
+                if (
+                    !progress ||
+                    progress.ads_watched < 2
+                ) {
+
+                    return res.json({
+
+                        success: false,
+
+                        message:
+                            "You must complete 2 ads before claiming this reward."
+
+                    });
+
+                }
 
             }
 
@@ -1511,7 +2071,7 @@ app.post(
 
 
             // ========================================
-            // RECORD GOAL CLAIM
+            // RECORD CLAIM
             // ========================================
 
             db.prepare(`
@@ -1532,7 +2092,7 @@ app.post(
 
 
             // ========================================
-            // SUCCESS MESSAGE
+            // SUCCESS
             // ========================================
 
             res.json({
@@ -1542,12 +2102,13 @@ app.post(
                 message:
                     goal === "share"
                         ? "Share goal claimed: NGN50,000"
-                        : "Buy Code goal claimed: NGN50,000"
+                        : goal === "watchads"
+                            ? "Watch Ads goal claimed: NGN50,000"
+                            : "Buy Code goal claimed: NGN50,000"
 
             });
 
         }
-
 
         catch (error) {
 
@@ -1622,7 +2183,6 @@ app.get(
 
         }
 
-
         catch (error) {
 
             console.error(
@@ -1637,115 +2197,6 @@ app.get(
 
                 message:
                     "Unable to check goals."
-
-            });
-
-        }
-
-    }
-);
-
-
-// ==================================================
-// COMPLETE CP SHARE
-// ==================================================
-
-app.post(
-    "/complete-share",
-    (req, res) => {
-
-        if (!req.session.userId) {
-
-            return res.status(401).json({
-
-                success: false,
-
-                message:
-                    "Please log in first."
-
-            });
-
-        }
-
-
-        try {
-
-            /*
-                Check whether the user has
-                already completed the Share
-                action.
-            */
-
-            const existing =
-                db.prepare(`
-                    SELECT id
-                    FROM share_completions
-                    WHERE user_id = ?
-                    LIMIT 1
-                `).get(
-                    req.session.userId
-                );
-
-
-            if (existing) {
-
-                return res.json({
-
-                    success: true,
-
-                    message:
-                        "Share completed."
-
-                });
-
-            }
-
-
-            /*
-                Record that the browser's
-                share operation completed.
-
-                The reward is NOT added here.
-            */
-
-            db.prepare(`
-                INSERT INTO share_completions
-                (
-                    user_id
-                )
-
-                VALUES (?)
-            `).run(
-                req.session.userId
-            );
-
-
-            res.json({
-
-                success: true,
-
-                message:
-                    "Share completed. You can now claim your reward."
-
-            });
-
-        }
-
-
-        catch (error) {
-
-            console.error(
-                "Share completion error:",
-                error
-            );
-
-
-            res.status(500).json({
-
-                success: false,
-
-                message:
-                    "Unable to record the share."
 
             });
 
