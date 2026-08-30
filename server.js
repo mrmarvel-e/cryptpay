@@ -70,16 +70,16 @@ db.exec(`
 // Adds a column to existing cp_codes tables so that
 // every purchased CP code can provide one Buy Code
 // reward opportunity.
-//
-// If the column already exists, nothing is changed.
 
 try {
+
     db.exec(`
         ALTER TABLE cp_codes
         ADD COLUMN buycode_claimed INTEGER DEFAULT 0
     `);
 
     console.log("Buy Code reward column added.");
+
 }
 
 catch (error) {
@@ -111,8 +111,6 @@ app.use(
     })
 );
 
-app.use(express.static("."));
-
 // ==================================================
 // SESSIONS
 // ==================================================
@@ -139,6 +137,142 @@ app.use(
         }
 
     })
+);
+
+// ==================================================
+// SHARE LINK ENTRY
+// ==================================================
+//
+// This is the special URL that should be shared.
+//
+// Example:
+//
+// https://cryptpay.name.ng/share
+//
+// When someone opens it:
+// - The server records that they arrived through
+//   the share link.
+// - If they are not logged in, they are sent
+//   to login.html.
+// - After login, the share requirement remains
+//   available.
+// ==================================================
+
+app.get(
+    "/share",
+    (req, res) => {
+
+        // Store the fact that the visitor entered
+        // through the CryptPay share link.
+
+        req.session.shareIntent = true;
+
+        // If the visitor is not logged in,
+        // send them to the login page.
+
+        if (!req.session.userId) {
+
+            return res.redirect(
+                "/login.html"
+            );
+
+        }
+
+        // If already logged in, send them
+        // directly to the CryptPay main page.
+
+        return res.redirect(
+            "/cryptpay.html"
+        );
+
+    }
+);
+
+// ==================================================
+// MAIN WEBSITE LOGIN PROTECTION
+// ==================================================
+//
+// Anyone visiting the main website while logged out
+// is redirected to login.html.
+//
+// This also applies when someone searches for the
+// website and opens it directly.
+// ==================================================
+
+app.get(
+    "/",
+    (req, res) => {
+
+        if (!req.session.userId) {
+
+            return res.redirect(
+                "/login.html"
+            );
+
+        }
+
+        return res.sendFile(
+            path.join(
+                __dirname,
+                "cryptpay.html"
+            )
+        );
+
+    }
+);
+
+// ==================================================
+// PROTECTED CRYPTPAY PAGES
+// ==================================================
+
+const protectedPages = [
+
+    "/cryptpay.html",
+
+    "/cryptpaygoals.html",
+
+    "/cpgoals.html",
+
+    "/cryptpayprofile.html",
+
+    "/dailyrewardcryptpay.html",
+
+    "/balance.html",
+
+    "/buycpcode.html",
+
+    "/aboutcryptpay.html"
+
+];
+
+app.use(
+    (req, res, next) => {
+
+        if (
+            protectedPages.includes(
+                req.path
+            )
+            &&
+            !req.session.userId
+        ) {
+
+            return res.redirect(
+                "/login.html"
+            );
+
+        }
+
+        next();
+
+    }
+);
+
+// ==================================================
+// STATIC WEBSITE FILES
+// ==================================================
+
+app.use(
+    express.static(".")
 );
 
 // ==================================================
@@ -407,9 +541,18 @@ app.post(
             req.session.userId =
                 user.id;
 
+            // ------------------------------------------
+            // If the user entered through the share
+            // link before logging in, keep that
+            // requirement active.
+            // ------------------------------------------
+
             res.json({
 
-                success: true
+                success: true,
+
+                sharePending:
+                    !!req.session.shareIntent
 
             });
 
@@ -484,7 +627,10 @@ app.get(
 
             loggedIn: true,
 
-            user: user
+            user: user,
+
+            sharePending:
+                !!req.session.shareIntent
 
         });
 
@@ -784,10 +930,6 @@ app.post(
                 cleanedText.includes(
                     expectedAccountNumber
                 );
-
-            // ==================================================
-            // LOG RESULTS
-            // ==================================================
 
             console.log(
                 "Account number detected:",
@@ -1190,12 +1332,15 @@ app.post(
 // ==================================================
 // CLAIM DAILY REWARD
 // ==================================================
+//
+// DAILY REWARD IS FREE.
+// NO CP CODE IS REQUIRED.
+// ==================================================
 
 app.post(
     "/claim-reward",
     (req, res) => {
 
-        // Check if the user is logged in
         if (!req.session.userId) {
 
             return res.status(401).json({
@@ -1209,7 +1354,8 @@ app.post(
 
         }
 
-        const reward = 100000;
+        const reward =
+            100000;
 
         try {
 
@@ -1268,7 +1414,7 @@ app.post(
             }
 
             // ========================================
-            // ADD REWARD TO BALANCE
+            // ADD FREE REWARD TO BALANCE
             // ========================================
 
             db.prepare(`
@@ -1340,6 +1486,21 @@ app.post(
 // ==================================================
 // COMPLETE CP SHARE GOAL
 // ==================================================
+//
+// The Share Goal DOES NOT require a CP Code.
+//
+// The user must first enter through:
+//
+// /share
+//
+// The /share route records shareIntent in the
+// session. If the user is logged out, they are
+// sent to login.html.
+//
+// After login, the share requirement remains
+// active.
+//
+// ==================================================
 
 app.post(
     "/complete-share",
@@ -1361,7 +1522,53 @@ app.post(
         try {
 
             // ========================================
-            // CHECK IF SHARE WAS ALREADY COMPLETED
+            // CHECK WHETHER SHARE REWARD WAS ALREADY
+            // CLAIMED
+            // ========================================
+
+            const alreadyClaimed =
+                db.prepare(`
+                    SELECT id
+                    FROM goal_claims
+                    WHERE user_id = ?
+                    AND goal = 'share'
+                    LIMIT 1
+                `).get(
+                    req.session.userId
+                );
+
+            if (alreadyClaimed) {
+
+                return res.json({
+
+                    success: false,
+
+                    message:
+                        "You have already claimed this goal."
+
+                });
+
+            }
+
+            // ========================================
+            // REQUIRE ENTRY THROUGH SHARE LINK
+            // ========================================
+
+            if (!req.session.shareIntent) {
+
+                return res.json({
+
+                    success: false,
+
+                    message:
+                        "Please open the CryptPay website using the Share Website link before claiming this reward."
+
+                });
+
+            }
+
+            // ========================================
+            // RECORD SHARE COMPLETION
             // ========================================
 
             const alreadyCompleted =
@@ -1375,41 +1582,32 @@ app.post(
                     req.session.userId
                 );
 
-            if (alreadyCompleted) {
+            if (!alreadyCompleted) {
 
-                return res.json({
+                db.prepare(`
+                    INSERT INTO goal_completions
+                    (
+                        user_id,
+                        goal
+                    )
 
-                    success: true,
-
-                    message:
-                        "Share goal already completed."
-
-                });
+                    VALUES (?, 'share')
+                `).run(
+                    req.session.userId
+                );
 
             }
 
             // ========================================
-            // RECORD SHARE COMPLETION
+            // SHARE REQUIREMENT COMPLETED
             // ========================================
-
-            db.prepare(`
-                INSERT INTO goal_completions
-                (
-                    user_id,
-                    goal
-                )
-
-                VALUES (?, 'share')
-            `).run(
-                req.session.userId
-            );
 
             res.json({
 
                 success: true,
 
                 message:
-                    "Share goal completed."
+                    "Share goal completed. You can now claim your NGN50,000 reward."
 
             });
 
@@ -1555,9 +1753,11 @@ app.post(
 
         const rewards = {
 
-            share: 50000,
+            share:
+                50000,
 
-            buycode: 50000
+            buycode:
+                50000
 
         };
 
@@ -1566,9 +1766,13 @@ app.post(
         // ========================================
 
         const validGoals = [
+
             "share",
+
             "buycode",
+
             "watchads"
+
         ];
 
         if (
@@ -1594,9 +1798,11 @@ app.post(
             // SHARE GOAL
             // ==================================================
 
-            // Share does NOT require a CP code.
-
             if (goal === "share") {
+
+                // ------------------------------------------
+                // CHECK ALREADY CLAIMED
+                // ------------------------------------------
 
                 const alreadyClaimed =
                     db.prepare(`
@@ -1622,6 +1828,27 @@ app.post(
 
                 }
 
+                // ------------------------------------------
+                // REQUIRE SHARE LINK ENTRY
+                // ------------------------------------------
+
+                if (!req.session.shareIntent) {
+
+                    return res.json({
+
+                        success: false,
+
+                        message:
+                            "Please open the CryptPay website using the Share Website link first."
+
+                    });
+
+                }
+
+                // ------------------------------------------
+                // CHECK SHARE COMPLETION
+                // ------------------------------------------
+
                 const shareCompleted =
                     db.prepare(`
                         SELECT id
@@ -1640,11 +1867,15 @@ app.post(
                         success: false,
 
                         message:
-                            "You must share the CryptPay website before claiming this reward."
+                            "You must complete the Share Website requirement before claiming this reward."
 
                     });
 
                 }
+
+                // ------------------------------------------
+                // ADD SHARE REWARD
+                // ------------------------------------------
 
                 db.prepare(`
                     UPDATE users
@@ -1661,6 +1892,10 @@ app.post(
 
                 );
 
+                // ------------------------------------------
+                // RECORD CLAIM
+                // ------------------------------------------
+
                 db.prepare(`
                     INSERT INTO goal_claims
                     (
@@ -1672,6 +1907,13 @@ app.post(
                 `).run(
                     req.session.userId
                 );
+
+                // ------------------------------------------
+                // REMOVE SHARE INTENT
+                // ------------------------------------------
+
+                req.session.shareIntent =
+                    false;
 
                 return res.json({
 
@@ -1690,11 +1932,11 @@ app.post(
 
             if (goal === "buycode") {
 
-                // --------------------------------------------------
-                // Find a purchased CP code belonging to this user
-                // that has not already been used for the Buy Code
-                // reward.
-                // --------------------------------------------------
+                // ------------------------------------------
+                // Find a purchased CP code belonging to
+                // this user that has not already been used
+                // for the Buy Code reward.
+                // ------------------------------------------
 
                 const availableCode =
                     db.prepare(`
@@ -1716,9 +1958,9 @@ app.post(
                         req.session.userId
                     );
 
-                // --------------------------------------------------
+                // ------------------------------------------
                 // No purchased code
-                // --------------------------------------------------
+                // ------------------------------------------
 
                 if (!availableCode) {
 
@@ -1733,9 +1975,9 @@ app.post(
 
                 }
 
-                // --------------------------------------------------
-                // Add NGN50,000 to the user's balance
-                // --------------------------------------------------
+                // ------------------------------------------
+                // Add NGN50,000
+                // ------------------------------------------
 
                 db.prepare(`
                     UPDATE users
@@ -1752,10 +1994,10 @@ app.post(
 
                 );
 
-                // --------------------------------------------------
-                // Mark this specific CP code as having been used
-                // for the Buy Code reward.
-                // --------------------------------------------------
+                // ------------------------------------------
+                // Mark CP code as used for Buy Code
+                // reward
+                // ------------------------------------------
 
                 db.prepare(`
                     UPDATE cp_codes
@@ -1766,17 +2008,6 @@ app.post(
                 `).run(
                     availableCode.id
                 );
-
-                // --------------------------------------------------
-                // IMPORTANT:
-                //
-                // We intentionally DO NOT put "buycode" into
-                // goal_claims because doing that would make the
-                // reward permanently claimable only once.
-                //
-                // Instead, each purchased CP code has its own
-                // buycode_claimed value.
-                // --------------------------------------------------
 
                 return res.json({
 
@@ -1872,6 +2103,7 @@ app.post(
                     ON CONFLICT(user_id)
 
                     DO UPDATE SET
+
                         points =
                             points + 50000,
 
@@ -1976,11 +2208,20 @@ app.get(
                     row => row.goal
                 );
 
+            // Check whether the user entered through
+            // the share link.
+
+            const sharePending =
+                !!req.session.shareIntent;
+
             res.json({
 
                 success: true,
 
-                claimed: claimed
+                claimed: claimed,
+
+                sharePending:
+                    sharePending
 
             });
 
