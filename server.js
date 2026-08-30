@@ -38,6 +38,33 @@ db.exec(`
 `);
 
 // ==================================================
+// BUY CODE REWARD CLAIMS
+// ==================================================
+//
+// One row represents one Buy Code reward claim.
+// This allows the user to claim the Buy Code reward
+// once for each CP code that has been purchased.
+//
+
+db.exec(`
+    CREATE TABLE IF NOT EXISTS buycode_reward_claims (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+        user_id INTEGER NOT NULL,
+
+        cp_code_id INTEGER NOT NULL UNIQUE,
+
+        claimed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+        FOREIGN KEY (user_id)
+            REFERENCES users(id),
+
+        FOREIGN KEY (cp_code_id)
+            REFERENCES cp_codes(id)
+    )
+`);
+
+// ==================================================
 // CP POINTS
 // ==================================================
 
@@ -74,18 +101,6 @@ app.use(
         extended: true
     })
 );
-
-// ==================================================
-// DIRECT WEBSITE ROOT TO LOGIN PAGE
-// ==================================================
-
-app.get("/", (req, res) => {
-
-    res.sendFile(
-        path.join(__dirname, "login.html")
-    );
-
-});
 
 app.use(express.static("."));
 
@@ -131,7 +146,6 @@ if (!fs.existsSync(proofFolder)) {
             recursive: true
         }
     );
-
 }
 
 // ==================================================
@@ -1560,6 +1574,149 @@ app.post(
 
         try {
 
+            // ==================================================
+            // BUY CODE GOAL
+            // ==================================================
+
+            if (goal === "buycode") {
+
+                // ==============================================
+                // GET ALL CP CODES PURCHASED BY THIS USER
+                // ==============================================
+
+                const purchasedCodes =
+                    db.prepare(`
+                        SELECT id
+                        FROM cp_codes
+                        WHERE user_id = ?
+                        ORDER BY id ASC
+                    `).all(
+                        req.session.userId
+                    );
+
+                // ==============================================
+                // CHECK WHETHER USER HAS PURCHASED A CODE
+                // ==============================================
+
+                if (
+                    purchasedCodes.length === 0
+                ) {
+
+                    return res.json({
+
+                        success: false,
+
+                        message:
+                            "Please purchase CP code before claiming this reward"
+
+                    });
+
+                }
+
+                // ==============================================
+                // FIND A CP CODE THAT HAS NOT YET BEEN USED
+                // FOR A BUY CODE REWARD
+                // ==============================================
+
+                let availableCode = null;
+
+                for (
+                    const purchasedCode
+                    of purchasedCodes
+                ) {
+
+                    const alreadyClaimed =
+                        db.prepare(`
+                            SELECT id
+                            FROM buycode_reward_claims
+                            WHERE cp_code_id = ?
+                            LIMIT 1
+                        `).get(
+                            purchasedCode.id
+                        );
+
+                    if (!alreadyClaimed) {
+
+                        availableCode =
+                            purchasedCode;
+
+                        break;
+
+                    }
+
+                }
+
+                // ==============================================
+                // ALL PURCHASED CODES HAVE ALREADY BEEN CLAIMED
+                // ==============================================
+
+                if (!availableCode) {
+
+                    return res.json({
+
+                        success: false,
+
+                        message:
+                            "Please purchase CP code before claiming this reward"
+
+                    });
+
+                }
+
+                // ==============================================
+                // ADD DEMO REWARD TO BALANCE
+                // ==============================================
+
+                db.prepare(`
+                    UPDATE users
+
+                    SET balance =
+                        balance + ?
+
+                    WHERE id = ?
+                `).run(
+
+                    rewards.buycode,
+
+                    req.session.userId
+
+                );
+
+                // ==============================================
+                // RECORD THIS SPECIFIC CODE'S REWARD CLAIM
+                // ==============================================
+
+                db.prepare(`
+                    INSERT INTO buycode_reward_claims
+                    (
+                        user_id,
+                        cp_code_id
+                    )
+
+                    VALUES (?, ?)
+                `).run(
+
+                    req.session.userId,
+
+                    availableCode.id
+
+                );
+
+                // ==============================================
+                // SUCCESS
+                // ==============================================
+
+                return res.json({
+
+                    success: true,
+
+                    message:
+                        "Buy Code goal claimed: NGN50,000"
+
+                });
+
+            }
+
             // ========================================
             // CHECK IF REWARD WAS ALREADY CLAIMED
             // ========================================
@@ -1977,7 +2134,7 @@ const PORT =
 
 app.listen(
     PORT,
-    "0.0.0.0",
+
     () => {
 
         console.log(
