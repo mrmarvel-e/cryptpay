@@ -1981,12 +1981,35 @@ app.get(
                 );
 
 
+            // ==================================================
+            // GET COMPLETED CP GOALS
+            // ==================================================
+
+            const completedRows =
+                db.prepare(`
+                    SELECT goal
+                    FROM goal_completions
+                    WHERE user_id = ?
+                `).all(
+                    req.session.userId
+                );
+
+
+            const completed =
+                completedRows.map(
+                    row => row.goal
+                );
+
+
             res.json({
 
                 success: true,
 
                 claimed:
-                    claimed
+                    claimed,
+
+                completed:
+                    completed
 
             });
 
