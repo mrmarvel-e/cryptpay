@@ -1,240 +1,281 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
+
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1546729568940222"
      crossorigin="anonymous"></script>
-    <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
 
-    <title>About Us</title>
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
-    <style>
+<title>About Us</title>
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+<style>
 
-        body {
-            background-color: black;
-            color: gold;
-            font-family: Arial, sans-serif;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
-        /* Remove link underlines */
+    body {
+        background-color: black;
+        color: gold;
+        font-family: Arial, sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
+    /* Remove link underlines */
 
-        a:visited,
-        a:hover,
-        a:active {
-            text-decoration: none;
-            color: inherit;
-        }
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
 
-        /* Main container */
+    a:visited,
+    a:hover,
+    a:active {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    /* Main container */
+
+    .container {
+        width: 100%;
+        max-width: 600px;
+        margin: auto;
+        padding: 15px;
+    }
+
+    /* Top section */
+
+    .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Back button */
+
+    .back-button {
+        width: 60px;
+        height: 60px;
+
+        background-color: transparent;
+        color: gold;
+
+        border: 2px solid gold;
+        border-radius: 50%;
+
+        padding: 3px;
+        cursor: pointer;
+    }
+
+    .back-button img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    /* Heading */
+
+    .heading {
+        text-align: center;
+        margin-top: 25px;
+        margin-bottom: 20px;
+    }
+
+    .heading h2 {
+        font-size: 28px;
+    }
+
+    /* =========================
+       ADSENSE
+    ========================= */
+
+    .ad-container {
+        width: 100%;
+
+        margin-top: 25px;
+        margin-bottom: 25px;
+
+        overflow: hidden;
+
+        text-align: center;
+    }
+
+    /* About text */
+
+    .about-text {
+        width: 100%;
+
+        background-color: transparent;
+
+        font-size: 21px;
+        line-height: 1.6;
+
+        text-align: left;
+    }
+
+    /* Disclaimer */
+
+    .disclaimer {
+        display: inline-block;
+
+        margin-top: 15px;
+
+        color: white;
+        font-size: 12px;
+
+        text-decoration: underline;
+    }
+
+    /* Phone */
+
+    @media (max-width: 500px) {
 
         .container {
-            width: 100%;
-            max-width: 600px;
-            margin: auto;
-            padding: 15px;
+            padding: 12px;
         }
-
-        /* Top section */
-
-        .top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* Back button */
 
         .back-button {
-            width: 60px;
-            height: 60px;
-
-            background-color: transparent;
-            color: gold;
-
-            border: 2px solid gold;
-            border-radius: 50%;
-
-            padding: 3px;
-            cursor: pointer;
+            width: 55px;
+            height: 55px;
         }
-
-        .back-button img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        /* Heading */
 
         .heading {
-            text-align: center;
-            margin-top: 25px;
-            margin-bottom: 20px;
+            margin-top: 20px;
         }
 
         .heading h2 {
-            font-size: 28px;
+            font-size: 25px;
         }
-
-        /* About text */
 
         .about-text {
-            width: 100%;
-
-            background-color: transparent;
-
-            font-size: 21px;
+            font-size: 18px;
             line-height: 1.6;
-
-            text-align: left;
         }
-
-        /* Disclaimer */
 
         .disclaimer {
-            display: inline-block;
-
-            margin-top: 15px;
-
-            color: white;
-            font-size: 12px;
-
-            text-decoration: underline;
+            font-size: 11px;
         }
 
-        /* Phone */
+    }
 
-        @media (max-width: 500px) {
+    /* Very small phones */
 
-            .container {
-                padding: 12px;
-            }
+    @media (max-width: 350px) {
 
-            .back-button {
-                width: 55px;
-                height: 55px;
-            }
-
-            .heading {
-                margin-top: 20px;
-            }
-
-            .heading h2 {
-                font-size: 25px;
-            }
-
-            .about-text {
-                font-size: 18px;
-                line-height: 1.6;
-            }
-
-            .disclaimer {
-                font-size: 11px;
-            }
-
+        .about-text {
+            font-size: 16px;
         }
 
-        /* Very small phones */
-
-        @media (max-width: 350px) {
-
-            .about-text {
-                font-size: 16px;
-            }
-
-            .heading h2 {
-                font-size: 23px;
-            }
-
+        .heading h2 {
+            font-size: 23px;
         }
 
-    </style>
+    }
+
+</style>
+
 
 </head>
-
 
 <body>
 
 <div class="container">
 
-    <!-- TOP -->
 
-    <div class="top">
+<!-- TOP -->
 
-        <a href="cryptpay.html">
+<div class="top">
 
-            <button class="back-button">
+    <a href="cryptpay.html">
 
-                <img
-                    src="cryptpaybackkey.png"
-                    alt="Back"
-                >
+        <button class="back-button">
 
-            </button>
+            <img
+                src="cryptpaybackkey.png"
+                alt="Back"
+            >
 
-        </a>
+        </button>
 
-    </div>
+    </a>
 
-
-    <!-- TITLE -->
-
-    <div class="heading">
-
-        <h2>
-            About Us
-        </h2>
-
-    </div>
+</div>
 
 
-    <!-- ABOUT TEXT -->
+<!-- TITLE -->
 
-    <div class="about-text">
+<div class="heading">
 
-        Cryptpay is a platform where you can withdraw BTC
-        earnings made from stock exchange provided by our sponsors.
-        Complete daily tasks and claim daily rewards.
-        Withdraw earnings and cashout instantly.
+    <h2>
+        About Us
+    </h2>
 
-        You may withdraw as much as you want. However,
-        CP code is one time use only.
+</div>
 
-        What are you waiting for? Purchase your 8-digit CP
-        code and withdraw instantly.
 
-        Cryptpay has over 10k+ users who have successfully
-        withdrawn their funds and are currently still earning.
+<!-- ADSENSE AD -->
 
-        Thanks for using our service and keep earning!
+<div class="ad-container">
 
-        Also, be notified that registering on this platform 
-        confirms that you have read and agreed to the disclaimer provided. 
+    <ins
+        class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-1546729568940222"
+        data-ad-slot="1792055789"
+        data-ad-format="auto"
+        data-full-width-responsive="true">
+    </ins>
 
-        <br>
+</div>
 
-        <a href="cryptpaydisclaimer.html"
-           class="disclaimer">
-            Disclaimer
-        </a>
 
-    </div>
+<script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<!-- ABOUT TEXT -->
+
+<div class="about-text">
+
+    Cryptpay is a platform where you can withdraw BTC
+    earnings made from stock exchange provided by our sponsors.
+    Complete daily tasks and claim daily rewards.
+    Withdraw earnings and cashout instantly.
+
+    You may withdraw as much as you want. However,
+    CP code is one time use only.
+
+    What are you waiting for? Purchase your 8-digit CP
+    code and withdraw instantly.
+
+    Cryptpay has over 10k+ users who have successfully
+    withdrawn their funds and are currently still earning.
+
+    Thanks for using our service and keep earning!
+
+    Also, be notified that registering on this platform 
+    confirms that you have read and agreed to the disclaimer provided. 
+
+    <br>
+
+    <a href="cryptpaydisclaimer.html"
+       class="disclaimer">
+        Disclaimer
+    </a>
+
+</div>
+
 
 </div>
 
