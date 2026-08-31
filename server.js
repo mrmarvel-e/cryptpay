@@ -269,17 +269,6 @@ const upload =
 // ==================================================
 // PUBLIC HOMEPAGE
 // ==================================================
-//
-// IMPORTANT:
-// The homepage does NOT require login.
-//
-// A visitor can open:
-// /
-// /cryptpay.html
-//
-// without being logged in.
-//
-// ==================================================
 
 app.get(
     "/",
@@ -628,9 +617,6 @@ app.post(
 
                 );
 
-
-            // Automatically log the newly
-            // registered user in.
 
             req.session.userId =
                 result.lastInsertRowid;
