@@ -51,20 +51,6 @@ db.exec(`
 
 
 // ==================================================
-// WATCH ADS PROGRESS
-// ==================================================
-
-db.exec(`
-    CREATE TABLE IF NOT EXISTS ad_progress (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER NOT NULL UNIQUE,
-        ads_watched INTEGER NOT NULL DEFAULT 0,
-        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-`);
-
-
-// ==================================================
 // BUY CODE REWARD TRACKING
 // ==================================================
 
@@ -562,7 +548,6 @@ app.get(
 
 
 // ==================================================
-// ADDED MODIFICATION
 // PROTECTED BUY CODE PAYMENT PAGE
 // ==================================================
 
@@ -1705,99 +1690,6 @@ app.post(
 
 
 // ==================================================
-// AD PROGRESS
-// ==================================================
-
-app.get(
-    "/ad-progress",
-    (req, res) => {
-
-        if (!req.session.userId) {
-
-            return res.status(401).json({
-
-                success: false,
-
-                message:
-                    "Please log in first."
-
-            });
-
-        }
-
-        try {
-
-            const progress =
-                db.prepare(`
-                    SELECT ads_watched
-                    FROM ad_progress
-                    WHERE user_id = ?
-                `).get(
-                    req.session.userId
-                );
-
-
-            const adsWatched =
-                progress
-                    ? progress.ads_watched
-                    : 0;
-
-
-            const claimed =
-                db.prepare(`
-                    SELECT id
-                    FROM goal_claims
-                    WHERE user_id = ?
-                    AND goal = 'watchads'
-                    LIMIT 1
-                `).get(
-                    req.session.userId
-                );
-
-
-            res.json({
-
-                success: true,
-
-                adsWatched:
-                    Math.min(
-                        adsWatched,
-                        2
-                    ),
-
-                required:
-                    2,
-
-                claimed:
-                    !!claimed
-
-            });
-
-        }
-
-        catch (error) {
-
-            console.error(
-                "Ad progress error:",
-                error
-            );
-
-            res.status(500).json({
-
-                success: false,
-
-                message:
-                    "Unable to check ad progress."
-
-            });
-
-        }
-
-    }
-);
-
-
-// ==================================================
 // CLAIM CP GOAL
 // ==================================================
 
@@ -1836,9 +1728,7 @@ app.post(
 
             "share",
 
-            "buycode",
-
-            "watchads"
+            "buycode"
 
         ];
 
@@ -2042,120 +1932,6 @@ app.post(
 
             }
 
-
-            // ==================================================
-            // WATCH ADS GOAL
-            // ==================================================
-
-            if (goal === "watchads") {
-
-                const alreadyClaimed =
-                    db.prepare(`
-                        SELECT id
-                        FROM goal_claims
-                        WHERE user_id = ?
-                        AND goal = ?
-                        LIMIT 1
-                    `).get(
-
-                        req.session.userId,
-
-                        goal
-
-                    );
-
-
-                if (alreadyClaimed) {
-
-                    return res.json({
-
-                        success: false,
-
-                        message:
-                            "You have already claimed this goal."
-
-                    });
-
-                }
-
-
-                const progress =
-                    db.prepare(`
-                        SELECT ads_watched
-                        FROM ad_progress
-                        WHERE user_id = ?
-                    `).get(
-                        req.session.userId
-                    );
-
-
-                if (
-                    !progress ||
-                    progress.ads_watched < 2
-                ) {
-
-                    return res.json({
-
-                        success: false,
-
-                        message:
-                            "You must complete 2 rewarded ads before claiming your CP Points."
-
-                    });
-
-                }
-
-
-                db.prepare(`
-                    INSERT INTO cp_points
-                    (
-                        user_id,
-                        points
-                    )
-
-                    VALUES (?, 50000)
-
-                    ON CONFLICT(user_id)
-
-                    DO UPDATE SET
-                        points =
-                            points + 50000,
-
-                        updated_at =
-                            CURRENT_TIMESTAMP
-                `).run(
-                    req.session.userId
-                );
-
-
-                db.prepare(`
-                    INSERT INTO goal_claims
-                    (
-                        user_id,
-                        goal
-                    )
-
-                    VALUES (?, ?)
-                `).run(
-
-                    req.session.userId,
-
-                    goal
-
-                );
-
-
-                return res.json({
-
-                    success: true,
-
-                    message:
-                        "You received 50,000 CP Points."
-
-                });
-
-            }
-
         }
 
         catch (error) {
@@ -2289,6 +2065,7 @@ app.post(
     }
 );
 
+
 // ==================================================
 // SERVE WEBSITE FILES
 // ==================================================
@@ -2296,6 +2073,7 @@ app.post(
 app.use(
     express.static(__dirname)
 );
+
 
 // ==================================================
 // ERROR HANDLER
@@ -2357,3 +2135,4 @@ app.listen(
 
     }
 );
+
