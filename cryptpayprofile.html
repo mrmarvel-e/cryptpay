@@ -3,11 +3,14 @@
 <html>
 
 <head>
+
     <link rel="icon" type="image/png" href="favicon.png">
+
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1546729568940222"
-     crossorigin="anonymous"></script>
+         crossorigin="anonymous"></script>
 
     <title>CryptPay Profile</title>
+
 
     <style>
 
@@ -17,9 +20,176 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+
+            position: relative;
+            overflow-x: hidden;
         }
 
+
+        /* ==================================================
+           GOLD STAR SPACE BACKGROUND
+           ================================================== */
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+
+        /* ==================================================
+           SMALL GOLD STARS
+           ================================================== */
+
+        body::before {
+
+            background-image:
+
+                radial-gradient(
+                    circle,
+                    gold 1px,
+                    transparent 2px
+                ),
+
+                radial-gradient(
+                    circle,
+                    gold 1px,
+                    transparent 2px
+                ),
+
+                radial-gradient(
+                    circle,
+                    #ffd700 1px,
+                    transparent 2px
+                ),
+
+                radial-gradient(
+                    circle,
+                    #fff0a0 1px,
+                    transparent 2px
+                );
+
+            background-size:
+
+                90px 90px,
+                130px 130px,
+                170px 170px,
+                220px 220px;
+
+            background-position:
+
+                10px 20px,
+                50px 80px,
+                100px 40px,
+                30px 120px;
+
+            opacity: 0.8;
+
+            animation: starsMove 12s linear infinite;
+        }
+
+
+        /* ==================================================
+           LARGE GLOWING STARS
+           ================================================== */
+
+        body::after {
+
+            background-image:
+
+                radial-gradient(
+                    circle,
+                    rgba(255,215,0,1) 0px,
+                    rgba(255,215,0,.8) 2px,
+                    rgba(255,215,0,.25) 5px,
+                    transparent 12px
+                ),
+
+                radial-gradient(
+                    circle,
+                    rgba(255,215,0,1) 0px,
+                    rgba(255,215,0,.7) 2px,
+                    rgba(255,215,0,.2) 6px,
+                    transparent 14px
+                ),
+
+                radial-gradient(
+                    circle,
+                    rgba(255,240,160,1) 0px,
+                    rgba(255,215,0,.6) 2px,
+                    transparent 10px
+                );
+
+            background-size:
+
+                260px 260px,
+                340px 340px,
+                430px 430px;
+
+            background-position:
+
+                40px 70px,
+                180px 20px,
+                90px 160px;
+
+            opacity: 0.7;
+
+            animation: starsGlow 3s ease-in-out infinite alternate;
+        }
+
+
+        /* ==================================================
+           STAR MOVEMENT
+           ================================================== */
+
+        @keyframes starsMove {
+
+            0% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0);
+            }
+
+        }
+
+
+        /* ==================================================
+           STAR TWINKLING
+           ================================================== */
+
+        @keyframes starsGlow {
+
+            0% {
+                opacity: 0.35;
+                filter: brightness(0.8);
+            }
+
+            50% {
+                opacity: 0.9;
+                filter: brightness(1.5);
+            }
+
+            100% {
+                opacity: 0.45;
+                filter: brightness(1);
+            }
+
+        }
+
+
         .profile-container {
+
             width: 90%;
             max-width: 500px;
             margin: 40px auto;
@@ -28,13 +198,18 @@
             border: 2px solid gold;
             border-radius: 25px;
             box-sizing: border-box;
+
+            position: relative;
+            z-index: 1;
         }
+
 
         .profile-title {
             text-align: center;
             font-size: 32px;
             margin-bottom: 30px;
         }
+
 
         .profile-icon {
             display: block;
@@ -46,9 +221,11 @@
             padding: 5px;
         }
 
+
         .profile-info {
             margin-top: 20px;
         }
+
 
         .info-box {
             background-color: #111111;
@@ -58,11 +235,13 @@
             margin-bottom: 15px;
         }
 
+
         .info-label {
             color: #aaa;
             font-size: 14px;
             margin-bottom: 5px;
         }
+
 
         .info-value {
             color: gold;
@@ -70,14 +249,17 @@
             word-wrap: break-word;
         }
 
+
         button {
             cursor: pointer;
         }
+
 
         #editButton,
         #saveButton,
         #cancelButton,
         #logoutButton {
+
             width: 100%;
             padding: 13px;
             margin-top: 10px;
@@ -85,43 +267,57 @@
             font-size: 16px;
         }
 
+
         #editButton,
         #saveButton {
+
             background-color: gold;
             color: black;
             border: 1px solid gold;
         }
 
+
         #editButton:hover,
         #saveButton:hover {
+
             background-color: #d4af37;
         }
 
+
         #cancelButton {
+
             background-color: transparent;
             color: gold;
             border: 1px solid gold;
         }
 
+
         #cancelButton:hover {
+
             background-color: #1a1a1a;
         }
 
+
         /* ==========================
            LOGOUT BUTTON
-        ========================== */
+           ========================== */
 
         #logoutButton {
+
             background-color: transparent;
             color: red;
             border: 1px solid red;
         }
 
+
         #logoutButton:hover {
+
             background-color: rgba(255, 0, 0, 0.08);
         }
 
+
         input {
+
             width: 100%;
             padding: 12px;
             margin-top: 8px;
@@ -134,12 +330,16 @@
             font-size: 16px;
         }
 
+
         input:focus {
+
             outline: none;
             border-color: gold;
         }
 
+
         .back-home {
+
             display: block;
             text-align: center;
             margin-top: 25px;
@@ -147,11 +347,15 @@
             text-decoration: none;
         }
 
+
         .back-home:hover {
+
             text-decoration: underline;
         }
 
+
         #message {
+
             text-align: center;
             margin-top: 15px;
             color: lightgreen;
@@ -680,6 +884,7 @@
 
                 }
 
+
                 catch (error) {
 
                     console.error(error);
@@ -710,4 +915,3 @@
 </body>
 
 </html>
-
