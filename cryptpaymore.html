@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -7,192 +8,228 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>More@CP</title>
 
-    <style>
+<title>More@CP</title>
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+<style>
 
-        body {
-            background-color: black;
-            color: gold;
-            font-family: Arial, sans-serif;
-            min-height: 100vh;
-        }
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
-        /* Removes purple link lines */
-        a {
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
+    body {
+        background-color: black;
+        color: gold;
+        font-family: Arial, sans-serif;
+        min-height: 100vh;
+    }
 
-        a:visited,
-        a:hover,
-        a:active {
-            text-decoration: none;
-            color: inherit;
-        }
+    /* Removes purple link lines */
+    a {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
 
-        /* Main container */
+    a:visited,
+    a:hover,
+    a:active {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    /* Main container */
+    .container {
+        width: 100%;
+        max-width: 600px;
+        margin: auto;
+        padding: 15px;
+    }
+
+    /* Back button */
+    .back-button {
+        width: 55px;
+        height: 55px;
+        background-color: transparent;
+        border: 2px solid gold;
+        border-radius: 50%;
+        padding: 2px;
+        cursor: pointer;
+    }
+
+    .back-button img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    /* Page title */
+    .title {
+        text-align: center;
+        margin-top: 25px;
+        margin-bottom: 30px;
+    }
+
+    .title h1 {
+        font-size: 28px;
+    }
+
+    /* =========================
+       ADSENSE
+    ========================= */
+
+    .ad-container {
+        width: 100%;
+        margin-top: 25px;
+        margin-bottom: 25px;
+        overflow: hidden;
+        text-align: center;
+    }
+
+    /* Menu */
+    .menu {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    /* Menu buttons */
+    .menu-button {
+        width: 100%;
+        height: 70px;
+        background-color: transparent;
+        color: gold;
+        border: 2px solid gold;
+        border-radius: 20px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 8px 20px;
+        cursor: pointer;
+    }
+
+    .menu-button:hover {
+        background-color: rgba(255, 215, 0, 0.08);
+    }
+
+    .menu-button b {
+        font-size: 22px;
+    }
+
+    .menu-button img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    /* Settings image */
+    .settings img {
+        width: 65px;
+        height: 50px;
+    }
+
+    /* Small phones */
+    @media (max-width: 350px) {
+
         .container {
-            width: 100%;
-            max-width: 600px;
-            margin: auto;
-            padding: 15px;
+            padding: 10px;
         }
 
-        /* Back button */
         .back-button {
-            width: 55px;
-            height: 55px;
-            background-color: transparent;
-            border: 2px solid gold;
-            border-radius: 50%;
-            padding: 2px;
-            cursor: pointer;
-        }
-
-        .back-button img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        /* Page title */
-        .title {
-            text-align: center;
-            margin-top: 25px;
-            margin-bottom: 30px;
+            width: 50px;
+            height: 50px;
         }
 
         .title h1 {
-            font-size: 28px;
+            font-size: 24px;
         }
 
-        /* Menu */
-        .menu {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        /* Menu buttons */
         .menu-button {
-            width: 100%;
-            height: 70px;
-            background-color: transparent;
-            color: gold;
-            border: 2px solid gold;
-            border-radius: 20px;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            padding: 8px 20px;
-            cursor: pointer;
-        }
-
-        .menu-button:hover {
-            background-color: rgba(255, 215, 0, 0.08);
+            height: 65px;
+            padding: 6px 15px;
         }
 
         .menu-button b {
-            font-size: 22px;
+            font-size: 18px;
         }
 
         .menu-button img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
+            width: 45px;
+            height: 45px;
         }
 
-        /* Settings image */
-        .settings img {
-            width: 65px;
-            height: 50px;
-        }
+    }
 
-        /* Small phones */
-        @media (max-width: 350px) {
+</style>
 
-            .container {
-                padding: 10px;
-            }
 
-            .back-button {
-                width: 50px;
-                height: 50px;
-            }
-
-            .title h1 {
-                font-size: 24px;
-            }
-
-            .menu-button {
-                height: 65px;
-                padding: 6px 15px;
-            }
-
-            .menu-button b {
-                font-size: 18px;
-            }
-
-            .menu-button img {
-                width: 45px;
-                height: 45px;
-            }
-
-        }
-
-    </style>
 </head>
-
 
 <body>
 
-    <div class="container">
 
-        <!-- BACK BUTTON -->
-        <a href="cryptpay.html">
-            <button class="back-button">
-                <img src="cryptpaybackkey.png" alt="Back">
+<div class="container">
+
+    <!-- BACK BUTTON -->
+    <a href="cryptpay.html">
+        <button class="back-button">
+            <img src="cryptpaybackkey.png" alt="Back">
+        </button>
+    </a>
+
+
+    <!-- TITLE -->
+    <div class="title">
+        <h1>More @ CP</h1>
+    </div>
+
+
+    <!-- ADSENSE AD -->
+
+    <div class="ad-container">
+
+        <ins
+            class="adsbygoogle"
+            style="display:block"
+            data-ad-client="ca-pub-1546729568940222"
+            data-ad-slot="1792055789"
+            data-ad-format="auto"
+            data-full-width-responsive="true">
+        </ins>
+
+    </div>
+
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+
+
+    <!-- MENU -->
+    <div class="menu">
+
+        <!-- ABOUT US -->
+        <a href="aboutcryptpay.html">
+            <button class="menu-button">
+
+                <b>About Us</b>
+
+                <img src="cryptpaysublogo.png" alt="About Us">
+
             </button>
         </a>
 
 
-        <!-- TITLE -->
-        <div class="title">
-            <h1>More @ CP</h1>
-        </div>
-
-
-        <!-- MENU -->
-        <div class="menu">
-
-            <!-- ABOUT US -->
-            <a href="aboutcryptpay.html">
-                <button class="menu-button">
-
-                    <b>About Us</b>
-
-                    <img src="cryptpaysublogo.png" alt="About Us">
-
-                </button>
-            </a>
-
-
-            
-        </div>
-
+        
     </div>
+
+</div>
+
 
 </body>
 </html>
