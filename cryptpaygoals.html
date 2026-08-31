@@ -185,6 +185,7 @@ body::after {
     }
 
 }
+
     * {
         box-sizing: border-box;
         margin: 0;
@@ -698,6 +699,29 @@ function openSharePage() {
     }
 
 
+    /*
+     * If the Share goal has already
+     * been completed but not claimed,
+     * claim the reward instead of
+     * opening the Share page.
+     */
+
+    if (
+        button.dataset.completed ===
+        "true"
+    ) {
+
+        claimGoal("share");
+
+        return;
+
+    }
+
+
+    /*
+     * Otherwise open the Share page.
+     */
+
     window.location.href =
         "cryptpayshare.html";
 
@@ -791,6 +815,14 @@ async function claimGoal(goal) {
         if (goal === "share") {
 
             button.disabled = true;
+
+            button.dataset.completed =
+                "false";
+
+            button.querySelector(
+                ".amount"
+            ).textContent =
+                "CLAIMED";
 
         }
 
@@ -941,28 +973,106 @@ async function checkClaimedGoals() {
         }
 
 
+        const shareButton =
+            document.getElementById(
+                "shareButton"
+            );
+
+
         /*
-         * SHARE
-         *
-         * Share remains a one-time
-         * claimed goal.
+         * =====================================
+         * SHARE ALREADY CLAIMED
+         * =====================================
          */
 
         if (
+            result.claimed &&
             result.claimed.includes(
                 "share"
             )
         ) {
 
-            document.getElementById(
-                "shareButton"
-            ).disabled = true;
+            shareButton.disabled =
+                true;
+
+
+            shareButton.dataset.completed =
+                "false";
+
+
+            shareButton.querySelector(
+                ".amount"
+            ).textContent =
+                "CLAIMED";
+
+
+            return;
 
         }
 
 
         /*
+         * =====================================
+         * SHARE COMPLETED BUT NOT CLAIMED
+         * =====================================
+         *
+         * The server should return:
+         *
+         * completed: ["share"]
+         *
+         * after /complete-share succeeds.
+         */
+
+        if (
+            result.completed &&
+            result.completed.includes(
+                "share"
+            )
+        ) {
+
+            shareButton.disabled =
+                false;
+
+
+            shareButton.dataset.completed =
+                "true";
+
+
+            shareButton.querySelector(
+                ".amount"
+            ).textContent =
+                "CLAIM NGN50,000";
+
+
+            return;
+
+        }
+
+
+        /*
+         * =====================================
+         * SHARE NOT COMPLETED
+         * =====================================
+         */
+
+        shareButton.disabled =
+            false;
+
+
+        shareButton.dataset.completed =
+            "false";
+
+
+        shareButton.querySelector(
+            ".amount"
+        ).textContent =
+            "NGN50,000";
+
+
+        /*
+         * =====================================
          * BUY CODE
+         * =====================================
          *
          * Do NOT disable this button
          * based on goal_claims.
@@ -1017,3 +1127,4 @@ initializePage();
 </body>
 
 </html>
+
