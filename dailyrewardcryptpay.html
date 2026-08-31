@@ -4,15 +4,13 @@
 
 <head>
     <link rel="icon" type="image/png" href="favicon.png">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1546729568940222"
-     crossorigin="anonymous"></script>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-<title>Daily Reward - Cryptpay</title>
+    <title>Daily Reward - Cryptpay</title>
 
 
 <style>
@@ -118,27 +116,6 @@
         border-radius: 30px;
 
         display: block;
-
-    }
-
-
-    /* =========================
-       ADSENSE
-    ========================= */
-
-    .ad-container {
-
-        width: 100%;
-
-        max-width: 550px;
-
-        margin-top: 25px;
-
-        margin-bottom: 25px;
-
-        overflow: hidden;
-
-        text-align: center;
 
     }
 
@@ -269,15 +246,6 @@
         }
 
 
-        .ad-container {
-
-            margin-top: 20px;
-
-            margin-bottom: 20px;
-
-        }
-
-
         .buttons {
 
             margin-top: 20px;
@@ -352,7 +320,9 @@
 
 </head>
 
+
 <body>
+
 
 <!-- =========================
      NOTIFICATION
@@ -360,7 +330,9 @@
 
 <div id="notification"></div>
 
+
 <div class="container">
+
 
 <!-- =========================
      CONGRATULATIONS IMAGE
@@ -375,24 +347,6 @@
     alt="Congratulations"
 
 >
-
-
-<!-- =========================
-     ADSENSE AD
-========================= -->
-
-<div class="ad-container">
-
-    <ins
-        class="adsbygoogle"
-        style="display:block"
-        data-ad-client="ca-pub-1546729568940222"
-        data-ad-slot="1792055789"
-        data-ad-format="auto"
-        data-full-width-responsive="true">
-    </ins>
-
-</div>
 
 
 <!-- =========================
@@ -440,20 +394,12 @@
 
 </div>
 
+
 </div>
 
+
+
 <script>
-
-
-// ========================================
-// LOAD ADSENSE
-// ========================================
-
-(adsbygoogle =
-    window.adsbygoogle ||
-    []
-).push({});
-
 
 
 // ========================================
@@ -483,8 +429,10 @@ async function claimDailyReward() {
                     method: "POST",
 
                     headers: {
+
                         "Content-Type":
                             "application/json"
+
                     },
 
                     body: JSON.stringify({
@@ -494,6 +442,7 @@ async function claimDailyReward() {
                     })
 
                 }
+
             );
 
 
@@ -527,7 +476,6 @@ async function claimDailyReward() {
         showNotification(
             result.message
         );
-
 
     }
 
@@ -622,6 +570,8 @@ checkLogin();
 
 </script>
 
+
 </body>
 
 </html>
+
