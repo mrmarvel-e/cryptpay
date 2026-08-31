@@ -12,7 +12,6 @@
 <meta
 name="viewport"
 content="width=device-width, initial-scale=1.0"
-
 >
 
 <title>CP Goals</title>
@@ -225,6 +224,26 @@ content="width=device-width, initial-scale=1.0"
     }
 
 
+    /* ADSENSE */
+
+    .ad-container {
+        width: 100%;
+        margin-top: 30px;
+        margin-bottom: 20px;
+
+        text-align: center;
+
+        overflow: hidden;
+    }
+
+
+    .adsbygoogle {
+        display: block;
+        width: 100%;
+        min-height: 100px;
+    }
+
+
     /* PHONE */
 
     @media (max-width: 500px) {
@@ -345,6 +364,7 @@ content="width=device-width, initial-scale=1.0"
 
 </a>
 
+
 <!-- GOAL INTRODUCTION -->
 
 <div class="goal-intro">
@@ -360,6 +380,7 @@ content="width=device-width, initial-scale=1.0"
 </b>
 
 </div>
+
 
 <!-- REWARDS -->
 
@@ -426,39 +447,26 @@ content="width=device-width, initial-scale=1.0"
 </button>
 
 
-<!-- WATCH ADS -->
-
-<button
-    class="reward-button"
-    id="watchAdsButton"
-    type="button"
-    onclick="startWatchAds()"
->
-
-    <div class="reward-left">
-
-        <h2>
-            Watch Ads
-        </h2>
-
-        <img
-            src="cryptpayads.png"
-            alt="Watch Ads"
-        >
-
-    </div>
+</div>
 
 
-    <b class="amount">
-        50,000 CP Points
-    </b>
+<!-- ADSENSE AD -->
 
-</button>
+<div class="ad-container">
+
+    <ins
+        class="adsbygoogle"
+        data-ad-client="ca-pub-1546729568940222"
+        data-ad-slot="YOUR_AD_SLOT_ID"
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+    ></ins>
+
+</div>
 
 
 </div>
 
-</div>
 
 <script>
 
@@ -500,13 +508,9 @@ async function claimGoal(goal) {
             ? document.getElementById(
                 "shareButton"
             )
-            : goal === "buycode"
-                ? document.getElementById(
-                    "buyCodeButton"
-                )
-                : document.getElementById(
-                    "watchAdsButton"
-                );
+            : document.getElementById(
+                "buyCodeButton"
+            );
 
 
     if (button.disabled) {
@@ -560,19 +564,6 @@ async function claimGoal(goal) {
             );
 
 
-            /*
-             * IMPORTANT:
-             *
-             * The Buy Code button is
-             * re-enabled after a failed
-             * claim.
-             *
-             * This allows the server to
-             * check again when the user
-             * later obtains another
-             * eligible code.
-             */
-
             button.disabled = false;
 
             return;
@@ -607,30 +598,11 @@ async function claimGoal(goal) {
          *
          * The server checks each purchased
          * CP code individually.
-         *
-         * Therefore, after another eligible
-         * code exists, the user can click
-         * this button again.
          */
 
         if (goal === "buycode") {
 
             button.disabled = false;
-
-        }
-
-
-        /*
-         * WATCH ADS:
-         *
-         * This remains a one-time goal
-         * according to the current server
-         * implementation.
-         */
-
-        if (goal === "watchads") {
-
-            button.disabled = true;
 
         }
 
@@ -651,110 +623,6 @@ async function claimGoal(goal) {
 
 
         button.disabled = false;
-
-    }
-
-}
-
-
-
-/* =========================================
-   START WATCH ADS
-========================================= */
-
-async function startWatchAds() {
-
-    const button =
-        document.getElementById(
-            "watchAdsButton"
-        );
-
-
-    if (button.disabled) {
-
-        return;
-
-    }
-
-
-    try {
-
-        const response =
-            await fetch(
-                "/ad-progress"
-            );
-
-
-        const result =
-            await response.json();
-
-
-        if (
-            !response.ok ||
-            !result.success
-        ) {
-
-            showNotification(
-                "Unable to check ad progress."
-            );
-
-            return;
-
-        }
-
-
-        if (result.claimed) {
-
-            button.disabled = true;
-
-            return;
-
-        }
-
-
-        if (result.adsWatched >= 2) {
-
-            await claimGoal(
-                "watchads"
-            );
-
-            return;
-
-        }
-
-
-        showNotification(
-
-            "Watch 2 rewarded ads to receive 50,000 CP Points."
-
-        );
-
-
-        /*
-           The actual Google rewarded-ad
-           presentation must be connected
-           here using the supported Google
-           rewarded-ad implementation.
-
-           Do NOT simply increase the
-           counter from this browser code.
-        */
-
-
-    }
-
-
-    catch (error) {
-
-        console.error(
-            "Ad progress error:",
-            error
-        );
-
-
-        showNotification(
-            "Unable to start the ad reward."
-        );
 
     }
 
@@ -894,8 +762,6 @@ async function checkClaimedGoals() {
         /*
          * BUY CODE
          *
-         * IMPORTANT:
-         *
          * Do NOT disable this button
          * based on "buycode" appearing
          * in goal_claims.
@@ -904,31 +770,10 @@ async function checkClaimedGoals() {
          * CP code's buycode_claimed value
          * separately.
          *
-         * Therefore this button must remain
-         * available so another purchased
-         * code can be used for another
-         * reward.
+         * Therefore this button remains
+         * available for another eligible
+         * purchased CP code.
          */
-
-
-        /*
-         * WATCH ADS
-         *
-         * Keep the existing one-time
-         * behavior.
-         */
-
-        if (
-            result.claimed.includes(
-                "watchads"
-            )
-        ) {
-
-            document.getElementById(
-                "watchAdsButton"
-            ).disabled = true;
-
-        }
 
     }
 
@@ -941,6 +786,31 @@ async function checkClaimedGoals() {
         );
 
     }
+
+}
+
+
+
+/* =========================================
+   LOAD ADSENSE AD
+========================================= */
+
+try {
+
+    (
+        adsbygoogle =
+        window.adsbygoogle ||
+        []
+    ).push({});
+
+}
+
+catch (error) {
+
+    console.error(
+        "AdSense error:",
+        error
+    );
 
 }
 
@@ -976,3 +846,4 @@ initializePage();
 </body>
 
 </html>
+
