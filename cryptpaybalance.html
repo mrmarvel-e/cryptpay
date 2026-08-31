@@ -1,256 +1,301 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
+
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1546729568940222"
      crossorigin="anonymous"></script>
-    <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
 
-    <title>CryptPay Balance</title>
+<meta name="viewport"
+   content="width=device-width, initial-scale=1.0">
 
-    <style>
+<title>CryptPay Balance</title>
 
-        * {
-            box-sizing: border-box;
-        }
+<style>
 
-        body {
+    * {
+        box-sizing: border-box;
+    }
 
-            background-color: black;
-            color: gold;
+    body {
 
-            font-family: Arial, sans-serif;
+        background-color: black;
+        color: gold;
 
-            text-align: center;
+        font-family: Arial, sans-serif;
 
-            margin: 0;
+        text-align: center;
 
-            min-height: 100vh;
+        margin: 0;
 
-        }
+        min-height: 100vh;
+
+    }
 
 
-        /* MAIN BOX */
+    /* MAIN BOX */
+
+    .balance-box {
+
+        width: 90%;
+        max-width: 400px;
+
+        margin: 80px auto;
+
+        padding: 35px 20px;
+
+        border: 2px solid gold;
+
+        border-radius: 25px;
+
+        background-color: #080808;
+
+    }
+
+
+    h1 {
+
+        margin-bottom: 30px;
+
+        font-size: 30px;
+
+    }
+
+
+    /* BALANCE */
+
+    #balance {
+
+        font-size: 40px;
+
+        font-weight: bold;
+
+        margin: 30px 0;
+
+        word-break: break-word;
+
+    }
+
+
+    /* ADSENSE */
+
+    .ad-container {
+
+        width: 90%;
+
+        max-width: 550px;
+
+        margin: 25px auto;
+
+        overflow: hidden;
+
+        text-align: center;
+
+    }
+
+
+    /* BACK BUTTON */
+
+    .back-button {
+
+        display: inline-block;
+
+        padding: 12px 25px;
+
+        color: gold;
+
+        border: 2px solid gold;
+
+        border-radius: 12px;
+
+        text-decoration: none;
+
+        font-size: 16px;
+
+    }
+
+
+    .back-button:hover {
+
+        background-color: #222;
+
+    }
+
+
+    /* PHONE */
+
+    @media (max-width: 500px) {
 
         .balance-box {
 
-            width: 90%;
-            max-width: 400px;
+            margin: 50px auto;
 
-            margin: 80px auto;
-
-            padding: 35px 20px;
-
-            border: 2px solid gold;
-
-            border-radius: 25px;
-
-            background-color: #080808;
+            padding: 30px 15px;
 
         }
 
 
         h1 {
 
-            margin-bottom: 30px;
-
-            font-size: 30px;
+            font-size: 26px;
 
         }
 
-
-        /* BALANCE */
 
         #balance {
 
-            font-size: 40px;
-
-            font-weight: bold;
-
-            margin: 30px 0;
-
-            word-break: break-word;
+            font-size: 32px;
 
         }
 
-
-        /* BACK BUTTON */
 
         .back-button {
 
-            display: inline-block;
+            font-size: 14px;
 
-            padding: 12px 25px;
-
-            color: gold;
-
-            border: 2px solid gold;
-
-            border-radius: 12px;
-
-            text-decoration: none;
-
-            font-size: 16px;
+            padding: 10px 20px;
 
         }
 
+    }
 
-        .back-button:hover {
-
-            background-color: #222;
-
-        }
-
-
-        /* PHONE */
-
-        @media (max-width: 500px) {
-
-            .balance-box {
-
-                margin: 50px auto;
-
-                padding: 30px 15px;
-
-            }
-
-
-            h1 {
-
-                font-size: 26px;
-
-            }
-
-
-            #balance {
-
-                font-size: 32px;
-
-            }
-
-
-            .back-button {
-
-                font-size: 14px;
-
-                padding: 10px 20px;
-
-            }
-
-        }
-
-    </style>
+</style>
 
 </head>
 
-
 <body>
 
+<div class="balance-box">
 
-    <div class="balance-box">
-
-        <h1>
-            My Balance
-        </h1>
-
-
-        <div id="balance">
-
-            Loading...
-
-        </div>
+    <h1>
+        My Balance
+    </h1>
 
 
-        <a
-            class="back-button"
-            href="cryptpay.html"
-        >
+    <div id="balance">
 
-            ← Back to CryptPay
-
-        </a>
+        Loading...
 
     </div>
 
 
+    <a
+        class="back-button"
+        href="cryptpay.html"
+    >
 
-    <script>
+        ← Back to CryptPay
 
+    </a>
 
-        // =========================
-        // LOAD USER BALANCE
-        // =========================
-
-        async function loadBalance() {
-
-            try {
-
-                const response =
-                    await fetch("/me");
+</div>
 
 
-                const result =
-                    await response.json();
+<!-- =========================
+     ADSENSE AD
+========================= -->
+
+<div class="ad-container">
+
+    <ins
+        class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-1546729568940222"
+        data-ad-slot="1792055789"
+        data-ad-format="auto"
+        data-full-width-responsive="true">
+    </ins>
+
+</div>
 
 
-                // User isn't logged in
 
-                if (!result.loggedIn) {
-
-                    window.location.href =
-                        "login.html";
-
-                    return;
-
-                }
+<script>
 
 
-                // Get user information
+    // =========================
+    // LOAD ADSENSE
+    // =========================
 
-                const user =
-                    result.user;
+    (adsbygoogle =
+        window.adsbygoogle ||
+        []
+    ).push({});
 
 
-                // Display balance
+    // =========================
+    // LOAD USER BALANCE
+    // =========================
 
-                document.getElementById(
-                    "balance"
-                ).textContent =
+    async function loadBalance() {
 
-                    "₦" +
-                    Number(
-                        user.balance || 0
-                    ).toLocaleString();
+        try {
 
+            const response =
+                await fetch("/me");
+
+
+            const result =
+                await response.json();
+
+
+            // User isn't logged in
+
+            if (!result.loggedIn) {
+
+                window.location.href =
+                    "login.html";
+
+                return;
 
             }
 
-            catch (error) {
 
-                console.error(error);
+            // Get user information
+
+            const user =
+                result.user;
 
 
-                document.getElementById(
-                    "balance"
-                ).textContent =
+            // Display balance
 
-                    "Unable to load balance";
+            document.getElementById(
+                "balance"
+            ).textContent =
 
-            }
+                "₦" +
+                Number(
+                    user.balance || 0
+                ).toLocaleString();
+
 
         }
 
+        catch (error) {
 
-        // Run when page loads
-
-        loadBalance();
+            console.error(error);
 
 
-    </script>
+            document.getElementById(
+                "balance"
+            ).textContent =
 
+                "Unable to load balance";
+
+        }
+
+    }
+
+
+    // Run when page loads
+
+    loadBalance();
+
+
+</script>
 
 </body>
 
