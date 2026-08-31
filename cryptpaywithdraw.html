@@ -1,381 +1,435 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
+
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1546729568940222"
      crossorigin="anonymous"></script>
-    <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<meta charset="UTF-8">
 
-    <title>Withdraw Funds - CryptPay</title>
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+
+>
+
+<title>Withdraw Funds - CryptPay</title>
+
+<style>
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
 
-    <style>
+    body {
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        background-color: black;
+
+        color: gold;
+
+        font-family: Arial, sans-serif;
+
+        min-height: 100vh;
+
+    }
 
 
-        body {
+    .container {
 
-            background-color: black;
+        width: 90%;
 
-            color: gold;
+        max-width: 450px;
 
-            font-family: Arial, sans-serif;
+        margin: 40px auto;
 
-            min-height: 100vh;
+        padding: 30px 20px;
 
-        }
+        background-color: #080808;
 
+        border: 2px solid gold;
+
+        border-radius: 25px;
+
+    }
+
+
+    h1 {
+
+        text-align: center;
+
+        margin-bottom: 30px;
+
+    }
+
+
+    label {
+
+        display: block;
+
+        margin-top: 18px;
+
+        margin-bottom: 7px;
+
+        font-weight: bold;
+
+    }
+
+
+    input,
+    select {
+
+        width: 100%;
+
+        padding: 14px;
+
+        background-color: gold;
+
+        color: black;
+
+        border: 2px solid gold;
+
+        border-radius: 10px;
+
+        font-size: 16px;
+
+        outline: none;
+
+    }
+
+
+    input:focus,
+    select:focus {
+
+        background-color: #fff1a8;
+
+    }
+
+
+    .withdraw-button {
+
+        width: 100%;
+
+        padding: 15px;
+
+        margin-top: 30px;
+
+        background-color: gold;
+
+        color: black;
+
+        border: 2px solid gold;
+
+        border-radius: 15px;
+
+        font-size: 20px;
+
+        font-weight: bold;
+
+        cursor: pointer;
+
+    }
+
+
+    .withdraw-button:hover {
+
+        background-color: black;
+
+        color: gold;
+
+    }
+
+
+    .withdraw-button:disabled {
+
+        opacity: 0.5;
+
+        cursor: not-allowed;
+
+    }
+
+
+    #notification {
+
+        display: none;
+
+        margin-top: 20px;
+
+        padding: 15px;
+
+        border-radius: 12px;
+
+        text-align: center;
+
+        font-weight: bold;
+
+    }
+
+
+    .success {
+
+        background-color: gold;
+
+        color: black;
+
+    }
+
+
+    .error {
+
+        background-color: #300000;
+
+        color: #ff7777;
+
+        border: 1px solid #ff7777;
+
+    }
+
+
+    .back-button {
+
+        display: block;
+
+        width: fit-content;
+
+        margin: 25px auto 0;
+
+        padding: 12px 22px;
+
+        color: gold;
+
+        border: 2px solid gold;
+
+        border-radius: 12px;
+
+        text-decoration: none;
+
+    }
+
+
+    /* =========================
+       ADSENSE
+    ========================= */
+
+    .ad-container {
+
+        width: 90%;
+
+        max-width: 550px;
+
+        margin: 25px auto;
+
+        overflow: hidden;
+
+        text-align: center;
+
+    }
+
+
+    @media (max-width: 500px) {
 
         .container {
 
-            width: 90%;
+            margin: 25px auto;
 
-            max-width: 450px;
-
-            margin: 40px auto;
-
-            padding: 30px 20px;
-
-            background-color: #080808;
-
-            border: 2px solid gold;
-
-            border-radius: 25px;
+            padding: 25px 15px;
 
         }
-
 
         h1 {
 
-            text-align: center;
-
-            margin-bottom: 30px;
+            font-size: 27px;
 
         }
 
+    }
 
-        label {
-
-            display: block;
-
-            margin-top: 18px;
-
-            margin-bottom: 7px;
-
-            font-weight: bold;
-
-        }
-
-
-        input,
-        select {
-
-            width: 100%;
-
-            padding: 14px;
-
-            background-color: gold;
-
-            color: black;
-
-            border: 2px solid gold;
-
-            border-radius: 10px;
-
-            font-size: 16px;
-
-            outline: none;
-
-        }
-
-
-        input:focus,
-        select:focus {
-
-            background-color: #fff1a8;
-
-        }
-
-
-        .withdraw-button {
-
-            width: 100%;
-
-            padding: 15px;
-
-            margin-top: 30px;
-
-            background-color: gold;
-
-            color: black;
-
-            border: 2px solid gold;
-
-            border-radius: 15px;
-
-            font-size: 20px;
-
-            font-weight: bold;
-
-            cursor: pointer;
-
-        }
-
-
-        .withdraw-button:hover {
-
-            background-color: black;
-
-            color: gold;
-
-        }
-
-
-        .withdraw-button:disabled {
-
-            opacity: 0.5;
-
-            cursor: not-allowed;
-
-        }
-
-
-        #notification {
-
-            display: none;
-
-            margin-top: 20px;
-
-            padding: 15px;
-
-            border-radius: 12px;
-
-            text-align: center;
-
-            font-weight: bold;
-
-        }
-
-
-        .success {
-
-            background-color: gold;
-
-            color: black;
-
-        }
-
-
-        .error {
-
-            background-color: #300000;
-
-            color: #ff7777;
-
-            border: 1px solid #ff7777;
-
-        }
-
-
-        .back-button {
-
-            display: block;
-
-            width: fit-content;
-
-            margin: 25px auto 0;
-
-            padding: 12px 22px;
-
-            color: gold;
-
-            border: 2px solid gold;
-
-            border-radius: 12px;
-
-            text-decoration: none;
-
-        }
-
-
-        @media (max-width: 500px) {
-
-            .container {
-
-                margin: 25px auto;
-
-                padding: 25px 15px;
-
-            }
-
-            h1 {
-
-                font-size: 27px;
-
-            }
-
-        }
-
-    </style>
+</style>
 
 </head>
 
-
 <body>
-
 
 <div class="container">
 
 
-    <h1>
-        Withdraw Funds
-    </h1>
+<h1>
+    Withdraw Funds
+</h1>
 
 
-    <form id="withdrawForm">
+<form id="withdrawForm">
 
 
-        <!-- ACCOUNT NUMBER -->
+    <!-- ACCOUNT NUMBER -->
 
-        <label for="accountNumber">
-            Account Number
-        </label>
+    <label for="accountNumber">
+        Account Number
+    </label>
 
-        <input
-            type="text"
-            id="accountNumber"
-            inputmode="numeric"
-            maxlength="10"
-            placeholder="Enter 10-digit account number"
-            required
-        >
-
-
-        <!-- BANK -->
-
-        <label for="bank">
-            Bank
-        </label>
-
-        <select id="bank" required>
-
-            <option value="">
-                Select Bank
-            </option>
-
-            <option value="Access Bank">
-                Access Bank
-            </option>
-
-            <option value="GTBank">
-                GTBank
-            </option>
-
-            <option value="First Bank">
-                First Bank
-            </option>
-
-            <option value="UBA">
-                UBA
-            </option>
-
-            <option value="Zenith Bank">
-                Zenith Bank
-            </option>
-
-            <option value="Opay">
-                Opay
-            </option>
-
-            <option value="PalmPay">
-                PalmPay
-            </option>
-
-            <option value="Kuda">
-                Kuda
-            </option>
-
-        </select>
-
-
-        <!-- AMOUNT -->
-
-        <label for="amount">
-            Amount
-        </label>
-
-        <input
-            type="number"
-            id="amount"
-            min="1"
-            step="1"
-            placeholder="Enter amount"
-            required
-        >
-
-
-        <!-- CP CODE -->
-
-        <label for="cpCode">
-            CP-Code
-        </label>
-
-        <input
-            type="text"
-            id="cpCode"
-            placeholder="Enter CP-Code"
-            required
-        >
-
-
-        <!-- WITHDRAW -->
-
-        <button
-            type="submit"
-            class="withdraw-button"
-            id="withdrawButton"
-        >
-
-            WITHDRAW
-
-        </button>
-
-
-    </form>
-
-
-    <!-- NOTIFICATION -->
-
-    <div id="notification"></div>
-
-
-    <!-- BACK -->
-
-    <a
-        href="cryptpay.html"
-        class="back-button"
+    <input
+        type="text"
+        id="accountNumber"
+        inputmode="numeric"
+        maxlength="10"
+        placeholder="Enter 10-digit account number"
+        required
     >
 
-        ← Back to CryptPay
 
-    </a>
+    <!-- BANK -->
+
+    <label for="bank">
+        Bank
+    </label>
+
+    <select id="bank" required>
+
+        <option value="">
+            Select Bank
+        </option>
+
+        <option value="Access Bank">
+            Access Bank
+        </option>
+
+        <option value="GTBank">
+            GTBank
+        </option>
+
+        <option value="First Bank">
+            First Bank
+        </option>
+
+        <option value="UBA">
+            UBA
+        </option>
+
+        <option value="Zenith Bank">
+            Zenith Bank
+        </option>
+
+        <option value="Opay">
+            Opay
+        </option>
+
+        <option value="PalmPay">
+            PalmPay
+        </option>
+
+        <option value="Kuda">
+            Kuda
+        </option>
+         
+         <option value="Smartcash">
+            Smartcash
+        </option>
+
+         <option value="Fidelity">
+            Fidelity
+        </option>
+
+    </select>
+
+
+    <!-- AMOUNT -->
+
+    <label for="amount">
+        Amount
+    </label>
+
+    <input
+        type="number"
+        id="amount"
+        min="1"
+        step="1"
+        placeholder="Enter amount"
+        required
+    >
+
+
+    <!-- CP CODE -->
+
+    <label for="cpCode">
+        CP-Code
+    </label>
+
+    <input
+        type="text"
+        id="cpCode"
+        placeholder="Enter CP-Code"
+        required
+    >
+
+
+    <!-- WITHDRAW -->
+
+    <button
+        type="submit"
+        class="withdraw-button"
+        id="withdrawButton"
+    >
+
+        WITHDRAW
+
+    </button>
+
+
+</form>
+
+
+<!-- NOTIFICATION -->
+
+<div id="notification"></div>
+
+
+<!-- BACK -->
+
+<a
+    href="cryptpay.html"
+    class="back-button"
+>
+
+    ← Back to CryptPay
+
+</a>
 
 
 </div>
 
+<!-- =========================
+     ADSENSE AD
+========================= -->
 
+<div class="ad-container">
+
+<ins
+    class="adsbygoogle"
+    style="display:block"
+    data-ad-client="ca-pub-1546729568940222"
+    data-ad-slot="1792055789"
+    data-ad-format="auto"
+    data-full-width-responsive="true">
+</ins>
+
+</div>
 
 <script>
+
+
+// ==============================
+// LOAD ADSENSE
+// ==============================
+
+(adsbygoogle =
+    window.adsbygoogle ||
+    []
+).push({});
+
 
 
 // ==============================
@@ -568,7 +622,6 @@ document
 
 
 </script>
-
 
 </body>
 
